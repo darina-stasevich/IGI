@@ -2,7 +2,7 @@ from geometric_lib import square
 from geometric_lib import circle
 
 print("No validation")
-print("Enter number from 1 to 4.\n1. To calculate perimeter of square.\n2. To calculate area of square.\n3. To calculate perimeter of circle\n4. To calculate area of circle")
+print("Enter number from 1 to 4.\n1. To calculate perimeter of square.\nS2. To calculate area of square.\n3. To calculate perimeter of circle\n4. To calculate area of circle")
 ind = int(input())
 if ind == 1:
     print("Ok. Calculating perimeter of square.\nEnter a.")
