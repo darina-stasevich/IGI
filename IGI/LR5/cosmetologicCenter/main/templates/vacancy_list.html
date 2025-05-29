@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Вакансии - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}Актуальные вакансии{% endblock %}
+
+{% block content %}
+    {% if vacancies %}
+        <div>
+            {% for vacancy in vacancies %}
+                <div>
+                    <h4>{{ vacancy.title }}</h4>
+
+                    {% if vacancy.doctor_category %}
+                        <p>{{ vacancy.doctor_category.name }}</p>
+                    {% endif %}
+
+                    <div>
+                        {{ vacancy.short_description|linebreaksbr }}
+                    </div>
+
+                    {% if vacancy.salary_info %}
+                        <p><strong>Уровень заработной платы:</strong> {{ vacancy.salary_info }}</p>
+                    {% endif %}
+
+                    <p>
+                        Дата публикации: {{ vacancy.date_posted|date:"d F Y" }}
+                    </p>
+
+                    {% if vacancy.contact_info %}
+                        <div>
+                            <strong>Как откликнуться:</strong><br>
+                            {{ vacancy.contact_info|linebreaksbr }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В данный момент открытых вакансий нет. Загляните позже или свяжитесь с нами для получения информации о возможных будущих возможностях.</p>
+    {% endif %}
+{% endblock %}

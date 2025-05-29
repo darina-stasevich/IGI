@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Кабинет врача - {{ block.super }}{% endblock %}
+
+{% block content_title %}Кабинет врача{% endblock %}
+
+{% block content %}
+<div>
+    <p>Добро пожаловать, доктор {{ user.last_name|default:user.username }}!</p>
+    <p>Это ваша рабочая страница.</p>
+
+    <h4>Информация о профиле:</h4>
+    <ul>
+        <li><strong>Логин:</strong> {{ user.username }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Имя:</strong> {{ user.first_name }}</li>
+        <li><strong>Фамилия:</strong> {{ user.last_name }}</li>
+        {% if user.profile and user.profile.doctor_profile %}
+            <li><strong>Телефон:</strong> {{ user.profile.phone_number }}</li>
+            <li><strong>Дата рождения:</strong> {{ user.profile.date_of_birth|date:"d.m.Y" }}</li>
+            <li><strong>Категория:</strong> {{ user.profile.doctor_profile.category.name }}</li>
+            <li><strong>Стаж:</strong> {{ user.profile.doctor_profile.experience_years }} лет</li>
+            <li><strong>Биография:</strong> {{ user.profile.doctor_profile.bio|linebreaksbr }}</li>
+            <li><strong>Услуги:</strong>
+                {% if user.profile.doctor_profile.services_can_perform.all %}
+                    <ul>
+                    {% for service in user.profile.doctor_profile.services_can_perform.all %}
+                        <li>{{ service.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    Не указаны
+                {% endif %}
+            </li>
+        {% endif %}
+    </ul>
+
+<h4>Ваше еженедельное расписание:</h4>
+    {% if schedule_for_template %}
+        <table>
+            <thead>
+                <tr>
+                    <th>День недели</th>
+                    <th>Время работы</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day_info in schedule_for_template %}
+                    <tr>
+                        <td><strong>{{ day_info.day_name }}</strong></td>
+                        <td>
+                            {% if day_info.slots %}
+                                <ul>
+                                    {% for slot in day_info.slots %}
+                                        <li>{{ slot.start_time }} - {{ slot.end_time }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                Выходной
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Еженедельное расписание еще не заполнено.</p>
+    {% endif %}
+
+    <p><a href="{% url 'user_logout' %}">Выйти</a></p>
+
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ form_title|default:"Форма" }} - {{ block.super }}{% endblock %}
+
+{% block content_title %}{{ form_title|default:"Заполните форму" }}{% endblock %}
+
+{% block content %}
+    <div>
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div>
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}
+                        {% if field.field.required %}<span>*</span>{% endif %}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <small>{{ field.help_text|safe }}</small>
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div>
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div>
+                <button type="submit">
+                    {% if "Регистрация" in form_title %}
+                        Зарегистрироваться
+                    {% elif "Вход" in form_title %}
+                        Войти
+                    {% else %}
+                        Отправить
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+
+        {% if form_title == "Вход в систему" %}
+            <p>Еще нет аккаунта?
+                <a href="{% url 'client_register' %}">Регистрация клиента</a> |
+                <a href="{% url 'doctor_register' %}">Регистрация врача</a>
+            </p>
+        {% elif "Регистрация" in form_title %}
+            <p>Уже есть аккаунт? <a href="{% url 'user_login' %}">Войти</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

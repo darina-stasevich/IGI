@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Кабинет клиента - {{ block.super }}{% endblock %}
+
+{% block content_title %}Кабинет клиента{% endblock %}
+
+{% block content %}
+<div>
+    <p>Добро пожаловать, {{ user.first_name|default:user.username }}!</p>
+    <p>Здесь вы можете просмотреть и обновить свои личные данные.</p>
+
+    <hr>
+    <h4>{{ form_title|default:"Редактирование профиля" }}</h4>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div>
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div>
+            <p><strong>Логин:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}
+                    {% if field.field.required %}<span>*</span>{% endif %}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <small>{{ field.help_text|safe }}</small>
+                {% endif %}
+
+                {% if field.errors %}
+                    <div>
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div>
+            <button type="submit">Обновить данные</button>
+        </div>
+    </form>
+    <hr>
+
+    <div>
+        <a href="{% url 'user_logout' %}">Выйти</a>
+        <a href="{% url 'delete_profile' %}">Удалить профиль</a>
+    </div>
+
+</div>
+{% endblock %}

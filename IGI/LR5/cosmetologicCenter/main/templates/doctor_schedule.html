@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block title %}
+  {{ page_title|default:"Расписание врача" }} - {{ block.super }}
+{% endblock %}
+
+{% block content_title %}
+  {{ page_title }} <small>{{ page_subtitle }}</small>
+{% endblock %}
+
+{% block content %}
+<div>
+
+  <form method="get">
+    <div>
+      <div>
+        <label for="date_filter_input">Выберите дату:</label> 
+        <input type="date" name="date" id="date_filter_input" value="{{ selected_date_str }}"> 
+      </div>
+      <div>
+        <label>Или выберите период:</label> 
+        <div> 
+            <button type="submit" name="period" value="today">Сегодня</button> 
+            <button type="submit" name="period" value="week">Эта неделя</button> 
+            <button type="submit" name="period" value="month">Этот месяц</button> 
+        </div>
+      </div>
+       <div>
+         <button type="submit">Показать</button>
+       </div>
+    </div>
+  </form>
+
+  {% if appointments %}
+    <div>
+      {% for app in appointments %}
+        {% timezone user_active_timezone_name|default:"UTC" %}
+        <div>
+          <div>
+            <div>{{ app.start_datetime|date:"d F Y" }} ({{ app.start_datetime|date:"l" }})</div>
+            <div>
+              {{ app.start_datetime|date:"H:i" }} - {{ app.end_datetime|date:"H:i" }}
+            </div>
+          </div>
+          <div>
+            <p><strong>Услуга:</strong> {{ app.service.name }}</p>
+            <p>
+              <strong>Клиент:</strong>
+              {% if app.client.user_profile.user.get_full_name %}
+                {{ app.client.user_profile.user.get_full_name }}
+              {% else %}
+                {{ app.client.user_profile.user.username }}
+              {% endif %}
+              {% if app.client.user_profile.phone_number %}
+                <small> (Тел: {{ app.client.user_profile.phone_number }})</small>
+              {% endif %}
+            </p>
+            <p>
+              <strong>Статус:</strong>
+              <span>
+                {{ app.get_status_display }}
+              </span>
+            </p>
+            {% if app.notes_by_client %}
+              <p>
+                <small><strong>Примечание клиента:</strong><br>{{ app.notes_by_client|linebreaksbr }}</small>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+        {% endtimezone %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div>
+      На выбранный период ({{ page_subtitle|lower }}) у вас нет записей.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

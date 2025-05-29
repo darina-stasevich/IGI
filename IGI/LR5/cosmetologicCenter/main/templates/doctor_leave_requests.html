@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ page_title|default:"Запросы на отпуск" }} - {{ block.super }}
+{% endblock %}
+
+{% block content_title %}
+  {{ page_title }}
+{% endblock %}
+
+{% block content %}
+<div>
+
+  <div>
+    <h3>Подать новый запрос на отпуск</h3>
+    <form method="post">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div>
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <small>{{ field.help_text }}</small>
+          {% endif %}
+          {% if field.errors %}
+            <div>
+              {% for error in field.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div>
+        <button type="submit">Отправить запрос</button>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <h3>История моих запросов</h3>
+    {% if leave_requests %}
+      <table>
+        <thead>
+          <tr>
+            <th>Дата начала</th>
+            <th>Дата окончания</th>
+            <th>Причина</th>
+            <th>Статус</th>
+            <th>Дата запроса</th>
+            <th>Одобрил(а)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in leave_requests %}
+            <tr>
+              <td>{{ req.start_date|date:"d.m.Y" }}</td>
+              <td>{{ req.end_date|date:"d.m.Y" }}</td>
+              <td>{{ req.reason|default:"-" }}</td>
+              <td>
+                <span>
+                  {{ req.get_status_display }}
+                </span>
+              </td>
+              <td>{{ req.requested_at|date:"d.m.Y H:i" }}</td>
+              <td>
+                {% if req.approved_by %}
+                  {{ req.approved_by.get_full_name|default:req.approved_by.username }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>У вас пока нет запросов на отпуск.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

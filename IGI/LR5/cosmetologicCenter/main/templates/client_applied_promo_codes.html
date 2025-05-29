@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мои использованные промокоды - {{ block.super }}{% endblock %}
+
+{% block content_title %}Мои использованные промокоды{% endblock %}
+
+{% block content %}
+<div>
+    {% if applied_appointments %}
+        <p>Здесь показаны промокоды, которые вы успешно применили к вашим записям на услуги.</p>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата записи</th>
+                        <th>Услуга</th>
+                        <th>Промокод</th>
+                        <th>Исходная цена</th>
+                        <th>Скидка</th>
+                        <th>Итоговая цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in applied_appointments %}
+                    <tr>
+                        <td>{{ appointment.start_datetime|date:"d.m.Y H:i" }}</td>
+                        <td>{{ appointment.service.name }}</td>
+                        <td>
+                            {% if appointment.applied_promo_code %}
+                                {{ appointment.applied_promo_code.code }}
+                            {% else %}
+                                <span>Н/Д</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.price_at_booking|floatformat:2 }} руб.</td>
+                        <td>
+                            {% if appointment.discount_amount_applied > 0 %}
+                                <span>-{{ appointment.discount_amount_applied|floatformat:2 }} руб.</span>
+                            {% else %}
+                                0.00 руб.
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ appointment.get_final_price_display|floatformat:2 }} руб.</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div role="alert">
+            У вас пока нет записей с примененными промокодами.
+        </div>
+    {% endif %}
+
+    <div>
+        <a href="{% url 'home' %}">Вернуться на главную</a>
+    </div>
+</div>
+
+{% endblock %}

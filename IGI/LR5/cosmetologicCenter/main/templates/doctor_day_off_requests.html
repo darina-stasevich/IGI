@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ page_title|default:"Запросы на отгул/сокращение" }} - {{ block.super }}
+{% endblock %}
+
+{% block content_title %}
+  {{ page_title }}
+{% endblock %}
+
+{% block content %}
+<div>
+
+  <div>
+    <h3>Подать новый запрос</h3>
+    <p>
+      Для запроса полного отгула оставьте поля "Время начала отсутствия" и "Время окончания отсутствия" пустыми.
+      Для запроса сокращенного дня укажите промежуток времени, когда вы будете отсутствовать.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div>
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <small>{{ field.help_text }}</small>
+          {% endif %}
+          {% if field.errors %}
+            <div>
+              {% for error in field.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div>
+        <button type="submit">Отправить запрос</button>
+      </div>
+    </form>
+  </div>
+
+  <hr>
+
+  <div>
+    <h3>История моих запросов</h3>
+    {% if day_off_requests %}
+      <table>
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Период отсутствия</th>
+            <th>Причина</th>
+            <th>Статус</th>
+            <th>Дата запроса</th>
+            <th>Обработал</th>
+            <th>Дата обновления статуса</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in day_off_requests %}
+            <tr>
+              <td>{{ req.date|date:"d.m.Y" }}</td>
+              <td>
+                {% if req.start_time and req.end_time %}
+                  {{ req.start_time|time:"H:i" }} - {{ req.end_time|time:"H:i" }}
+                {% else %}
+                  Весь день
+                {% endif %}
+              </td>
+              <td>{{ req.reason|default:"-" }}</td>
+              <td>
+                <span>
+                  {{ req.get_status_display }}
+                </span>
+              </td>
+              <td>{{ req.requested_at|date:"d.m.Y H:i" }}</td>
+              <td>
+                {% if req.processed_by %}
+                  {{ req.processed_by.get_full_name|default:req.processed_by.username }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td>{{ req.status_updated_at|date:"d.m.Y H:i"|default:"-" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>У вас пока нет запросов на изменение расписания.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

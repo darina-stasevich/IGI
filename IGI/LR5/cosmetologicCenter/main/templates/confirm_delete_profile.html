@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Подтверждение удаления профиля - {{ block.super }}{% endblock %}
+
+{% block content_title %}Подтверждение удаления профиля{% endblock %}
+
+{% block content %}
+<div>
+    <h4>Вы уверены, что хотите удалить свой профиль?</h4>
+    <p><strong>Внимание!</strong> Это действие необратимо. Все ваши данные, включая информацию профиля и историю записей на услуги, будут безвозвратно удалены.</p>
+
+    <form method="post" action="{% url 'delete_profile' %}">
+        {% csrf_token %}
+        <button type="submit" >Да, удалить мой профиль</button>
+        <a href="{% url 'client_dashboard' %}" >Нет, вернуться в кабинет</a>
+    </form>
+</div>
+{% endblock %}

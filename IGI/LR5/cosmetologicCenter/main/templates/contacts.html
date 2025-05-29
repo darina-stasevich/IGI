@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Контакты - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}Наши контакты{% endblock %}
+
+{% block content %}
+
+    {% if company_profile %}
+        <div>
+            <h4>{{ company_profile.main_info_title|default:"Клиника Здоровье" }}</h4>
+            <p><em>Для записи к врачу или уточнения информации, пожалуйста, воспользуйтесь контактами специалистов ниже или общей формой записи (если есть).</em></p>
+        </div>
+    {% endif %}
+
+    {% if doctors %}
+        <h3>Наши врачи</h3>
+        <div>
+            {% for doctor in doctors %}
+                <div>
+                    <div>
+                        {% if doctor.contact_page_photo %}
+                            <img src="{{ doctor.contact_page_photo.url }}" alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}" width="120">
+                        {% elif doctor.user_profile.photo %}
+                             <img src="{{ doctor.user_profile.photo.url }}" alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}" width="120">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.png' %}" alt="Фото отсутствует" width="120">
+                        {% endif %}
+
+                        <h5>{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}</h5>
+                        {% if doctor.category %}
+                            <p>{{ doctor.category.name }}</p>
+                        {% endif %}
+
+                        <p>
+                            {{ doctor.contact_page_description|default:doctor.bio|truncatewords:30|linebreaksbr }}
+                        </p>
+
+                        {% if doctor.user_profile.phone_number %}
+                            <p><strong>Телефон:</strong> {{ doctor.user_profile.phone_number }}</p>
+                        {% endif %}
+                        {% if doctor.user_profile.user.email %}
+                            <p><strong>Email:</strong> <a href="mailto:{{ doctor.user_profile.user.email }}">{{ doctor.user_profile.user.email }}</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if other_staff %}
+        <h3>Администрация и персонал</h3>
+        <div>
+            {% for staff_member in other_staff %}
+                <div>
+                     <div>
+                        {% if staff_member.photo %}
+                            <img src="{{ staff_member.photo.url }}" alt="{{ staff_member.full_name }}" width="120">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.png' %}" alt="Фото отсутствует" width="120">
+                        {% endif %}
+
+                        <h5>{{ staff_member.full_name }}</h5>
+                        <p>{{ staff_member.position }}</p>
+
+                        {% if staff_member.work_description %}
+                            <p>{{ staff_member.work_description|linebreaksbr }}</p>
+                        {% endif %}
+                        {% if staff_member.phone %}
+                            <p><strong>Телефон:</strong> {{ staff_member.phone }}</p>
+                        {% endif %}
+                        {% if staff_member.email %}
+                            <p><strong>Email:</strong> <a href="mailto:{{ staff_member.email }}">{{ staff_member.email }}</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if not doctors and not other_staff %}
+        <p>Контактная информация сотрудников в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
+    {% endif %}
+
+{% endblock %}

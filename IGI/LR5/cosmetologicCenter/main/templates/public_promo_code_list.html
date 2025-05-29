@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Акции и промокоды - {{ block.super }}{% endblock %}
+
+{% block content_title %}Доступные акции и промокоды{% endblock %}
+
+{% block content %}
+<div>
+    <p>Ознакомьтесь с нашими текущими акциями и промокодами, которые вы можете использовать для получения скидок на услуги!</p>
+    <p>Промокоды действительны на {{ current_date|date:"d.m.Y" }}. Условия могут меняться.</p>
+
+    {% if promo_codes %}
+        <div>
+            {% for promo in promo_codes %}
+            <div>
+                <div>
+                    <div>
+                        <h5>Промокод: <span>{{ promo.code }}</span></h5>
+                    </div>
+                    <div>
+                        {% if promo.description %}
+                            <p>{{ promo.description|linebreaksbr }}</p>
+                        {% else %}
+                            <p><em>Описание отсутствует.</em></p>
+                        {% endif %}
+
+                        <p>
+                            <strong>Скидка:</strong>
+                            {% if promo.discount_percentage %}
+                                {{ promo.discount_percentage|floatformat:"-0" }}%
+                            {% elif promo.discount_amount %}
+                                {{ promo.discount_amount|floatformat:"-2" }} руб.
+                            {% else %}
+                                Не указана
+                            {% endif %}
+                        </p>
+                        <p><small>Действителен до: {{ promo.valid_to|date:"d.m.Y" }}</small></p>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            К сожалению, на данный момент активных промокодов нет. Загляните позже!
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

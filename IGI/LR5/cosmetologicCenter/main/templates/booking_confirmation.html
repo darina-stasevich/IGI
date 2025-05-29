@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Подтверждение бронирования - {{ block.super }}{% endblock %}
+
+{% block content_title %}Подтвердите ваше бронирование{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Детали вашей будущей записи:</h3>
+    <div>
+        <p><strong>Услуга:</strong> {{ service.name }}</p>
+        <p><strong>Категория:</strong> {{ service.category.name }}</p>
+        <p><strong>Врач:</strong> {{ doctor.user_profile.user.get_full_name_or_username }}</p>
+        <p><strong>Дата:</strong> {{ start_datetime_obj|date:"d F Y" }}</p>
+        <p><strong>Время:</strong> с {{ start_datetime_obj|time:"H:i" }} до {{ end_datetime_obj|time:"H:i" }}</p>
+        <p><strong>Длительность:</strong> {{ service.duration_minutes }} минут</p>
+        <p><strong>Стоимость:</strong> {{ price }} руб.</p>
+    </div>
+
+    <form method="post" action="{% url 'create_appointment' %}">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div>
+            <button type="submit">Подтвердить и записаться</button>
+            <a href="{% url 'find_available_slots' %}">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

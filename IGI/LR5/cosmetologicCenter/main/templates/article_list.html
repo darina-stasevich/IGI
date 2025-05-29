@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Новости - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}Новости и статьи{% endblock %}
+
+{% block content %}
+    {% if articles %}
+        <div>
+            {% for article in articles %}
+                <div>
+                    <h3>
+                        <a href="#">{{ article.title }}</a>
+                    </h3>
+
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                    {% elif article.image_url %}
+                        <img src="{{ article.image_url }}" alt="{{ article.title }}">
+                    {% endif %}
+
+                    <p>
+                        Опубликовано: {{ article.published_date|date:"d F Y" }}
+                        {% if article.author %}
+                            | Автор: {{ article.author.get_full_name|default:article.author.username }}
+                        {% endif %}
+                    </p>
+
+                    <p>{{ article.short_description }}</p>
+                
+
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В данный момент нет опубликованных новостей. Загляните позже!</p>
+    {% endif %}
+{% endblock %}

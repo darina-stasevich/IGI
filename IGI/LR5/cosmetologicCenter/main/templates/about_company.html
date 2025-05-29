@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}О компании - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}
+    {% if company_profile %}
+        {{ company_profile.main_info_title|default:"О нашей клинике" }}
+    {% else %}
+        О нашей клинике
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if company_profile %}
+        {% if company_profile.logo %}
+            <img src="{{ company_profile.logo.url }}" alt="Логотип компании">
+        {% elif company_profile.logo_url %}
+             <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
+        {% endif %}
+
+        <p>{{ company_profile.main_info_text|linebreaksbr }}</p>
+
+        {% if company_profile.video_url %}
+            <div>
+                <h4>Видео о нас:</h4>
+                {% if "youtube.com/watch?v=" in company_profile.video_url %}
+                    {% with video_id=company_profile.video_url|slice:"32:" %}
+                    <iframe src="https://www.youtube.com/embed/{{ video_id }}"
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    {% endwith %}
+                {% elif "vimeo.com/" in company_profile.video_url %}
+                    {% with video_id=company_profile.video_url|slice:"18:" %}
+                     <iframe src="https://player.vimeo.com/video/{{ video_id }}"
+                             allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    {% endwith %}
+                {% else %}
+                    <p><a href="{{ company_profile.video_url }}" target="_blank">Посмотреть видео</a> (Не удалось встроить)</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if company_profile.history_text %}
+            <hr>
+            <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
+            <p>{{ company_profile.history_text|linebreaksbr }}</p>
+        {% endif %}
+
+        {% if company_profile.requisites_text %}
+            <hr>
+            <h3>{{ company_profile.requisites_title|default:"Реквизиты" }}</h3>
+            <pre>{{ company_profile.requisites_text }}</pre>
+        {% endif %}
+
+        <p>
+            Информация последний раз обновлена: {{ company_profile.last_updated|date:"d F Y, H:i" }}
+        </p>
+
+    {% else %}
+        <p>Информация о компании в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
+    {% endif %}
+{% endblock %}

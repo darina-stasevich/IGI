@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}Добро пожаловать!{% endblock %}
+
+{% block content %}
+    <p>{{ welcome_message }}</p>
+
+    {% if latest_article %}
+        <div>
+            <h3>Последняя новость: <a href="#">{{ latest_article.title }}</a></h3>
+
+            {% if latest_article.image %}
+                <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}">
+            {% elif latest_article.image_url %}
+                <img src="{{ latest_article.image_url }}" alt="{{ latest_article.title }}">
+            {% endif %}
+
+            <p><strong>Дата публикации:</strong> {{ latest_article.published_date|date:"d F Y, H:i" }}</p>
+            <p>{{ latest_article.short_description }}</p>
+        </div>
+    {% else %}
+        <p>Пока нет опубликованных новостей.</p>
+    {% endif %}
+
+    <hr>
+
+    <p>Используйте навигацию для доступа к другим разделам сайта.</p>
+
+    {% if not user.is_authenticated %}
+        <p>Пожалуйста, <a href="{% url 'user_login' %}">войдите</a> или <a href="{% url 'client_register' %}">зарегистрируйтесь</a>.</p>
+    {% else %}
+        <p>Вы вошли как: {{ user.username }}.</p>
+        {% if user.profile %}
+            <p>Ваша роль: {{ user.profile.get_role_display }}.</p>
+            {% if user.profile.role == 'client' %}
+                <p><a href="{% url 'client_dashboard' %}">Перейти в кабинет клиента</a></p>
+            {% elif user.profile.role == 'doctor' %}
+                <p><a href="{% url 'doctor_dashboard' %}">Перейти в кабинет врача</a></p>
+            {% endif %}
+        {% else %}
+            <p>Профиль пользователя не найден.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

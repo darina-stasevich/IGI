@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Поиск свободных мест - {{ block.super }}{% endblock %}
+
+{% block content_title %}Поиск свободных мест для записи{% endblock %}
+
+{% block content %}
+<div>
+    <form method="get" action="{% url 'find_available_slots' %}">
+        <input type="hidden" name="action" value="show_slots">
+
+        <div> 
+            <div>
+                <label for="category">1. Выберите категорию услуг:</label>
+                <select name="category" id="category" onchange="this.form.submit()">
+                    <option value="">---------</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.pk }}" {% if selected_category_obj and selected_category_obj.pk == cat.pk %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if selected_category_obj or services %}
+            <div>
+                <label for="service">2. Выберите услугу:</label>
+                <select name="service" id="service" {% if not services %}disabled{% endif %} onchange="this.form.submit()">
+                    <option value="">---------</option>
+                    {% for srv in services %}
+                        <option value="{{ srv.pk }}" {% if selected_service_obj and selected_service_obj.pk == srv.pk %}selected{% endif %}>
+                            {{ srv.name }} ({{ srv.duration_minutes }} мин, {{ srv.price }} руб)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% if selected_category_obj and selected_service_obj %}
+            <div>
+                <label for="date">3. Выберите дату:</label>
+                <input type="date" name="date" id="date" value="{{ selected_date_str|default_if_none:'' }}" required> 
+            </div>
+            <div>
+                 <button type="submit">Показать доступные места</button> 
+            </div>
+            {% endif %}
+        </div>
+
+        {% if not selected_category_obj %}
+            <p>Начните с выбора категории услуг.</p> 
+        {% elif not selected_service_obj %}
+            <p>Теперь выберите услугу.</p> 
+        {% elif selected_category_obj and selected_service_obj and not selected_date_str and not action_show_slots %}
+            <p>Теперь выберите дату и нажмите "Показать доступные места".</p> 
+        {% endif %}
+    </form>
+
+    {% if action_show_slots and selected_service_obj and selected_date_str %}
+        <hr>
+        <div>
+            <h3>Детали выбранной услуги:</h3>
+            <p><strong>Услуга:</strong> {{ selected_service_obj.name }}</p>
+            <p><strong>Категория:</strong> {{ selected_service_obj.category.name }}</p>
+            <p><strong>Длительность:</strong> {{ selected_service_obj.duration_minutes }} минут</p>
+            <p><strong>Стоимость:</strong> {{ selected_service_obj.price }} руб.</p>
+            <p><strong>Выбранная дата:</strong> {{ selected_date_obj|date:"d F Y"|default:selected_date_str }}</p>
+        </div>
+
+        <h3>Доступные места:</h3> 
+        {% if available_slots %}
+            <table> 
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Время начала</th>
+                        <th>Время окончания</th>
+                        <th>Врач</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in available_slots %}
+                    <tr>
+                        <td>{{ slot.start_datetime|date:"d.m.Y" }}</td>
+                        <td>{{ slot.start_datetime|time:"H:i" }}</td>
+                        <td>{{ slot.end_datetime|time:"H:i" }}</td>
+                        <td>{{ slot.doctor.user_profile.user.get_full_name|default:slot.doctor.user_profile.user.username }}</td>
+                        <td>
+                            <a href="{% url 'booking_confirmation' %}?service_id={{ selected_service_obj.pk }}&doctor_id={{ slot.doctor.pk }}&date_str={{ slot.start_datetime|date:'Y-m-d' }}&start_time_str={{ slot.start_datetime|time:'H:i' }}&end_time_str={{ slot.end_datetime|time:'H:i' }}"> 
+                                Забронировать
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>К сожалению, на выбранную дату для данной услуги свободных мест не найдено.</p> 
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

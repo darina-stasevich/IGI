@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if current_category %}
+    Услуги: {{ current_category.name }}
+  {% else %}
+    Все услуги
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div>
+  <h1>
+    {% if current_category %}
+      Услуги в категории: {{ current_category.name }}
+    {% else %}
+      Все услуги
+    {% endif %}
+  </h1>
+  <hr>
+
+  <div>
+    <aside>
+      <h4>Категории услуг</h4>
+      <ul>
+        <li>
+          <a href="{% url 'service_list' %}">
+            Все категории
+          </a>
+        </li>
+        {% for category in categories %}
+          <li>
+            <a href="{% url 'service_list' %}?category_id={{ category.id }}">
+              {{ category.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <main> 
+      {% if services %}
+        {% for service in services %}
+          <div> 
+            <div> 
+              <h4>{{ service.name }}</h4> 
+              {% if not current_category %}
+                <h6>Категория: {{ service.category.name }}</h6> 
+              {% endif %}
+              <p>{{ service.description|linebreaksbr }}</p> 
+              <p><strong>Стоимость:</strong> {{ service.price }} руб.</p> 
+              <p><strong>Длительность:</strong> {{ service.duration_minutes }} минут</p> 
+              {% if service.office_number %}
+                <p><strong>Кабинет:</strong> {{ service.office_number }}</p> 
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>В данной категории пока нет услуг или услуги не найдены.</p>
+      {% endif %}
+    </main>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Словарь терминов (FAQ) - Клиника "Здоровье"{% endblock %}
+
+{% block content_title %}Словарь терминов и понятий (FAQ){% endblock %}
+
+{% block content %}
+    {% if faq_items %}
+        <div class="faq-list-container">
+            {% for item in faq_items %}
+                <div class="faq-item" style="margin-bottom: 25px;">
+                    <h4 class="faq-question" style="margin-bottom: 5px;">
+                        {{ item.question }}
+                    </h4>
+                    <div class="faq-answer" style="padding-left: 15px; border-left: 3px solid #eee;">
+                        {{ item.answer|linebreaksbr }}
+                    </div>
+                    <p style="font-size: 0.85em; color: #888; margin-top: 5px;">
+                        Добавлено: {{ item.date_added|date:"d F Y" }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В данный момент в словаре нет записей. Пожалуйста, зайдите позже.</p>
+    {% endif %}
+{% endblock %}
