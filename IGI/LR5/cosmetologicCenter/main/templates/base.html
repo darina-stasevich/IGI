@@ -46,7 +46,7 @@
         </div>
     </header>
 
-    <nav> {# Был class="main-nav" #}
+    <nav>
         <ul>
             <li><a href="{% url 'home' %}" {% if request.resolver_match.view_name == 'home' %}{% endif %}>Главная</a>
             </li>
@@ -226,10 +226,6 @@
 
 <footer> 
     <p>&copy; {% now "Y" %} Клиника "Здоровье". Все права защищены.</p>
-    <p id="current-time-info">
-        UTC: {{ current_time_utc|date:"H:i" }} | Лок.
-        ({{ user_active_timezone_name }}): {{ current_time_local|date:"H:i" }}
-    </p>
 </footer>
 
 <script src="{% static 'js/timezone.js' %}"></script>
