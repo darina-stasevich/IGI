@@ -11,7 +11,7 @@
         {% if company_profile.logo %}
             <img src="{{ company_profile.logo.url }}" alt="Логотип компании">
         {% elif company_profile.logo_url %}
-             <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
+            <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
         {% endif %}
     {% endif %}
 
@@ -20,87 +20,95 @@
 
     {# --- НАЧАЛО БЛОКА КАРУСЕЛИ --- #}
     {% if banner_images %}
-    <style>
-        .carousel-container {
-            position: relative;
-            max-width: 800px;
-            overflow: hidden;
-        }
-        .carousel-slide {
-            display: none;
-        }
-        .carousel-slide img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .carousel-slide.active {
-            display: block;
-        }
-        .carousel-prev, .carousel-next {
-            position: absolute;
-            top: 50%;
-            width: auto;
-        }
-        .carousel-prev {
-            left: 0;
-        }
-        .carousel-next {
-            right: 0;
-        }
-    </style>
+        <style>
+            .carousel-container {
+                position: relative;
+                max-width: 800px;
+                overflow: hidden;
+            }
 
-    <div class="carousel-container">
-        {% for image_path in banner_images %}
-        <div class="carousel-slide {% if forloop.first %}active{% endif %}">
-            <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}">
+            .carousel-slide {
+                display: none;
+            }
+
+            .carousel-slide img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .carousel-slide.active {
+                display: block;
+            }
+
+            .carousel-prev, .carousel-next {
+                position: absolute;
+                top: 50%;
+                width: auto;
+            }
+
+            .carousel-prev {
+                left: 0;
+            }
+
+            .carousel-next {
+                right: 0;
+            }
+        </style>
+
+        <div class="carousel-container">
+            {% for image_path in banner_images %}
+                <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+                    <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}">
+                </div>
+            {% endfor %}
+
+            <button class="carousel-prev" onclick="changeSlide(-1)"><</button>
+            <button class="carousel-next" onclick="changeSlide(1)">></button>
         </div>
-        {% endfor %}
 
-        <button class="carousel-prev" onclick="changeSlide(-1)"><</button>
-        <button class="carousel-next" onclick="changeSlide(1)">></button>
-    </div>
+        <script>
+            let slideIndex = 0;
+            const slides = document.querySelectorAll(".carousel-slide");
 
-    <script>
-        let slideIndex = 0;
-        const slides = document.querySelectorAll(".carousel-slide");
-
-        function showSlide(n) {
-            slides.forEach((slide) => slide.classList.remove("active"));
-            slides[n].classList.add("active");
-        }
-
-        function changeSlide(n) {
-            slideIndex += n;
-            if (slideIndex >= slides.length) {
-                slideIndex = 0; // Возврат к первому слайду
+            function showSlide(n) {
+                slides.forEach((slide) => slide.classList.remove("active"));
+                slides[n].classList.add("active");
             }
-            if (slideIndex < 0) {
-                slideIndex = slides.length - 1; // Переход к последнему
+
+            function changeSlide(n) {
+                slideIndex += n;
+                if (slideIndex >= slides.length) {
+                    slideIndex = 0; // Возврат к первому слайду
+                }
+                if (slideIndex < 0) {
+                    slideIndex = slides.length - 1; // Переход к последнему
+                }
+                showSlide(slideIndex);
             }
+
             showSlide(slideIndex);
-        }
-        showSlide(slideIndex);
-    </script>
+        </script>
     {% endif %}
 
     {% if latest_services %}
-    <div>
-        <h2>Наши услуги</h2>
         <div>
-            {% for service in latest_services %}
-                <div>
-                    {% include "_service_card.html" with service=service show_category=True %}
-                </div>
-            {% endfor %}
+            <h2>Наши услуги</h2>
+            <div>
+                {% for service in latest_services %}
+                    <div>
+                        {% include "_service_card.html" with service=service show_category=True %}
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'service_list' %}">Посмотреть все услуги &rarr;</a>
         </div>
-        <a href="{% url 'service_list' %}">Посмотреть все услуги &rarr;</a>
-    </div>
     {% endif %}
 
     {% if latest_article %}
         <div>
-            <h3>Последняя новость: <a href="{% url 'article_detail' latest_article.slug %}">{{ latest_article.title }}</a></h3>
+            <h3>Последняя новость: <a
+                    href="{% url 'article_detail' latest_article.slug %}">{{ latest_article.title }}</a></h3>
 
             {% if latest_article.image %}
                 <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}">
@@ -120,7 +128,8 @@
     <p>Используйте навигацию для доступа к другим разделам сайта.</p>
 
     {% if not user.is_authenticated %}
-        <p>Пожалуйста, <a href="{% url 'user_login' %}">войдите</a> или <a href="{% url 'client_register' %}">зарегистрируйтесь</a>.</p>
+        <p>Пожалуйста, <a href="{% url 'user_login' %}">войдите</a> или <a href="{% url 'client_register' %}">зарегистрируйтесь</a>.
+        </p>
     {% else %}
         <p>Вы вошли как: {{ user.username }}.</p>
         {% if user.profile %}
@@ -133,6 +142,26 @@
         {% else %}
             <p>Профиль пользователя не найден.</p>
         {% endif %}
+    {% endif %}
+
+    {% if partners %}
+        <div style="text-align: center">
+        <hr>
+            <h2>Наши партнеры</h2>
+            <div style="display: flex; justify-content: center; gap: 40px;">
+
+                {% for partner in partners %}
+                    <div class="partner-logo">
+                        <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ partner.name }}">
+                            <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}"
+                                 style="max-height: 80px; max-width: 150px;">
+                        </a>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
     {% endif %}
 
 {% endblock %}

@@ -581,3 +581,35 @@ class Vacancy(models.Model):
         verbose_name = "Вакансия"
         verbose_name_plural = "Вакансии"
         ordering = ['-date_posted']
+
+class PartnerCompany(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Название компании"
+    )
+    website_url = models.URLField(
+        verbose_name="Ссылка на сайт",
+        help_text="Полный URL-адрес сайта партнера (например, https://example.com)"
+    )
+    logo = models.ImageField(
+        upload_to='partners_logos/',
+        verbose_name="Логотип",
+        help_text="Загрузите изображение логотипа"
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Краткое описание (необязательно)"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен",
+        help_text="Снимите галочку, чтобы скрыть партнера с сайта, не удаляя его"
+    )
+
+    class Meta:
+        verbose_name = "Компания-партнер"
+        verbose_name_plural = "Компании-партнеры"
+        ordering = ['name'] # Сортировка по имени по умолчанию
+
+    def __str__(self):
+        return self.name

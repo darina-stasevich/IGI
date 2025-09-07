@@ -29,7 +29,7 @@ from .forms import ClientRegistrationForm, DoctorRegistrationForm, UserLoginForm
     DoctorLeaveRequestForm, DoctorDayOffRequestForm, AppointmentNotesForm
 from .models import UserProfile, Client, Appointment, ServiceCategory, Service, Review, Doctor, DoctorLeave, \
     DoctorAvailabilityOverride, DoctorWeeklyAvailabilitySlot, PromoCode, Article, CompanyProfile, FaqItem, \
-    NonDoctorStaffContact, Vacancy
+    NonDoctorStaffContact, Vacancy, PartnerCompany
 
 
 # ---------- Аутентификация ----------
@@ -751,12 +751,15 @@ def home_view(request):
 
     services_queryset = Service.objects.select_related('category')[:3]
 
+    active_partners = PartnerCompany.objects.filter(is_active=True)
+
     context = {
         'welcome_message': welcome_message,
         'latest_article': latest_article,
         'company_profile': company_profile,
         'banner_images': banner_image_paths,
         'latest_services': services_queryset,
+        'partners': active_partners,
     }
     return render(request, 'home.html', context)
 
