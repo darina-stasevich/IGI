@@ -137,6 +137,12 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{% url 'cart_view' %}"
+                               {% if request.resolver_match.view_name == 'cart_view' %}{% endif %}>
+                                Корзина
+                            </a>
+                        </li>
+                        <li>
                             <a href="{% url 'client_appointments' %}"
                                {% if request.resolver_match.view_name == 'client_appointments' %}{% endif %}>
                                 Мои записи

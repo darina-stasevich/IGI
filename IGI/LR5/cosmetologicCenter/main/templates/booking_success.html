@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заказ успешно оплачен{% endblock %}
+
+{% block content_title %}Спасибо за ваш заказ!{% endblock %}
+
+{% block content %}
+<div>
+
+    <h2>Оплата прошла успешно!</h2>
+    <p>
+        Ваши записи были успешно подтверждены и оплачены.
+    </p>
+    <p>
+        Всю информацию о предстоящих визитах вы можете найти в вашем личном кабинете.
+    </p>
+
+    <div>
+        <a href="{% url 'client_appointments' %}" class="btn btn-primary">
+            Перейти в мои записи
+        </a>
+
+        <a href="{% url 'home' %}">
+            Вернуться на главную
+        </a>
+    </div>
+
+</div>
+{% endblock %}

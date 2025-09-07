@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оплата заказа{% endblock %}
+
+{% block content_title %}Подтверждение и оплата{% endblock %}
+
+{% block content %}
+<div>
+
+    <div>
+        <h3>Детали заказа</h3>
+        <p>
+            Количество услуг для оплаты: <strong>{{ items_count }} шт.</strong>
+        </p>
+        <p>
+            К оплате: {{ total_price }} руб.
+        </p>
+    </div>
+
+    <div>
+        <h4>Это страница-симулятор оплаты</h4>
+        <p>Для завершения бронирования, пожалуйста, нажмите на кнопку "Оплатить" ниже.</p>
+        <p>Реальная платежная система не подключена.</p>
+
+        <form action="{% url 'process_payment' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">
+                Оплатить {{ total_price }} руб.
+            </button>
+        </form>
+
+    </div>
+
+    <div>
+        <a href="{% url 'cart_view' %}">&larr; Вернуться в корзину</a>
+    </div>
+
+</div>
+{% endblock %}

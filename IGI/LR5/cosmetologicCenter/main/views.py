@@ -8,6 +8,7 @@ import io
 import base64
 import matplotlib
 from django.conf import settings
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import requests
@@ -388,7 +389,7 @@ def booking_confirmation_view(request):
     return render(request, 'booking_confirmation.html', context)
 
 @login_required
-def create_appointment_view(request):
+def add_to_cart_view(request):
     if request.method != 'POST':
         messages.error(request, "Недопустимый метод запроса.")
         return redirect('find_available_slots')
@@ -405,7 +406,7 @@ def create_appointment_view(request):
 
     form = AppointmentNotesForm(request.POST)
     print(
-        f"[DEBUG create_appointment_view] Raw POST data for datetimes: start='{request.POST.get('start_datetime')}', end='{request.POST.get('end_datetime')}'")
+        f"[DEBUG add_to_cart_view] Raw POST data for datetimes: start='{request.POST.get('start_datetime')}', end='{request.POST.get('end_datetime')}'")
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
@@ -453,12 +454,9 @@ def create_appointment_view(request):
             )
             appointment.save()
 
-            doctor_display_name = doctor.user_profile.user.get_full_name()
-            if not doctor_display_name:
-                doctor_display_name = doctor.user_profile.user.username
             messages.success(request,
-                             f"Вы успешно записаны на услугу '{service.name}' к врачу {doctor_display_name} на {timezone.localtime(start_datetime).strftime('%d.%m.%Y в %H:%M')}.")
-            return redirect('client_appointments')
+                                 f"Услуга '{service.name}' добавлена в корзину. Вы можете продолжить выбор или перейти к оплате.")
+            return redirect('cart_view')
 
         except (ValueError, Service.DoesNotExist, Doctor.DoesNotExist) as e:
             messages.error(request, f"Ошибка при создании записи: {e}. Попробуйте снова.")
@@ -1303,3 +1301,58 @@ def service_detail_view(request, pk):
         'service': service
     }
     return render(request, 'service_detail.html', context)
+
+@login_required
+def cart_view(request):
+
+    cart_items = Appointment.objects.filter(
+        client_id=request.user.profile.id,
+        status='booked'
+    ).order_by('start_datetime')
+
+    total_price = sum(item.price_at_booking for item in cart_items)
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+    return render(request, 'cart_detail.html', context)
+
+@login_required
+def remove_from_cart_view(request, appointment_id):
+    item_to_delete = get_object_or_404(
+        Appointment,
+        pk=appointment_id,
+        client_id=request.user.profile.id,
+        status='booked'
+    )
+    item_to_delete.delete()
+    return redirect('cart_view')
+
+
+@login_required
+def payment_page_view(request):
+    cart_items = Appointment.objects.filter(client_id=request.user.profile.id, status='booked')
+    if not cart_items.exists():
+        return redirect('cart_view')
+
+    total_price = sum(item.price_at_booking for item in cart_items)
+    context = {'total_price': total_price, 'items_count': cart_items.count()}
+    return render(request, 'payment.html', context)
+
+
+@login_required
+@transaction.atomic
+def process_payment_view(request):
+    if request.method == 'POST':
+        items_to_pay = Appointment.objects.filter(client_id=request.user.profile.id, status='booked')
+
+        items_to_pay.update(status='paid')
+
+        return redirect('booking_success')
+    return redirect('home')
+
+
+@login_required
+def booking_success_view(request):
+    return render(request, 'booking_success.html')

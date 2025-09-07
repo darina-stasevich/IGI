@@ -281,6 +281,7 @@ class DoctorLeave(models.Model):
 class Appointment(models.Model):
     STATUS_CHOICES = [
         ('booked', 'Забронировано'),
+        ('paid', 'Оплачено'),
         ('completed', 'Завершено'),
         ('cancelled_by_client', 'Отменено клиентом'),
         ('cancelled_by_clinic', 'Отменено клиникой'),
