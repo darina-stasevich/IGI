@@ -246,6 +246,7 @@ def cancel_appointment_view(request, appointment_id):
 
     return redirect('client_appointments')
 
+@login_required
 def add_review_view(request):
     try:
         if not hasattr(request.user, 'profile'):
