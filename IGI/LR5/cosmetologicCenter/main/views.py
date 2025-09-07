@@ -1065,6 +1065,15 @@ def article_list_view(request):
     return render(request, 'article_list.html', context)
 
 
+def article_detail_view(request, slug):
+    article = get_object_or_404(Article, slug=slug, is_published=True)
+
+    context = {
+        'article': article,
+    }
+    return render(request, 'article_detail.html', context)
+
+
 def faq_list_view(request):
     if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.role == 'doctor':
         return redirect('home')
@@ -1075,7 +1084,6 @@ def faq_list_view(request):
         'faq_items': faq_items,
     }
     return render(request, 'faq_list.html', context)
-
 
 def contacts_view(request):
     if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.role == 'doctor':
@@ -1096,6 +1104,7 @@ def contacts_view(request):
     }
     return render(request, 'contacts.html', context)
 
+
 def privacy_policy_view(request):
     if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.role == 'doctor':
         return redirect('home')
@@ -1114,7 +1123,6 @@ def vacancy_list_view(request):
         'vacancies': vacancies,
     }
     return render(request, 'vacancy_list.html', context)
-
 
 def public_statistics_view(request):
     if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.role == 'doctor':
@@ -1237,6 +1245,7 @@ def public_statistics_view(request):
     }
 
     return render(request, 'public_statistics.html', context)
+
 
 def http_cat_view(request):
     context = {

@@ -6,6 +6,7 @@ urlpatterns = [
     re_path(r'^$', views.home_view, name='home'),
     re_path(r'^about/$', views.about_company_view, name='about_company'),
     re_path(r'^articles/$', views.article_list_view, name='article_list'),
+    path('articles/<slug:slug>/', views.article_detail_view, name='article_detail'),
     re_path(r'^faq/$', views.faq_list_view, name='faq_list'),
     re_path(r'^contacts/$', views.contacts_view, name='contacts'),
     re_path(r'^privacy-policy/$', views.privacy_policy_view, name='privacy_policy'),

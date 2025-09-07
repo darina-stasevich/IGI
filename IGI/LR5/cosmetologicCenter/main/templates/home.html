@@ -100,7 +100,7 @@
 
     {% if latest_article %}
         <div>
-            <h3>Последняя новость: <a href="#">{{ latest_article.title }}</a></h3>
+            <h3>Последняя новость: <a href="{% url 'article_detail' latest_article.slug %}">{{ latest_article.title }}</a></h3>
 
             {% if latest_article.image %}
                 <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}">

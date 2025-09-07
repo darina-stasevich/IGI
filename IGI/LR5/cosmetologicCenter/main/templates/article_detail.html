@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ article.title }} - Новости{% endblock %}
+
+{% block content_title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+    <div>
+        <p>
+            Опубликовано: {{ article.published_date|date:"d F Y, H:i" }}
+            {% if article.author %}
+                | Автор: {{ article.author.get_full_name|default:article.author.username }}
+            {% endif %}
+        </p>
+        <hr>
+        {% if article.image %}
+            <img src="{{ article.image.url }}" alt="{{ article.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+        {% elif article.image_url %}
+            <img src="{{ article.image_url }}" alt="{{ article.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+        {% endif %}
+        <div class="article-full-content">
+            {{ article.full_content|linebreaksbr }}
+        </div>
+        <a href="{% url 'article_list' %}">&larr; Вернуться к списку новостей</a>
+    </div>
+{% endblock %}
