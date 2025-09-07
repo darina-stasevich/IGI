@@ -10,25 +10,30 @@ class CookieTimezoneMiddleware:
 
     def __call__(self, request):
 
-
         if request.path.startswith('/admin/'):
-            default_tz = pytz.timezone(settings.TIME_ZONE)
-            timezone.activate(default_tz)
-            request.activated_timezone_name = settings.TIME_ZONE
+            try:
+                default_tz = pytz.timezone(settings.TIME_ZONE)
+                timezone.activate(default_tz)
+                request.activated_timezone_name = settings.TIME_ZONE
+            except Exception as e:
+                print(f"ADMIN_PATH: CRITICAL ERROR trying to activate settings.TIME_ZONE '{settings.TIME_ZONE}': {e}")
         else:
 
             user_timezone_from_cookie_raw = request.COOKIES.get('user_timezone')
 
-            activated_timezone_name_for_request = str(timezone.get_default_timezone())
             final_activated_tz_str = None
 
-            user_timezone_decoded = urllib.parse.unquote(user_timezone_from_cookie_raw)
+            if user_timezone_from_cookie_raw:
+                user_timezone_decoded = urllib.parse.unquote(user_timezone_from_cookie_raw)
 
-            tz_object_for_activation = pytz.timezone(user_timezone_decoded)
-            test_naive_dt = datetime(2025, 5, 25, 15, 0, 0)
-            test_aware_dt = tz_object_for_activation.localize(test_naive_dt)
-
-            final_activated_tz_str = user_timezone_decoded
+                try:
+                    final_activated_tz_str = user_timezone_decoded
+                except pytz.exceptions.UnknownTimeZoneError:
+                    print(f"  ERROR: Decoded timezone '{user_timezone_decoded}' is UNKNOWN to pytz.")
+                except Exception as e:
+                    print(f"  ERROR: An unexpected error occurred with pytz.timezone('{user_timezone_decoded}'): {e}")
+            else:
+                print("  'user_timezone' cookie was not found or is empty.")
 
             if final_activated_tz_str:
                 try:
@@ -42,7 +47,5 @@ class CookieTimezoneMiddleware:
                 activated_timezone_name_for_request = str(timezone.get_default_timezone())
 
             request.activated_timezone_name = activated_timezone_name_for_request
-
         response = self.get_response(request)
-
         return response

@@ -18,7 +18,7 @@ def validate_age_18_plus(date_of_birth):
     if today.month > date_of_birth.month:
         return
     if today.month < date_of_birth.month:
-        raise ValidationError("Регистрация разрешена только для пользователей старше 18 лет.", code='age_too_yound')
+        raise ValidationError("Регистрация разрешена только для пользователей старше 18 лет.", code='age_too_young')
 
     #today.month = date_of_birth.month
     if today.day > date_of_birth.day:
