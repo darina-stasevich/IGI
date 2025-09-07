@@ -6,7 +6,97 @@
 {% block content_title %}Добро пожаловать!{% endblock %}
 
 {% block content %}
+
+    {% if company_profile %}
+        {% if company_profile.logo %}
+            <img src="{{ company_profile.logo.url }}" alt="Логотип компании">
+        {% elif company_profile.logo_url %}
+             <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
+        {% endif %}
+    {% endif %}
+
+
     <p>{{ welcome_message }}</p>
+
+    {# --- НАЧАЛО БЛОКА КАРУСЕЛИ --- #}
+    {% if banner_images %}
+    <style>
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        .carousel-slide {
+            display: none;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+        .carousel-prev, .carousel-next {
+            position: absolute;
+            top: 50%;
+            width: auto;
+        }
+        .carousel-prev {
+            left: 0;
+        }
+        .carousel-next {
+            right: 0;
+        }
+    </style>
+
+    <div class="carousel-container">
+        {% for image_path in banner_images %}
+        <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+            <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}">
+        </div>
+        {% endfor %}
+
+        <button class="carousel-prev" onclick="changeSlide(-1)"><</button>
+        <button class="carousel-next" onclick="changeSlide(1)">></button>
+    </div>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll(".carousel-slide");
+
+        function showSlide(n) {
+            slides.forEach((slide) => slide.classList.remove("active"));
+            slides[n].classList.add("active");
+        }
+
+        function changeSlide(n) {
+            slideIndex += n;
+            if (slideIndex >= slides.length) {
+                slideIndex = 0; // Возврат к первому слайду
+            }
+            if (slideIndex < 0) {
+                slideIndex = slides.length - 1; // Переход к последнему
+            }
+            showSlide(slideIndex);
+        }
+        showSlide(slideIndex);
+    </script>
+    {% endif %}
+
+    {% if latest_services %}
+    <div>
+        <h2>Наши услуги</h2>
+        <div>
+            {% for service in latest_services %}
+                <div>
+                    {% include "_service_card.html" with service=service show_category=True %}
+                </div>
+            {% endfor %}
+        </div>
+        <a href="{% url 'service_list' %}">Посмотреть все услуги &rarr;</a>
+    </div>
+    {% endif %}
 
     {% if latest_article %}
         <div>

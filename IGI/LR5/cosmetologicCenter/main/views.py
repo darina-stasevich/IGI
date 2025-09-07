@@ -1,4 +1,5 @@
 import datetime
+import os
 import statistics
 import pytz
 import matplotlib.pyplot as plt
@@ -6,6 +7,7 @@ import matplotlib.dates as mdates
 import io
 import base64
 import matplotlib
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import requests
@@ -731,10 +733,31 @@ def home_view(request):
 
     welcome_message = "Добро пожаловать в нашу клинику 'Здоровье'!"
 
+    company_profile = CompanyProfile.objects.first()
+
+    banner_image_paths = []
+    try:
+        banners_dir = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'banners')
+
+        if os.path.isdir(banners_dir):
+            files = sorted(os.listdir(banners_dir))
+
+            image_files = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+
+            banner_image_paths = [os.path.join('images', 'banners', f) for f in image_files]
+
+    except (IndexError, FileNotFoundError):
+        pass
+
+    services_queryset = Service.objects.select_related('category')[:3]
+
     context = {
         'welcome_message': welcome_message,
         'latest_article': latest_article,
-  }
+        'company_profile': company_profile,
+        'banner_images': banner_image_paths,
+        'latest_services': services_queryset,
+    }
     return render(request, 'home.html', context)
 
 
