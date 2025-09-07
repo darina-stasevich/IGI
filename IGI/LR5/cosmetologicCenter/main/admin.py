@@ -365,6 +365,10 @@ class CompanyProfileAdmin(admin.ModelAdmin):
         ('Основная информация', {
             'fields': ('main_info_title', 'main_info_text', 'logo_url', 'video_url')
         }),
+        ('Лицензии и сертификаты (опционально)', {
+            'classes': ('collapse',),
+            'fields': ('certificate_title', 'certificate_static_path')
+        }),
         ('История компании (опционально)', {
             'classes': ('collapse',),
             'fields': ('history_title', 'history_text')
@@ -379,13 +383,10 @@ class CompanyProfileAdmin(admin.ModelAdmin):
     )
 
     def has_add_permission(self, request):
-        # Разрешить добавление только если еще нет ни одной записи
         return not CompanyProfile.objects.exists()
 
     def has_delete_permission(self, request, obj=None):
-        # Запретить удаление, если это единственный объект (для singleton-подобного поведения)
-        # return False # Раскомментируйте, если хотите полностью запретить удаление
-        return True  # Пока оставим возможность удаления
+        return True
 
 
 # --- Админка для Статей (Новостей) ---

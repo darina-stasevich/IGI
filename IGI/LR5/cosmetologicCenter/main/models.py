@@ -1,4 +1,5 @@
 from decimal import Decimal
+from urllib.parse import urlparse, parse_qs
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -437,6 +438,19 @@ class CompanyProfile(models.Model):
     )
     requisites_text = models.TextField(blank=True, verbose_name="Текст реквизитов")
 
+    certificate_title = models.CharField(
+        max_length=200,
+        default="Лицензии и сертификаты",
+        blank=True,
+        verbose_name="Заголовок блока 'Сертификаты'"
+    )
+    certificate_static_path = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Путь к файлу сертификата в папке static",
+        help_text="Например: 'main/certificates/certificate.pdf'"
+    )
+
     logo_url = models.URLField(verbose_name="URL логотипа", blank=True, null=True)
     video_url = models.URLField(verbose_name="URL видео (например, YouTube, Vimeo)", blank=True, null=True)
 
@@ -448,6 +462,30 @@ class CompanyProfile(models.Model):
     class Meta:
         verbose_name = "Профиль компании"
 
+    # --- ВОТ НЕДОСТАЮЩИЙ МЕТОД ---
+    def get_embed_url(self):
+        if not self.video_url:
+            return None
+
+        url_data = urlparse(self.video_url)
+
+        if "youtube.com" in url_data.netloc:
+            query = parse_qs(url_data.query)
+            video_id = query.get("v", [None])[0]
+            if video_id:
+                return f"https://www.youtube.com/embed/{video_id}"
+
+        elif "youtu.be" in url_data.netloc:
+            video_id = url_data.path.lstrip('/')
+            if video_id:
+                return f"https://www.youtube.com/embed/{video_id}"
+
+        elif "vimeo.com" in url_data.netloc:
+            video_id = url_data.path.lstrip('/')
+            if video_id.isdigit():
+                return f"https://player.vimeo.com/video/{video_id}"
+
+        return None
 
 class Article(models.Model):
     title = models.CharField(max_length=50, verbose_name="Заголовок")
