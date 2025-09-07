@@ -9,20 +9,41 @@
     {% if faq_items %}
         <div class="faq-list-container">
             {% for item in faq_items %}
-                <div class="faq-item" style="margin-bottom: 25px;">
-                    <h4 class="faq-question" style="margin-bottom: 5px;">
+                <div class="faq-item">
+
+                    <h4 class="faq-question-toggle" style="cursor: pointer; margin-bottom: 10px;">
                         {{ item.question }}
                     </h4>
-                    <div class="faq-answer" style="padding-left: 15px; border-left: 3px solid #eee;">
-                        {{ item.answer|linebreaksbr }}
+
+                    <div class="faq-answer-content" style="display: none;">
+                        <p>{{ item.answer|linebreaksbr }}</p>
+                        <p>
+                            Добавлено: {{ item.date_added|date:"d F Y" }}
+                        </p>
                     </div>
-                    <p style="font-size: 0.85em; color: #888; margin-top: 5px;">
-                        Добавлено: {{ item.date_added|date:"d F Y" }}
-                    </p>
+
                 </div>
+                <hr>
             {% endfor %}
         </div>
     {% else %}
-        <p>В данный момент в словаре нет записей. Пожалуйста, зайдите позже.</p>
+        <p>В данный момент в этом разделе нет записей. Пожалуйста, зайдите позже.</p>
     {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqToggles = document.querySelectorAll('.faq-question-toggle');
+
+            faqToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const answerContent = toggle.nextElementSibling;
+                    if (answerContent.style.display === 'none') {
+                        answerContent.style.display = 'block';
+                    } else {
+                        answerContent.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
