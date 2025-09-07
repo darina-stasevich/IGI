@@ -34,17 +34,11 @@
             <main>
                 {% if services %}
                     {% for service in services %}
-                        {# --- ИСПРАВЛЕННЫЙ БЛОК --- #}
-                        {# Сначала создаем переменную show_cat с помощью {% with %} #}
-                        {# Используем IF для принятия решения #}
                         {% if current_category %}
-                            {# Если мы находимся внутри категории, мы НЕ хотим показывать ее название в каждой карточке #}
                             {% include "_service_card.html" with service=service show_category=False %}
                         {% else %}
-                            {# Если мы на странице "Все услуги", то хотим видеть категорию для каждой услуги #}
                             {% include "_service_card.html" with service=service show_category=True %}
                         {% endif %}
-                        {# --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА --- #}
                     {% endfor %}
                 {% else %}
                     <p>В данной категории пока нет услуг или услуги не найдены.</p>

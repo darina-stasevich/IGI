@@ -1295,3 +1295,11 @@ def http_cat_view(request):
             context['error_message'] = "Пожалуйста, введите число (например, HTTP статус-код)."
 
     return render(request, 'http_cat_page.html', context)
+
+def service_detail_view(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+
+    context = {
+        'service': service
+    }
+    return render(request, 'service_detail.html', context)

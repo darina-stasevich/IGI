@@ -23,6 +23,7 @@ urlpatterns = [
     # Маршрут с параметром (appointment_id)
     re_path(r'^cancel-appointment/(?P<appointment_id>[0-9]+)/$', views.cancel_appointment_view, name='cancel_appointment'),
     re_path(r'^services/$', views.service_list_view, name='service_list'),
+    path('services/<int:pk>/', views.service_detail_view, name='service_detail'),
     re_path(r'^reviews/$', views.review_list_view, name='review_list'),
     re_path(r'^reviews/add/$', views.add_review_view, name='add_review'),
     re_path(r'^doctor/schedule/$', views.doctor_schedule_view, name='doctor_schedule'),

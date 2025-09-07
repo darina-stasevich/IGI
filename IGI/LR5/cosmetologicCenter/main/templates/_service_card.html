@@ -1,14 +1,21 @@
 <div style="border: 1px solid #eee; margin-bottom: 15px; border-radius: 5px;">
-  <h4>{{ service.name }}</h4>
+    <div>
+        <h4>{{ service.name }}</h4>
+        {% if show_category %}
+            <h5>Категория: {{ service.category.name }}</h5>
+        {% endif %}
 
-  {% if show_category %}
-    <h5>Категория: {{ service.category.name }}</h5>
-  {% endif %}
+        <p>{{ service.description|linebreaksbr }}</p>
+        <p><strong>Стоимость:</strong> {{ service.price }} руб.</p>
+        <p><strong>Длительность:</strong> {{ service.duration_minutes }} минут</p>
+        {% if service.office_number %}
+            <p><strong>Кабинет:</strong> {{ service.office_number }}</p>
+        {% endif %}
+    </div>
 
-  <p>{{ service.description|linebreaksbr }}</p>
-  <p><strong>Стоимость:</strong> {{ service.price }} руб.</p>
-  <p><strong>Длительность:</strong> {{ service.duration_minutes }} минут</p>
-  {% if service.office_number %}
-    <p><strong>Кабинет:</strong> {{ service.office_number }}</p>
-  {% endif %}
+    <div>
+        <a href="{% url 'service_detail' service.pk %}">
+            Подробнее и запись
+        </a>
+    </div>
 </div>
