@@ -367,7 +367,7 @@ class CompanyProfileAdmin(admin.ModelAdmin):
         }),
         ('Лицензии и сертификаты (опционально)', {
             'classes': ('collapse',),
-            'fields': ('certificate_title', 'certificate_static_path')
+            'fields': ('certificate_title', 'certificate_text')
         }),
         ('История компании (опционально)', {
             'classes': ('collapse',),

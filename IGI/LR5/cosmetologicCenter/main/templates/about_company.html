@@ -54,21 +54,16 @@
             <pre>{{ company_profile.requisites_text }}</pre>
         {% endif %}
 
-        {% if company_profile.certificate_static_path %}
+        {% if company_profile.certificate_text %}
             <div>
-                <h3>{{ company_profile.certificate_title }}</h3>
-                <div>
-
-                    {% static company_profile.certificate_static_path as certificate_url %}
-                    {% if certificate_url|lower|slice:"-4:" in ".jpg.jpeg.png.gif" %}
-                        <a href="{{ certificate_url }}" target="_blank">
-                            <img src="{{ certificate_url }}"
-                                 alt="{{ company_profile.certificate_description|default:'Сертификат' }}">
-                        </a>
-                    {% else %}
-                        <p>📄</p>
-                    {% endif %}
-                </div>
+                {% if company_profile.certificate_text %}
+                    <div>
+                        <h3>{{ company_profile.certificate_title }}</h3>
+                        <div>
+                            {{ company_profile.certificate_text }}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         {% endif %}
 

@@ -444,12 +444,12 @@ class CompanyProfile(models.Model):
         blank=True,
         verbose_name="Заголовок блока 'Сертификаты'"
     )
-    certificate_static_path = models.CharField(
-        max_length=255,
+    certificate_text = models.TextField(
         blank=True,
-        verbose_name="Путь к файлу сертификата в папке static",
-        help_text="Например: 'main/certificates/certificate.pdf'"
+        verbose_name="Текст сертификата",
+        help_text="Содержимое сертификата в виде текста (можно вставить из PDF/скана после распознавания)."
     )
+
 
     logo_url = models.URLField(verbose_name="URL логотипа", blank=True, null=True)
     video_url = models.URLField(verbose_name="URL видео (например, YouTube, Vimeo)", blank=True, null=True)
@@ -462,7 +462,6 @@ class CompanyProfile(models.Model):
     class Meta:
         verbose_name = "Профиль компании"
 
-    # --- ВОТ НЕДОСТАЮЩИЙ МЕТОД ---
     def get_embed_url(self):
         if not self.video_url:
             return None

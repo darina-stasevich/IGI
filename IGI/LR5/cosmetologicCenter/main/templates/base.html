@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="красота, уход, здоровье, пластика, доктор, косметология"/>
     <title>{% block title %}Клиника{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'images/shortcut.ico' %}" type="image/x-icon">
     <style>
@@ -25,7 +26,18 @@
             margin-bottom: 8px;
             color: #333;
         }
+
+        aside {
+            width: 15%;
+            height: 100%;
+            padding-left: 15px;
+            margin-left: 15px;
+            float: right;
+            font-style: italic;
+            background-color: lightgray;
+        }
     </style>
+
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -45,168 +57,6 @@
                 <a href="{% url 'doctor_register' %}">Регистрация врача</a>
             {% endif %}
         </div>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}" {% if request.resolver_match.view_name == 'home' %}{% endif %}>Главная</a>
-            </li>
-
-            {% if not user.is_authenticated or user.profile.role != 'doctor' %}
-                <li>
-                    <a href="{% url 'about_company' %}"
-                       {% if request.resolver_match.view_name == 'about_company' %}{% endif %}>
-                        О компании
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'article_list' %}"
-                       {% if request.resolver_match.view_name == 'article_list' %}{% endif %}>
-                        Новости
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'faq_list' %}"
-                       {% if request.resolver_match.view_name == 'faq_list' %}{% endif %}>
-                        FAQ
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'service_list' %}"
-                       {% if request.resolver_match.view_name == 'service_list' %}{% endif %}>
-                        Услуги
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'find_available_slots' %}"
-                       {% if request.resolver_match.view_name == 'find_available_slots' %}{% endif %}>
-                        Запись на услугу
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'review_list' %}"
-                       {% if request.resolver_match.view_name == 'review_list' %}{% endif %}>
-                        Отзывы
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'public_promo_code_list' %}"
-                       {% if request.resolver_match.view_name == 'public_promo_code_list' %}{% endif %}>
-                        Акции и промокоды
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'contacts' %}"
-                       {% if request.resolver_match.view_name == 'contacts' %}{% endif %}>
-                        Контакты
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'vacancy_list' %}"
-                       {% if request.resolver_match.view_name == 'vacancy_list' %}{% endif %}>
-                        Вакансии
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'privacy_policy' %}"
-                       {% if request.resolver_match.view_name == 'privacy_policy' %}{% endif %}>
-                        Политика конфиденциальности
-                    </a>
-                </li>
-                 <li>
-                    <a href="{% url 'statistics' %}"
-                       {% if request.resolver_match.view_name == 'statistics' %}{% endif %}>
-                        Статистика
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'http_cat' %}"
-                       {% if request.resolver_match.view_name == 'http_cat' %}{% endif %}>
-                        HTTP Коты
-                    </a>
-                </li>
-            {% endif %}
-
-            {% if user.is_authenticated %}
-                {% if user.profile %}
-                    {% if user.profile.role == 'client' %}
-                        <li>
-                            <a href="{% url 'client_dashboard' %}"
-                               {% if request.resolver_match.view_name == 'client_dashboard' %}{% endif %}>
-                                Мой кабинет
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'cart_view' %}"
-                               {% if request.resolver_match.view_name == 'cart_view' %}{% endif %}>
-                                Корзина
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'client_appointments' %}"
-                               {% if request.resolver_match.view_name == 'client_appointments' %}{% endif %}>
-                                Мои записи
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'client_applied_promo_codes' %}"
-                               {% if request.resolver_match.view_name == 'client_applied_promo_codes' %}{% endif %}>
-                                Мои промокоды
-                            </a>
-                        </li>
-                    {% elif user.profile.role == 'doctor' %}
-                        <li>
-                            <a href="{% url 'doctor_dashboard' %}"
-                               {% if request.resolver_match.view_name == 'doctor_dashboard' %}{% endif %}>
-                                Кабинет врача
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'doctor_schedule' %}"
-                               {% if request.resolver_match.view_name == 'doctor_schedule' %}{% endif %}>
-                                Мое расписание
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'doctor_leave_requests' %}"
-                               {% if request.resolver_match.view_name == 'doctor_leave_requests' %}{% endif %}>
-                                Запросы на отпуск
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'doctor_day_off_requests' %}"
-                               {% if request.resolver_match.view_name == 'doctor_day_off_requests' %}{% endif %}>
-                                Отгул/Сокращенный день
-                            </a>
-                        </li>
-                    {% endif %}
-                {% else %}
-                {% endif %}
-            {% endif %}
-        </ul>
-    </nav>
-
-    <div>
-        <main> 
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% block content_title_block %}
-                <div> 
-                    <h2>{% block content_title %}Заголовок страницы{% endblock %}</h2>
-                </div>
-            {% endblock %}
-
-            {% block content %}
-                <p>Содержимое страницы будет здесь.</p>
-            {% endblock %}
-        </main>
-
         <aside>
             <div id="calendar-widget">
                 {% block calendar_content %}
@@ -227,10 +77,171 @@
             </div>
             {% block sidebar_extra_content %}{% endblock %}
         </aside>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a accesskey="1" href="{% url 'home' %}" {% if request.resolver_match.view_name == 'home' %}{% endif %}>Главная</a>
+            </li>
+
+            {% if not user.is_authenticated or user.profile.role != 'doctor' %}
+                <li>
+                    <a href="{% url 'about_company' %}"
+                            {% if request.resolver_match.view_name == 'about_company' %}{% endif %}>
+                        О компании
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'article_list' %}"
+                            {% if request.resolver_match.view_name == 'article_list' %}{% endif %}>
+                        Новости
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'faq_list' %}"
+                            {% if request.resolver_match.view_name == 'faq_list' %}{% endif %}>
+                        FAQ
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'service_list' %}"
+                            {% if request.resolver_match.view_name == 'service_list' %}{% endif %}>
+                        Услуги
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'find_available_slots' %}" accesskey="6"
+                            {% if request.resolver_match.view_name == 'find_available_slots' %}{% endif %}>
+                        Запись на услугу
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'review_list' %}"
+                            {% if request.resolver_match.view_name == 'review_list' %}{% endif %}>
+                        Отзывы
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'public_promo_code_list' %}"
+                            {% if request.resolver_match.view_name == 'public_promo_code_list' %}{% endif %}>
+                        Акции и промокоды
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'contacts' %}"
+                            {% if request.resolver_match.view_name == 'contacts' %}{% endif %}>
+                        Контакты
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vacancy_list' %}"
+                            {% if request.resolver_match.view_name == 'vacancy_list' %}{% endif %}>
+                        Вакансии
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'privacy_policy' %}"
+                            {% if request.resolver_match.view_name == 'privacy_policy' %}{% endif %}>
+                        Политика конфиденциальности
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'statistics' %}"
+                            {% if request.resolver_match.view_name == 'statistics' %}{% endif %}>
+                        Статистика
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'http_cat' %}"
+                            {% if request.resolver_match.view_name == 'http_cat' %}{% endif %}>
+                        HTTP Коты
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                {% if user.profile %}
+                    {% if user.profile.role == 'client' %}
+                        <li>
+                            <a href="{% url 'client_dashboard' %}"
+                                    {% if request.resolver_match.view_name == 'client_dashboard' %}{% endif %}>
+                                Мой кабинет
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'cart_view' %}"
+                                    {% if request.resolver_match.view_name == 'cart_view' %}{% endif %}>
+                                Корзина
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'client_appointments' %}"
+                                    {% if request.resolver_match.view_name == 'client_appointments' %}{% endif %}>
+                                Мои записи
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'client_applied_promo_codes' %}"
+                                    {% if request.resolver_match.view_name == 'client_applied_promo_codes' %}{% endif %}>
+                                Мои промокоды
+                            </a>
+                        </li>
+                    {% elif user.profile.role == 'doctor' %}
+                        <li>
+                            <a href="{% url 'doctor_dashboard' %}"
+                                    {% if request.resolver_match.view_name == 'doctor_dashboard' %}{% endif %}>
+                                Кабинет врача
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'doctor_schedule' %}"
+                                    {% if request.resolver_match.view_name == 'doctor_schedule' %}{% endif %}>
+                                Мое расписание
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'doctor_leave_requests' %}"
+                                    {% if request.resolver_match.view_name == 'doctor_leave_requests' %}{% endif %}>
+                                Запросы на отпуск
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'doctor_day_off_requests' %}"
+                                    {% if request.resolver_match.view_name == 'doctor_day_off_requests' %}{% endif %}>
+                                Отгул/Сокращенный день
+                            </a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div>
+        <main>
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% block content_title_block %}
+                <div>
+                    <h2>{% block content_title %}Заголовок страницы{% endblock %}</h2>
+                </div>
+            {% endblock %}
+
+            {% block content %}
+                <p>Содержимое страницы будет здесь.</p>
+            {% endblock %}
+        </main>
     </div>
 </div>
 
-<footer> 
+<footer>
     <p>&copy; {% now "Y" %} Клиника "Здоровье". Все права защищены.</p>
 </footer>
 

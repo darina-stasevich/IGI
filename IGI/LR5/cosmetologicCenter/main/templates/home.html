@@ -18,7 +18,6 @@
 
     <p>{{ welcome_message }}</p>
 
-    {# --- НАЧАЛО БЛОКА КАРУСЕЛИ --- #}
     {% if banner_images %}
         <style>
             .carousel-container {
@@ -79,10 +78,10 @@
             function changeSlide(n) {
                 slideIndex += n;
                 if (slideIndex >= slides.length) {
-                    slideIndex = 0; // Возврат к первому слайду
+                    slideIndex = 0;
                 }
                 if (slideIndex < 0) {
-                    slideIndex = slides.length - 1; // Переход к последнему
+                    slideIndex = slides.length - 1;
                 }
                 showSlide(slideIndex);
             }
