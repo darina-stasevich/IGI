@@ -1,15 +1,20 @@
 {% load static %}
 {% load tz %}
 <!DOCTYPE html>
-<html lang="ru" dir="ltr">
+<html lang="ru" dir="ltr" itemscope itemtype="https://schema.org/MedicalBusiness" translate="yes" spellcheck="true">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="красота, уход, здоровье, пластика, доктор, косметология">
     <meta name="description" content="Клиника «Здоровье»: запись на услуги, личный кабинет, контакты, акции и новости.">
     <meta name="theme-color" content="#ffffff">
+
+    <meta itemprop="name" content="Клиника «Здоровье»">
+    <meta itemprop="description" content="Медицинская клиника, предоставляющая услуги красоты, ухода за здоровьем, пластической хирургии и косметологии.">
+
     <title>{% block title %}Клиника{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'images/shortcut.ico' %}" type="image/x-icon">
+
     <style>
         .calendar-text-output {
             font-family: monospace;
@@ -44,17 +49,19 @@
 <body>
 
 <div id="layout">
-    <header id="site-header">
+    <header id="site-header" itemscope itemtype="https://schema.org/WPHeader" tabindex="-1">
         <div>
             <h1>
-                <a href="{% url 'home' %}">{% block site_name %}Клиника "Здоровье"{% endblock %}</a>
+                <a href="{% url 'home' %}" itemprop="url">
+                    <span itemprop="name" translate="no">{% block site_name %}Клиника "Здоровье"{% endblock %}</span>
+                </a>
             </h1>
         </div>
 
         <div>
             <span>Таймзона: {{ user_active_timezone_name|default:"Не определена" }}</span> |
             {% if user.is_authenticated %}
-                Привет, {{ user.first_name|default:user.username }}!
+                Привет, <span itemprop="employee" spellcheck="false">{{ user.first_name|default:user.username }}</span>!
                 <a href="{% url 'user_logout' %}">Выход</a>
             {% else %}
                 <a href="{% url 'user_login' %}">Вход</a> |
@@ -63,27 +70,27 @@
             {% endif %}
         </div>
 
-        <aside id="sidebar" role="complementary">
-            <section id="calendar-widget">
+        <aside id="sidebar" itemscope itemtype="https://schema.org/WPSideBar" tabindex="0" aria-label="Боковая панель">
+            <section id="calendar-widget" itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement">
                 {% block calendar_content %}
                     <div class="calendar-caption"
-                         id="calendar-title">{{ current_local_month_date_obj|date:"F Y" }}</div>
-                    <pre class="calendar-text-output">{{ text_calendar_output }}</pre>
+                         id="calendar-title" tabindex="-1" lang="ru">{{ current_local_month_date_obj|date:"F Y" }}</div>
+                    <pre class="calendar-text-output" spellcheck="false" translate="no">{{ text_calendar_output }}</pre>
                 {% endblock calendar_content %}
             </section>
             <hr>
-            <section>
+            <section itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement">
                 <p>
                     <strong>Время сервера (UTC):</strong><br>
                     {% timezone "UTC" %}
-                        <time datetime="{{ current_time_utc|date:'c' }}">{{ current_time_utc|date:"Y-m-d H:i:s" }}
+                        <time datetime="{{ current_time_utc|date:'c' }}" translate="no">{{ current_time_utc|date:"Y-m-d H:i:s" }}
                             (UTC)
                         </time>
                     {% endtimezone %}
                 </p>
                 <p>
                     <strong>Ваше время ({{ user_active_timezone_name }}):</strong><br>
-                    <time datetime="{{ current_time_local|date:'c' }}">{{ current_time_local|date:"Y-m-d H:i:s" }}
+                    <time datetime="{{ current_time_local|date:'c' }}" translate="no">{{ current_time_local|date:"Y-m-d H:i:s" }}
                         ({{ current_time_local.tzname }})
                     </time>
                 </p>
@@ -91,78 +98,81 @@
         </aside>
     </header>
 
-    <nav id="primary-nav">
+    <nav id="primary-nav" itemscope itemtype="https://schema.org/SiteNavigationElement" tabindex="0" aria-label="Основная навигация">
         <ul>
-            <li>
-                <a accesskey="1" href="{% url 'home' %}">Главная</a>
+            <li itemprop="name">
+                <a accesskey="1" href="{% url 'home' %}" itemprop="url">Главная</a>
             </li>
 
             {% if not user.is_authenticated or user.profile.role != 'doctor' %}
-                <li>
-                    <a href="{% url 'about_company' %}">О компании</a>
+                <li itemprop="name">
+                    <a accesskey="2" href="{% url 'about_company' %}" itemprop="url">О компании</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="3" href="{% url 'article_list' %}" itemprop="url">Новости</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="4" href="{% url 'faq_list' %}" itemprop="url" lang="en" translate="no">FAQ</a>
+                </li>
+                <li itemprop="name" tabindex="5">
+                    <a accesskey="5" href="{% url 'service_list' %}" itemprop="url">Услуги</a>
+                </li>
+                <li itemprop="name" tabindex="10">
+                    <a accesskey="6" href="{% url 'find_available_slots' %}" itemprop="url">Запись на услугу</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="7" href="{% url 'review_list' %}" itemprop="url">Отзывы</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="8" href="{% url 'public_promo_code_list' %}" itemprop="url">Акции и промокоды</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="9" href="{% url 'contacts' %}" itemprop="url">Контакты</a>
+                </li>
+                <li itemprop="name">
+                    <a accesskey="0" href="{% url 'vacancy_list' %}" itemprop="url">Вакансии</a>
+                </li>
+                <li itemprop="name">
+                    <a href="{% url 'privacy_policy' %}" itemprop="url">Политика конфиденциальности</a>
+                </li>
+                <li itemprop="name">
+                    <a href="{% url 'statistics' %}" itemprop="url">Статистика</a>
+                </li>
+                <li itemprop="name">
+                    <a href="{% url 'http_cat' %}" itemprop="url"><span lang="en" translate="no">HTTP</span> Коты</a>
                 </li>
                 <li>
-                    <a href="{% url 'article_list' %}">Новости</a>
-                </li>
-                <li>
-                    <a href="{% url 'faq_list' %}">FAQ</a>
-                </li>
-                <li>
-                    <a href="{% url 'service_list' %}">Услуги</a>
-                </li>
-                <li>
-                    <a href="{% url 'find_available_slots' %}" accesskey="6">Запись на услугу</a>
-                </li>
-                <li>
-                    <a href="{% url 'review_list' %}">Отзывы</a>
-                </li>
-                <li>
-                    <a href="{% url 'public_promo_code_list' %}">Акции и промокоды</a>
-                </li>
-                <li>
-                    <a href="{% url 'contacts' %}">Контакты</a>
-                </li>
-                <li>
-                    <a href="{% url 'vacancy_list' %}">Вакансии</a>
-                </li>
-                <li>
-                    <a href="{% url 'privacy_policy' %}">Политика конфиденциальности</a>
-                </li>
-                <li>
-                    <a href="{% url 'statistics' %}">Статистика</a>
-                </li>
-                <li>
-                    <a href="{% url 'http_cat' %}">HTTP Коты</a>
+                    <a href="{% url 'lab_demo' %}">Дополнительный функционал</a>
                 </li>
             {% endif %}
 
             {% if user.is_authenticated %}
                 {% if user.profile %}
                     {% if user.profile.role == 'client' %}
-                        <li>
-                            <a href="{% url 'client_dashboard' %}">Мой кабинет</a>
+                        <li itemprop="name">
+                            <a href="{% url 'client_dashboard' %}" itemprop="url">Мой кабинет</a>
                         </li>
-                        <li>
-                            <a href="{% url 'cart_view' %}">Корзина</a>
+                        <li itemprop="name">
+                            <a href="{% url 'cart_view' %}" itemprop="url">Корзина</a>
                         </li>
-                        <li>
-                            <a href="{% url 'client_appointments' %}">Мои записи</a>
+                        <li itemprop="name">
+                            <a href="{% url 'client_appointments' %}" itemprop="url">Мои записи</a>
                         </li>
-                        <li>
-                            <a href="{% url 'client_applied_promo_codes' %}">Мои промокоды</a>
+                        <li itemprop="name">
+                            <a href="{% url 'client_applied_promo_codes' %}" itemprop="url">Мои промокоды</a>
                         </li>
                     {% elif user.profile.role == 'doctor' %}
-                        <li>
-                            <a href="{% url 'doctor_dashboard' %}">Кабинет врача</a>
+                        <li itemprop="name">
+                            <a href="{% url 'doctor_dashboard' %}" itemprop="url">Кабинет врача</a>
                         </li>
-                        <li>
-                            <a href="{% url 'doctor_schedule' %}">Мое расписание</a>
+                        <li itemprop="name">
+                            <a href="{% url 'doctor_schedule' %}" itemprop="url">Мое расписание</a>
                         </li>
-                        <li>
-                            <a href="{% url 'doctor_leave_requests' %}">Запросы на отпуск</a>
+                        <li itemprop="name">
+                            <a href="{% url 'doctor_leave_requests' %}" itemprop="url">Запросы на отпуск</a>
                         </li>
-                        <li>
-                            <a href="{% url 'doctor_day_off_requests' %}">Отгул/Сокращенный день</a>
+                        <li itemprop="name">
+                            <a href="{% url 'doctor_day_off_requests' %}" itemprop="url">Отгул/Сокращенный день</a>
                         </li>
                     {% endif %}
                 {% else %}
@@ -172,12 +182,12 @@
     </nav>
 
     <div id="content-wrap">
-        <main id="main-content">
+        <main id="main-content" tabindex="-1">
             {% if messages %}
-                <section id="messages" role="status">
+                <section id="messages" tabindex="0" aria-live="polite">
                     <ul>
                         {% for message in messages %}
-                            <li>{{ message }}</li>
+                            <li lang="ru">{{ message }}</li>
                         {% endfor %}
                     </ul>
                 </section>
@@ -185,7 +195,7 @@
 
             {% block content_title_block %}
                 <header id="page-header">
-                    <h2 id="content-title">{% block content_title %}Заголовок страницы{% endblock %}</h2>
+                    <h2 id="content-title" tabindex="-1">{% block content_title %}Заголовок страницы{% endblock %}</h2>
                 </header>
             {% endblock %}
 
@@ -196,10 +206,10 @@
     </div>
 </div>
 
-<footer id="site-footer" role="contentinfo">
+<footer id="site-footer" itemscope itemtype="https://schema.org/WPFooter" tabindex="0">
     <p>&copy;
-        <time datetime="{% now 'Y' %}-01-01">{% now "Y" %}</time>
-        Клиника "Здоровье". Все права защищены.
+        <time datetime="{% now 'Y' %}-01-01" translate="no">{% now "Y" %}</time>
+        <span itemprop="copyrightHolder" translate="no">Клиника "Здоровье"</span>. Все права защищены.
     </p>
 </footer>
 

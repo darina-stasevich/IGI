@@ -22,29 +22,37 @@
 
 {% block content %}
   {% if articles %}
-    <section id="news-list">
+    <section id="news-list" itemscope itemtype="https://schema.org/ItemList">
+      <meta itemprop="name" content="Новости и статьи клиники «Здоровье»">
+
       {% for article in articles %}
-        <article id="article-{{ article.slug }}" class="news-card">
+        <article id="article-{{ article.slug }}" class="news-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/NewsArticle">
+          <meta itemprop="position" content="{{ forloop.counter }}">
+
           <header>
             <h3 id="article-title-{{ article.slug }}">
-              <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+              <a href="{% url 'article_detail' article.slug %}" itemprop="url">
+                <span itemprop="headline">{{ article.title }}</span>
+              </a>
             </h3>
-            <p class="meta">
-              <time datetime="{{ article.published_date|date:'c' }}">
+            <p>
+              <time datetime="{{ article.published_date|date:'c' }}" itemprop="datePublished">
                 Опубликовано: {{ article.published_date|date:"d F Y" }}
               </time>
               {% if article.author %}
-                | Автор: {{ article.author.get_full_name|default:article.author.username }}
+                | Автор: <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+                  <span itemprop="name">{{ article.author.get_full_name|default:article.author.username }}</span>
+                </span>
               {% endif %}
             </p>
           </header>
 
           {% if article.image or article.image_url %}
-            <figure class="news-image">
+            <figure>
               {% if article.image %}
-                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200">
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200" itemprop="image">
               {% else %}
-                <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200">
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200" itemprop="image">
               {% endif %}
               {% if article.short_description %}
                 <figcaption id="desc-{{ article.slug }}">{{ article.short_description }}</figcaption>
@@ -53,7 +61,7 @@
           {% endif %}
 
           {% if article.short_description %}
-            <p>{{ article.short_description }}</p>
+            <p itemprop="description">{{ article.short_description }}</p>
           {% endif %}
 
           <p>
@@ -63,22 +71,5 @@
       {% endfor %}
     </section>
 
-    {% if is_paginated %}
-      <nav class="pagination">
-        <ul>
-          {% if page_obj.has_previous %}
-            <li><a rel="prev" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>
-          {% endif %}
-          <li>Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</li>
-          {% if page_obj.has_next %}
-            <li><a rel="next" href="?page={{ page_obj.next_page_number }}">Вперед</a></li>
-          {% endif %}
-        </ul>
-      </nav>
     {% endif %}
-  {% else %}
-    <section>
-      <p>В данный момент нет опубликованных новостей. Загляните позже!</p>
-    </section>
-  {% endif %}
 {% endblock %}

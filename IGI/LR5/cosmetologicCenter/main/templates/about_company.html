@@ -13,28 +13,31 @@
 
 {% block content %}
     {% if company_profile %}
-        <article id="about-company">
+        <article id="about-company" itemscope itemtype="https://schema.org/Organization">
+            <meta itemprop="name" content="Клиника «Здоровье»">
 
             {% if company_profile.logo or company_profile.logo_url %}
                 <figure>
                     {% if company_profile.logo %}
                         <img src="{{ company_profile.logo.url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
-                             decoding="async">
+                             decoding="async" itemprop="logo">
                     {% else %}
                         <img src="{{ company_profile.logo_url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
-                             decoding="async">
+                             decoding="async" itemprop="logo">
                     {% endif %}
                 </figure>
             {% endif %}
 
-            <section id="main-info">
+            <section id="main-info" itemprop="description">
                 <p>{{ company_profile.main_info_text|linebreaksbr }}</p>
             </section>
 
             {% if company_profile.video_url %}
                 {% with embed_url=company_profile.get_embed_url %}
                     {% if embed_url %}
-                        <section id="about-video">
+                        <section id="about-video" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
+                            <meta itemprop="name" content="Видео о клинике «Здоровье»">
+                            <meta itemprop="description" content="Видеопрезентация нашей клиники и услуг">
                             <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
                                 <iframe
                                         src="{{ embed_url }}"
@@ -42,7 +45,8 @@
                                         title="Видео о клинике"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         referrerpolicy="strict-origin-when-cross-origin"
-                                        allowfullscreen>
+                                        allowfullscreen
+                                        itemprop="embedUrl">
                                 </iframe>
                             </div>
                         </section>
@@ -57,10 +61,13 @@
             {% endif %}
 
             {% if company_profile.history_text %}
-                <section id="history">
+                <section id="history" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
+                    <meta itemprop="name" content="История компании">
                     <hr>
                     <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
-                    <p>{{ company_profile.history_text|linebreaksbr }}</p>
+                    <div itemprop="value">
+                        <p>{{ company_profile.history_text|linebreaksbr }}</p>
+                    </div>
                 </section>
             {% endif %}
 
@@ -73,19 +80,20 @@
             {% endif %}
 
             {% if company_profile.certificate_text %}
-                <section id="certificates">
+                <section id="certificates" itemprop="hasCertification" itemscope itemtype="https://schema.org/EducationalOccupationalCredential">
+                    <meta itemprop="name" content="Сертификаты и лицензии">
                     <hr>
                     <h3>{{ company_profile.certificate_title|default:"Сертификаты и лицензии" }}</h3>
-                    <div>
+                    <div itemprop="description">
                         {{ company_profile.certificate_text|linebreaksbr }}
                     </div>
                 </section>
             {% endif %}
 
             <footer>
-                <p>
+                 <p>
                     Информация последний раз обновлена:
-                    <time datetime="{{ company_profile.last_updated|date:'c' }}">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
+                    <time datetime="{{ company_profile.last_updated|date:'c' }}" itemprop="dateModified">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
                 </p>
             </footer>
         </article>

@@ -5,14 +5,18 @@
 {% block content_title %}{{ article.title }}{% endblock %}
 
 {% block content %}
-  <article id="article-{{ article.slug }}">
+  <article id="article-{{ article.slug }}" itemscope itemtype="https://schema.org/NewsArticle">
+    <meta itemprop="headline" content="{{ article.title }}">
+
     <header>
       <p>
-        <time datetime="{{ article.published_date|date:'c' }}">
+        <time datetime="{{ article.published_date|date:'c' }}" itemprop="datePublished">
           Опубликовано: {{ article.published_date|date:"d F Y, H:i" }}
         </time>
         {% if article.author %}
-          | Автор: {{ article.author.get_full_name|default:article.author.username }}
+          | Автор: <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+            <span itemprop="name">{{ article.author.get_full_name|default:article.author.username }}</span>
+          </span>
         {% endif %}
       </p>
       <hr>
@@ -21,16 +25,23 @@
     {% if article.image or article.image_url %}
       <figure>
         {% if article.image %}
-          <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async">
+          <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async" itemprop="image">
         {% else %}
-          <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async">
+          <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async" itemprop="image">
         {% endif %}
       </figure>
     {% endif %}
 
-    <section class="article-full-content">
+    <section class="article-full-content" itemprop="articleBody">
       {{ article.full_content|linebreaksbr }}
     </section>
+
+    <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+      <meta itemprop="name" content="Клиника «Здоровье»">
+      {% if company_profile.logo or company_profile.logo_url %}
+        <meta itemprop="logo" content="{% if company_profile.logo %}{{ company_profile.logo.url }}{% else %}{{ company_profile.logo_url }}{% endif %}">
+      {% endif %}
+    </div>
 
     <nav>
       <a href="{% url 'article_list' %}">&larr; Вернуться к списку новостей</a>

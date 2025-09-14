@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Лабораторная: Примеры code/var/samp/kbd{% endblock %}
+{% block content_title %}Демонстрация семантических тегов{% endblock %}
+
+{% block content %}
+    <article>
+        <section>
+            <h2>Встроенные примеры</h2>
+            <p>
+                Вызов функции с параметром <var>n</var>: <code translate="no">sum_to(<var>n</var>)</code>.
+                Формула суммы: <code translate="no">S = <var>n</var>(<var>n</var> + 1) / 2</code>.
+            </p>
+            <p>
+                Пример запуска в REPL: <code translate="no">sum_to(5)</code><br>
+                Ожидаемый результат: <samp translate="no">15</samp>
+            </p>
+            <p>
+                Копирование строки: нажмите <kbd>Ctrl</kbd> + <kbd>C</kbd> (Windows/Linux) или
+                <kbd>Cmd</kbd> + <kbd>C</kbd> (macOS).
+            </p>
+        </section>
+
+        <section>
+            <h2>Блочный листинг</h2>
+            <pre spellcheck="false" translate="no"><code>def sum_to(n):
+    # сумма от 1 до n включительно
+    return n * (n + 1) // 2
+
+print(sum_to(5))  # 15
+</code></pre>
+            <p>Вывод программы: <samp translate="no">15</samp></p>
+            <p>Запуск: выделите блок и нажмите <kbd>Ctrl</kbd> + <kbd>C</kbd>, затем вставьте в REPL <kbd>Ctrl</kbd> +
+                <kbd>V</kbd>.</p>
+        </section>
+
+        <section id="attrs-demo">
+            <p contenteditable="true" spellcheck="true" lang="ru">
+                Это редактируемый текст с проверкой орфографии.
+            </p>
+            <p contenteditable="true" spellcheck="false" lang="ru">
+                Это редактируемый текст без проверки орфографии.
+            </p>
+
+            <h3>dir (направление письма)</h3>
+            <p lang="ar" dir="rtl" tabindex="0" aria-label="Пример справа налево">
+                مثال للنص من اليمين إلى اليسار — العربية.
+            </p>
+            <p lang="en" dir="ltr" tabindex="0" aria-label="Пример слева направо">
+                Left-to-right sample text — English.
+            </p>
+
+            <h3>hidden</h3>
+            <p hidden id="hidden-example">
+                Этот текст скрыт атрибутом hidden и не должен отображаться на странице.
+            </p>
+
+            <p translate="yes" lang="en">
+                this is example.
+            </p>
+            <p translate="no" lang="en">
+                this is example.
+            </p>
+        </section>
+
+        <p><a href="/">Вернуться на главную</a></p>
+    </article>
+{% endblock %}

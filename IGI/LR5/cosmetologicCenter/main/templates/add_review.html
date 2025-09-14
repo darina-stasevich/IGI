@@ -29,16 +29,14 @@
         </div>
       {% endif %}
 
-      {# Скрытые поля (например, привязка к приему) #}
       {% for hidden in form.hidden_fields %}
         {{ hidden }}
       {% endfor %}
 
-      {# Видимые поля формы #}
       {% for field in form.visible_fields %}
         <div class="form-row" id="row-{{ field.name }}">
           <label for="{{ field.id_for_label }}">
-            {{ field.label }}{% if field.field.required %} <abbr title="обязательное">*</abbr>{% endif %}
+            {{ field.label }}{% if field.field.required %} <abbr title="обязательное поле">*</abbr>{% endif %}
           </label>
           {{ field }}
           {% if field.help_text %}
@@ -54,7 +52,7 @@
         </div>
       {% endfor %}
 
-      <nav class="form-actions">
+      <nav>
         <button type="submit" {% if not eligible_appointments_exist %}disabled{% endif %}>Отправить отзыв</button>
         <a href="{% url 'review_list' %}">Отмена</a>
       </nav>

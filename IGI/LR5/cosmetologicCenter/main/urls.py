@@ -1,5 +1,7 @@
 # main/urls.py
 from django.urls import path, re_path
+from django.views.generic import TemplateView
+
 from . import views
 
 urlpatterns = [
@@ -40,4 +42,6 @@ urlpatterns = [
     path('payment/', views.payment_page_view, name='payment_page'),
     path('payment/process/', views.process_payment_view, name='process_payment'),
     path('booking-success/', views.booking_success_view, name='booking_success'),
+    path('lab/demo/', TemplateView.as_view(template_name='lab_demo.html'), name='lab_demo'),
+
 ]
