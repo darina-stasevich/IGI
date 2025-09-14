@@ -1,40 +1,71 @@
 {% extends 'base.html' %}
+
 {% block title %}Ваша корзина записей{% endblock %}
 
 {% block content %}
-    <h1>Ваша корзина</h1>
-    {% if cart_items %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Услуга</th>
-                    <th>Врач</th>
-                    <th>Дата и время</th>
-                    <th>Стоимость</th>
-                    <th>Действие</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.service.name }}</td>
-                    <td>{{ item.doctor }}</td>
-                    <td>{{ item.start_datetime|date:"d.m.Y H:i" }}</td>
-                    <td>{{ item.price_at_booking }} руб.</td>
-                    <td>
-                        <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-danger btn-sm">Удалить</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <hr>
-        <div style="text-align: right;">
-            <h3>Итого: {{ total_price }} руб.</h3>
-            <a href="{% url 'payment_page' %}" class="btn btn-primary btn-lg">Перейти к оплате</a>
-        </div>
-    {% else %}
-        <p>Ваша корзина пуста. Вы еще не забронировали ни одной услуги.</p>
-        <a href="{% url 'service_list' %}">Посмотреть наши услуги</a>
-    {% endif %}
+<main id="cart" lang="ru" aria-labelledby="cart-title">
+  <h1 id="cart-title">Ваша корзина</h1>
+
+  {% if cart_items %}
+    <section aria-live="polite">
+      <p>Здесь собраны ваши выбранные услуги перед оформлением.</p>
+
+      <table class="table" id="cart-table">
+        <caption>Список записей, добавленных в корзину</caption>
+        <thead>
+          <tr>
+            <th scope="col">Услуга</th>
+            <th scope="col">Врач</th>
+            <th scope="col">Дата и время</th>
+            <th scope="col">Стоимость</th>
+            <th scope="col">Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+            <tr id="cart-item-{{ item.pk }}">
+              <td>{{ item.service.name }}</td>
+              <td>{{ item.doctor }}</td>
+              <td>
+                {% if item.start_datetime %}
+                  <time datetime="{{ item.start_datetime|date:'c' }}">
+                    {{ item.start_datetime|date:"d.m.Y H:i" }}
+                  </time>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td>{{ item.price_at_booking }} руб.</td>
+              <td>
+                <form method="post" action="{% url 'remove_from_cart' item.pk %}" onsubmit="return confirm('Удалить эту запись из корзины?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm" aria-label="Удалить из корзины: {{ item.service.name }}">
+                    Удалить
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <hr>
+
+      <div style="text-align: right;">
+        <p>
+          <strong>Позиций в корзине:</strong> {{ cart_items|length }}
+        </p>
+        <h3>Итого: {{ total_price }} руб.</h3>
+        <a href="{% url 'payment_page' %}" class="btn btn-primary btn-lg" title="Перейти к оплате выбранных услуг">
+          Перейти к оплате
+        </a>
+      </div>
+    </section>
+  {% else %}
+    <section id="cart-empty" role="status" aria-live="polite">
+      <p>Ваша корзина пуста. Вы еще не забронировали ни одной услуги.</p>
+      <p><a href="{% url 'service_list' %}" class="btn btn-outline-primary">Посмотреть наши услуги</a></p>
+    </section>
+  {% endif %}
+</main>
 {% endblock %}

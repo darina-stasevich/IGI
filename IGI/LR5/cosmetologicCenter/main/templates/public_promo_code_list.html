@@ -6,47 +6,56 @@
 {% block content_title %}Доступные акции и промокоды{% endblock %}
 
 {% block content %}
-<div>
-    <p>Ознакомьтесь с нашими текущими акциями и промокодами, которые вы можете использовать для получения скидок на услуги!</p>
-    <p>Промокоды действительны на {{ current_date|date:"d.m.Y" }}. Условия могут меняться.</p>
+<section id="promotions">
+  <p>Ознакомьтесь с нашими текущими акциями и промокодами, которые вы можете использовать для получения скидок на услуги!</p>
+  <p>
+    Промокоды действительны на
+    <time datetime="{{ current_date|date:'c' }}">{{ current_date|date:"d.m.Y" }}</time>.
+    Условия могут меняться.
+  </p>
 
-    {% if promo_codes %}
-        <div>
-            {% for promo in promo_codes %}
-            <div>
-                <div>
-                    <div>
-                        <h5>Промокод: <span>{{ promo.code }}</span></h5>
-                    </div>
-                    <div>
-                        {% if promo.description %}
-                            <p>{{ promo.description|linebreaksbr }}</p>
-                        {% else %}
-                            <p><em>Описание отсутствует.</em></p>
-                        {% endif %}
+  {% if promo_codes %}
+    <ul>
+      {% for promo in promo_codes %}
+        <li>
+          <article>
+            <header>
+              <h3>Промокод: <code>{{ promo.code }}</code></h3>
+            </header>
 
-                        <p>
-                            <strong>Скидка:</strong>
-                            {% if promo.discount_percentage %}
-                                {{ promo.discount_percentage|floatformat:"-0" }}%
-                            {% elif promo.discount_amount %}
-                                {{ promo.discount_amount|floatformat:"-2" }} руб.
-                            {% else %}
-                                Не указана
-                            {% endif %}
-                        </p>
-                        <p><small>Действителен до: {{ promo.valid_to|date:"d.m.Y" }}</small></p>
-                    </div>
+            <section>
+              {% if promo.description %}
+                <p>{{ promo.description|linebreaksbr }}</p>
+              {% else %}
+                <p><em>Описание отсутствует.</em></p>
+              {% endif %}
+            </section>
 
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div>
-            К сожалению, на данный момент активных промокодов нет. Загляните позже!
-        </div>
-    {% endif %}
-</div>
+            <section>
+              <dl>
+                <dt>Скидка</dt>
+                <dd>
+                  {% if promo.discount_percentage %}
+                    <data value="{{ promo.discount_percentage|floatformat:'-0' }}">{{ promo.discount_percentage|floatformat:"-0" }}%</data>
+                  {% elif promo.discount_amount %}
+                    <data value="{{ promo.discount_amount|floatformat:'-2' }}">{{ promo.discount_amount|floatformat:"-2" }} руб.</data>
+                  {% else %}
+                    Не указана
+                  {% endif %}
+                </dd>
 
+                <dt>Действителен до</dt>
+                <dd>
+                  <time datetime="{{ promo.valid_to|date:'c' }}">{{ promo.valid_to|date:"d.m.Y" }}</time>
+                </dd>
+              </dl>
+            </section>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>К сожалению, на данный момент активных промокодов нет. Загляните позже!</p>
+  {% endif %}
+</section>
 {% endblock %}

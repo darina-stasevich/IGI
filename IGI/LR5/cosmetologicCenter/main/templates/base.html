@@ -1,11 +1,13 @@
 {% load static %}
 {% load tz %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="красота, уход, здоровье, пластика, доктор, косметология"/>
+    <meta name="keywords" content="красота, уход, здоровье, пластика, доктор, косметология">
+    <meta name="description" content="Клиника «Здоровье»: запись на услуги, личный кабинет, контакты, акции и новости.">
+    <meta name="theme-color" content="#ffffff">
     <title>{% block title %}Клиника{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'images/shortcut.ico' %}" type="image/x-icon">
     <style>
@@ -37,15 +39,18 @@
             background-color: lightgray;
         }
     </style>
-
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-<div>
-    <header>
+
+<div id="layout">
+    <header id="site-header">
         <div>
-            <h1><a href="{% url 'home' %}">{% block site_name %}Клиника "Здоровье"{% endblock %}</a></h1>
+            <h1>
+                <a href="{% url 'home' %}">{% block site_name %}Клиника "Здоровье"{% endblock %}</a>
+            </h1>
         </div>
+
         <div>
             <span>Таймзона: {{ user_active_timezone_name|default:"Не определена" }}</span> |
             {% if user.is_authenticated %}
@@ -57,105 +62,77 @@
                 <a href="{% url 'doctor_register' %}">Регистрация врача</a>
             {% endif %}
         </div>
-        <aside>
-            <div id="calendar-widget">
+
+        <aside id="sidebar" role="complementary">
+            <section id="calendar-widget">
                 {% block calendar_content %}
-                    <div class="calendar-caption">{{ current_local_month_date_obj|date:"F Y" }}</div>
-                    <div class="calendar-text-output">{{ text_calendar_output }}</div>
+                    <div class="calendar-caption"
+                         id="calendar-title">{{ current_local_month_date_obj|date:"F Y" }}</div>
+                    <pre class="calendar-text-output">{{ text_calendar_output }}</pre>
                 {% endblock calendar_content %}
-            </div>
+            </section>
             <hr>
-            <div>
-                <p><strong>Время сервера (UTC):</strong><br>
+            <section>
+                <p>
+                    <strong>Время сервера (UTC):</strong><br>
                     {% timezone "UTC" %}
-                        {{ current_time_utc|date:"Y-m-d H:i:s" }} (UTC)
+                        <time datetime="{{ current_time_utc|date:'c' }}">{{ current_time_utc|date:"Y-m-d H:i:s" }}
+                            (UTC)
+                        </time>
                     {% endtimezone %}
                 </p>
-                <p><strong>Ваше время ({{ user_active_timezone_name }}):</strong><br>
-                    {{ current_time_local|date:"Y-m-d H:i:s" }} ({{ current_time_local.tzname }})
+                <p>
+                    <strong>Ваше время ({{ user_active_timezone_name }}):</strong><br>
+                    <time datetime="{{ current_time_local|date:'c' }}">{{ current_time_local|date:"Y-m-d H:i:s" }}
+                        ({{ current_time_local.tzname }})
+                    </time>
                 </p>
-            </div>
-            {% block sidebar_extra_content %}{% endblock %}
+            </section>
         </aside>
     </header>
 
-    <nav>
+    <nav id="primary-nav">
         <ul>
-            <li><a accesskey="1" href="{% url 'home' %}" {% if request.resolver_match.view_name == 'home' %}{% endif %}>Главная</a>
+            <li>
+                <a accesskey="1" href="{% url 'home' %}">Главная</a>
             </li>
 
             {% if not user.is_authenticated or user.profile.role != 'doctor' %}
                 <li>
-                    <a href="{% url 'about_company' %}"
-                            {% if request.resolver_match.view_name == 'about_company' %}{% endif %}>
-                        О компании
-                    </a>
+                    <a href="{% url 'about_company' %}">О компании</a>
                 </li>
                 <li>
-                    <a href="{% url 'article_list' %}"
-                            {% if request.resolver_match.view_name == 'article_list' %}{% endif %}>
-                        Новости
-                    </a>
+                    <a href="{% url 'article_list' %}">Новости</a>
                 </li>
                 <li>
-                    <a href="{% url 'faq_list' %}"
-                            {% if request.resolver_match.view_name == 'faq_list' %}{% endif %}>
-                        FAQ
-                    </a>
+                    <a href="{% url 'faq_list' %}">FAQ</a>
                 </li>
                 <li>
-                    <a href="{% url 'service_list' %}"
-                            {% if request.resolver_match.view_name == 'service_list' %}{% endif %}>
-                        Услуги
-                    </a>
+                    <a href="{% url 'service_list' %}">Услуги</a>
                 </li>
                 <li>
-                    <a href="{% url 'find_available_slots' %}" accesskey="6"
-                            {% if request.resolver_match.view_name == 'find_available_slots' %}{% endif %}>
-                        Запись на услугу
-                    </a>
+                    <a href="{% url 'find_available_slots' %}" accesskey="6">Запись на услугу</a>
                 </li>
                 <li>
-                    <a href="{% url 'review_list' %}"
-                            {% if request.resolver_match.view_name == 'review_list' %}{% endif %}>
-                        Отзывы
-                    </a>
+                    <a href="{% url 'review_list' %}">Отзывы</a>
                 </li>
                 <li>
-                    <a href="{% url 'public_promo_code_list' %}"
-                            {% if request.resolver_match.view_name == 'public_promo_code_list' %}{% endif %}>
-                        Акции и промокоды
-                    </a>
+                    <a href="{% url 'public_promo_code_list' %}">Акции и промокоды</a>
                 </li>
                 <li>
-                    <a href="{% url 'contacts' %}"
-                            {% if request.resolver_match.view_name == 'contacts' %}{% endif %}>
-                        Контакты
-                    </a>
+                    <a href="{% url 'contacts' %}">Контакты</a>
                 </li>
                 <li>
-                    <a href="{% url 'vacancy_list' %}"
-                            {% if request.resolver_match.view_name == 'vacancy_list' %}{% endif %}>
-                        Вакансии
-                    </a>
+                    <a href="{% url 'vacancy_list' %}">Вакансии</a>
                 </li>
                 <li>
-                    <a href="{% url 'privacy_policy' %}"
-                            {% if request.resolver_match.view_name == 'privacy_policy' %}{% endif %}>
-                        Политика конфиденциальности
-                    </a>
+                    <a href="{% url 'privacy_policy' %}">Политика конфиденциальности</a>
                 </li>
                 <li>
-                    <a href="{% url 'statistics' %}"
-                            {% if request.resolver_match.view_name == 'statistics' %}{% endif %}>
-                        Статистика
-                    </a>
+                    <a href="{% url 'statistics' %}">Статистика</a>
                 </li>
                 <li>
-                    <a href="{% url 'http_cat' %}"
-                            {% if request.resolver_match.view_name == 'http_cat' %}{% endif %}>
-                        HTTP Коты
-                    </a>
+                    <a href="{% url 'http_cat' %}">HTTP Коты</a>
                 </li>
             {% endif %}
 
@@ -163,53 +140,29 @@
                 {% if user.profile %}
                     {% if user.profile.role == 'client' %}
                         <li>
-                            <a href="{% url 'client_dashboard' %}"
-                                    {% if request.resolver_match.view_name == 'client_dashboard' %}{% endif %}>
-                                Мой кабинет
-                            </a>
+                            <a href="{% url 'client_dashboard' %}">Мой кабинет</a>
                         </li>
                         <li>
-                            <a href="{% url 'cart_view' %}"
-                                    {% if request.resolver_match.view_name == 'cart_view' %}{% endif %}>
-                                Корзина
-                            </a>
+                            <a href="{% url 'cart_view' %}">Корзина</a>
                         </li>
                         <li>
-                            <a href="{% url 'client_appointments' %}"
-                                    {% if request.resolver_match.view_name == 'client_appointments' %}{% endif %}>
-                                Мои записи
-                            </a>
+                            <a href="{% url 'client_appointments' %}">Мои записи</a>
                         </li>
                         <li>
-                            <a href="{% url 'client_applied_promo_codes' %}"
-                                    {% if request.resolver_match.view_name == 'client_applied_promo_codes' %}{% endif %}>
-                                Мои промокоды
-                            </a>
+                            <a href="{% url 'client_applied_promo_codes' %}">Мои промокоды</a>
                         </li>
                     {% elif user.profile.role == 'doctor' %}
                         <li>
-                            <a href="{% url 'doctor_dashboard' %}"
-                                    {% if request.resolver_match.view_name == 'doctor_dashboard' %}{% endif %}>
-                                Кабинет врача
-                            </a>
+                            <a href="{% url 'doctor_dashboard' %}">Кабинет врача</a>
                         </li>
                         <li>
-                            <a href="{% url 'doctor_schedule' %}"
-                                    {% if request.resolver_match.view_name == 'doctor_schedule' %}{% endif %}>
-                                Мое расписание
-                            </a>
+                            <a href="{% url 'doctor_schedule' %}">Мое расписание</a>
                         </li>
                         <li>
-                            <a href="{% url 'doctor_leave_requests' %}"
-                                    {% if request.resolver_match.view_name == 'doctor_leave_requests' %}{% endif %}>
-                                Запросы на отпуск
-                            </a>
+                            <a href="{% url 'doctor_leave_requests' %}">Запросы на отпуск</a>
                         </li>
                         <li>
-                            <a href="{% url 'doctor_day_off_requests' %}"
-                                    {% if request.resolver_match.view_name == 'doctor_day_off_requests' %}{% endif %}>
-                                Отгул/Сокращенный день
-                            </a>
+                            <a href="{% url 'doctor_day_off_requests' %}">Отгул/Сокращенный день</a>
                         </li>
                     {% endif %}
                 {% else %}
@@ -218,20 +171,22 @@
         </ul>
     </nav>
 
-    <div>
-        <main>
+    <div id="content-wrap">
+        <main id="main-content">
             {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
+                <section id="messages" role="status">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
             {% endif %}
 
             {% block content_title_block %}
-                <div>
-                    <h2>{% block content_title %}Заголовок страницы{% endblock %}</h2>
-                </div>
+                <header id="page-header">
+                    <h2 id="content-title">{% block content_title %}Заголовок страницы{% endblock %}</h2>
+                </header>
             {% endblock %}
 
             {% block content %}
@@ -241,11 +196,14 @@
     </div>
 </div>
 
-<footer>
-    <p>&copy; {% now "Y" %} Клиника "Здоровье". Все права защищены.</p>
+<footer id="site-footer" role="contentinfo">
+    <p>&copy;
+        <time datetime="{% now 'Y' %}-01-01">{% now "Y" %}</time>
+        Клиника "Здоровье". Все права защищены.
+    </p>
 </footer>
 
-<script src="{% static 'js/timezone.js' %}"></script>
+<script src="{% static 'js/timezone.js' %}" defer></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

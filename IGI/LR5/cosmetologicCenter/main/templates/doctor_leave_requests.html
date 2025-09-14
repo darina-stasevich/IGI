@@ -9,70 +9,87 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<main id="leave-requests" lang="ru">
 
-  <div>
+  <section id="new-request">
     <h3>Подать новый запрос на отпуск</h3>
-    <form method="post">
+
+    <form method="post" id="leave-request-form" name="leave-request-form" accept-charset="utf-8">
       {% csrf_token %}
 
       {% if form.non_field_errors %}
-        <div>
-          {% for error in form.non_field_errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        </div>
+        <section id="form-non-field-errors">
+          <ul>
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </section>
       {% endif %}
 
-      {% for field in form %}
-        <div>
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}
-            <small>{{ field.help_text }}</small>
-          {% endif %}
-          {% if field.errors %}
-            <div>
-              {% for error in field.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-      {% endfor %}
+      <article id="form-fields">
+        {% for field in form %}
+          <section id="field-{{ field.name }}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
 
-      <div>
-        <button type="submit">Отправить запрос</button>
-      </div>
+            {% if field.help_text %}
+              <small id="help-{{ field.name }}">{{ field.help_text }}</small>
+            {% endif %}
+
+            {% if field.errors %}
+              <ul id="errors-{{ field.name }}">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </article>
+
+      <p>
+        <button type="submit" title="Отправить запрос на отпуск">Отправить запрос</button>
+      </p>
     </form>
-  </div>
+  </section>
 
-  <div>
+  <section id="requests-history">
     <h3>История моих запросов</h3>
+
     {% if leave_requests %}
-      <table>
+      <table id="leave-requests-table">
+        <caption>Список ранее отправленных запросов на отпуск</caption>
         <thead>
           <tr>
-            <th>Дата начала</th>
-            <th>Дата окончания</th>
-            <th>Причина</th>
-            <th>Статус</th>
-            <th>Дата запроса</th>
-            <th>Одобрил(а)</th>
+            <th scope="col">Дата начала</th>
+            <th scope="col">Дата окончания</th>
+            <th scope="col">Причина</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Дата запроса</th>
+            <th scope="col">Одобрил(а)</th>
           </tr>
         </thead>
         <tbody>
           {% for req in leave_requests %}
             <tr>
-              <td>{{ req.start_date|date:"d.m.Y" }}</td>
-              <td>{{ req.end_date|date:"d.m.Y" }}</td>
-              <td>{{ req.reason|default:"-" }}</td>
               <td>
-                <span>
-                  {{ req.get_status_display }}
-                </span>
+                <time datetime="{{ req.start_date|date:'Y-m-d' }}">
+                  {{ req.start_date|date:"d.m.Y" }}
+                </time>
               </td>
-              <td>{{ req.requested_at|date:"d.m.Y H:i" }}</td>
+              <td>
+                <time datetime="{{ req.end_date|date:'Y-m-d' }}">
+                  {{ req.end_date|date:"d.m.Y" }}
+                </time>
+              </td>
+              <td>{{ req.reason|default:"-" }}</td>
+              <td>{{ req.get_status_display }}</td>
+              <td>
+                <time datetime="{{ req.requested_at|date:'c' }}">
+                  {{ req.requested_at|date:"d.m.Y H:i" }}
+                </time>
+              </td>
               <td>
                 {% if req.approved_by %}
                   {{ req.approved_by.get_full_name|default:req.approved_by.username }}
@@ -87,6 +104,7 @@
     {% else %}
       <p>У вас пока нет запросов на отпуск.</p>
     {% endif %}
-  </div>
-</div>
+  </section>
+
+</main>
 {% endblock %}

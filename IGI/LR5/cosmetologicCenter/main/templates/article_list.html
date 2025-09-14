@@ -2,38 +2,83 @@
 {% load static %}
 
 {% block title %}Новости - Клиника "Здоровье"{% endblock %}
-
 {% block content_title %}Новости и статьи{% endblock %}
 
+{% block extra_head %}
+<style>
+  .news-card .news-image {
+    width: 320px;
+    height: 200px;
+    overflow: hidden;
+  }
+  .news-card .news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-    {% if articles %}
-        <div>
-            {% for article in articles %}
-                <div>
-                    <h3>
-                        <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
-                    </h3>
+  {% if articles %}
+    <section id="news-list">
+      {% for article in articles %}
+        <article id="article-{{ article.slug }}" class="news-card">
+          <header>
+            <h3 id="article-title-{{ article.slug }}">
+              <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+            </h3>
+            <p class="meta">
+              <time datetime="{{ article.published_date|date:'c' }}">
+                Опубликовано: {{ article.published_date|date:"d F Y" }}
+              </time>
+              {% if article.author %}
+                | Автор: {{ article.author.get_full_name|default:article.author.username }}
+              {% endif %}
+            </p>
+          </header>
 
-                    {% if article.image %}
-                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
-                    {% elif article.image_url %}
-                        <img src="{{ article.image_url }}" alt="{{ article.title }}">
-                    {% endif %}
+          {% if article.image or article.image_url %}
+            <figure class="news-image">
+              {% if article.image %}
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200">
+              {% else %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200">
+              {% endif %}
+              {% if article.short_description %}
+                <figcaption id="desc-{{ article.slug }}">{{ article.short_description }}</figcaption>
+              {% endif %}
+            </figure>
+          {% endif %}
 
-                    <p>
-                        Опубликовано: {{ article.published_date|date:"d F Y" }}
-                        {% if article.author %}
-                            | Автор: {{ article.author.get_full_name|default:article.author.username }}
-                        {% endif %}
-                    </p>
+          {% if article.short_description %}
+            <p>{{ article.short_description }}</p>
+          {% endif %}
 
-                    <p>{{ article.short_description }}</p>
-                
+          <p>
+            <a href="{% url 'article_detail' article.slug %}">Читать далее</a>
+          </p>
+        </article>
+      {% endfor %}
+    </section>
 
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>В данный момент нет опубликованных новостей. Загляните позже!</p>
+    {% if is_paginated %}
+      <nav class="pagination">
+        <ul>
+          {% if page_obj.has_previous %}
+            <li><a rel="prev" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>
+          {% endif %}
+          <li>Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</li>
+          {% if page_obj.has_next %}
+            <li><a rel="next" href="?page={{ page_obj.next_page_number }}">Вперед</a></li>
+          {% endif %}
+        </ul>
+      </nav>
     {% endif %}
+  {% else %}
+    <section>
+      <p>В данный момент нет опубликованных новостей. Загляните позже!</p>
+    </section>
+  {% endif %}
 {% endblock %}

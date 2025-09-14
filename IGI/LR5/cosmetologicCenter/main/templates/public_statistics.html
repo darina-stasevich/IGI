@@ -1,94 +1,123 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}{{ page_title|default:"Статистика клиники" }} - Клиника "Здоровье"{% endblock %}
 
 {% block content_title %}{{ page_title|default:"Статистика нашей клиники" }}{% endblock %}
 
 {% block content %}
-<div>
+<main id="clinic-statistics">
 
-    <section>
-        <h3>Популярность наших услуг</h3>
-        {% if popular_service_categories %}
-            <p>Самые востребованные направления в нашей клинике (топ-5 по количеству выполненных процедур):</p>
-            <ol>
-                {% for category in popular_service_categories %}
-                    <li>
-                        <strong>{{ category.name }}</strong>
-                        {% if category.num_completed_appointments %}
-                            (более {{ category.num_completed_appointments }}
-                            {% if category.num_completed_appointments == 1 %}выполненной процедуры{% elif category.num_completed_appointments|get_digit:"-1" >= 2 and category.num_completed_appointments|get_digit:"-1" <= 4 and category.num_completed_appointments > 4 %}выполненных процедуры{% else %}выполненных процедур{% endif %})
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ol>
-            {% if categories_pie_chart_base64 %}
-            <div>
-                <h4>Визуализация топ-5 популярных категорий</h4>
-                <img src="data:image/png;base64,{{ categories_pie_chart_base64 }}" alt="Диаграмма популярных категорий услуг">
-            </div>
+  <section>
+    <h2>Популярность наших услуг</h2>
+    {% if popular_service_categories %}
+      <p>Самые востребованные направления в нашей клинике (топ-5 по количеству выполненных процедур):</p>
+      <ol>
+        {% for category in popular_service_categories %}
+          <li>
+            <strong>{{ category.name }}</strong>
+            {% if category.num_completed_appointments %}
+              (более {{ category.num_completed_appointments }}
+              {% if category.num_completed_appointments == 1 %}
+                выполненной процедуры
+              {% elif category.num_completed_appointments|get_digit:"-1" >= 2 and category.num_completed_appointments|get_digit:"-1" <= 4 and category.num_completed_appointments > 4 %}
+                выполненных процедуры
+              {% else %}
+                выполненных процедур
+              {% endif %})
             {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+
+      {% if categories_pie_chart_base64 %}
+        <figure>
+          <img src="data:image/png;base64,{{ categories_pie_chart_base64 }}" alt="Диаграмма популярных категорий услуг">
+          <figcaption>Визуализация топ-5 популярных категорий</figcaption>
+        </figure>
+      {% endif %}
+    {% else %}
+      <p>Данные о популярности категорий услуг пока собираются. Мы постоянно работаем над улучшением нашего сервиса!</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Динамика нашей работы</h2>
+    <p>
+      Наши высококвалифицированные специалисты успешно выполнили более
+      <strong>{{ total_completed_procedures_count }}</strong>
+      {% if total_completed_procedures_count == 1 %}
+        процедуры
+      {% elif total_completed_procedures_count|get_digit:"-1" >= 2 and total_completed_procedures_count|get_digit:"-1" <= 4 and total_completed_procedures_count > 4 %}
+        процедуры
+      {% else %}
+        процедур
+      {% endif %}.
+      Мы благодарны за ваше доверие!
+    </p>
+
+    {% if appointments_line_chart_base64 %}
+      <figure>
+        <img src="data:image/png;base64,{{ appointments_line_chart_base64 }}" alt="График выполненных записей по месяцам">
+        <figcaption>Количество выполненных записей по месяцам</figcaption>
+      </figure>
+    {% else %}
+      <p>Данные о динамике записей за последние 12 месяцев пока формируются.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Ассортимент наших предложений</h2>
+    <p>Мы гордимся разнообразием услуг, которые предлагаем нашим клиентам:</p>
+    <ul>
+      <li>
+        Более <strong>{{ total_service_categories_count }}</strong>
+        {% if total_service_categories_count == 1 %}
+          категории
+        {% elif total_service_categories_count|get_digit:"-1" >= 2 and total_service_categories_count|get_digit:"-1" <= 4 and total_service_categories_count > 4 %}
+          категорий
         {% else %}
-            <p>Данные о популярности категорий услуг пока собираются. Мы постоянно работаем над улучшением нашего сервиса!</p>
+          категорий
         {% endif %}
-    </section>
-
-    <section>
-        <h3>Динамика нашей работы</h3>
-        <p>
-            Наши высококвалифицированные специалисты успешно выполнили более
-            <strong>{{ total_completed_procedures_count }}</strong>
-            {% if total_completed_procedures_count == 1 %}процедуры{% elif total_completed_procedures_count|get_digit:"-1" >= 2 and total_completed_procedures_count|get_digit:"-1" <= 4 and total_completed_procedures_count > 4 %}процедуры{% else %}процедур{% endif %}.
-            Мы благодарны за ваше доверие!
-        </p>
-        {% if appointments_line_chart_base64 %}
-        <div>
-            <h4>Количество выполненных записей по месяцам</h4>
-            <img src="data:image/png;base64,{{ appointments_line_chart_base64 }}" alt="График выполненных записей по месяцам">
-        </div>
+        косметологических услуг.
+      </li>
+      <li>
+        Свыше <strong>{{ total_unique_services_count }}</strong>
+        {% if total_unique_services_count == 1 %}
+          уникальной процедуры
+        {% elif total_unique_services_count|get_digit:"-1" >= 2 and total_unique_services_count|get_digit:"-1" <= 4 and total_unique_services_count > 4 %}
+          уникальных процедур
         {% else %}
-        <p>Данные о динамике записей за последние 12 месяцев пока формируются.</p>
+          уникальных процедур
         {% endif %}
-    </section>
+        для вашей красоты и здоровья.
+      </li>
+    </ul>
+  </section>
 
-    <section>
-        <h3>Ассортимент наших предложений</h3>
-        <p>Мы гордимся разнообразием услуг, которые предлагаем нашим клиентам:</p>
-        <ul>
-            <li>Более <strong>{{ total_service_categories_count }}</strong>
-                {% if total_service_categories_count == 1 %}категории{% elif total_service_categories_count|get_digit:"-1" >= 2 and total_service_categories_count|get_digit:"-1" <= 4 and total_service_categories_count > 4 %}категорий{% else %}категорий{% endif %}
-                косметологических услуг.
-            </li>
-            <li>Свыше <strong>{{ total_unique_services_count }}</strong>
-                {% if total_unique_services_count == 1 %}уникальной процедуры{% elif total_unique_services_count|get_digit:"-1" >= 2 and total_unique_services_count|get_digit:"-1" <= 4 and total_unique_services_count > 4 %}уникальных процедур{% else %}уникальных процедур{% endif %}
-                для вашей красоты и здоровья.
-            </li>
-        </ul>
-    </section>
-
-    <section>
-        <h3>Наши клиенты о нас</h3>
-        {% if total_reviews_count > 0 %}
-            {% if average_client_rating is not None %}
-            <p>
-                Средняя оценка наших услуг: <strong>{{ average_client_rating|floatformat:1 }} / 5</strong>.
-            </p>
-            {% endif %}
-            {% if median_client_rating is not None %}
-            <p>
-                Медианная оценка наших услуг: <strong>{{ median_client_rating|floatformat:1 }} / 5</strong>.
-                Это означает, что половина клиентов оценила нас на {{ median_client_rating|floatformat:1 }} или выше!
-            </p>
-            {% endif %}
-            <p>
-                Всего отзывов: {{ total_reviews_count }}.
-                Мы ценим ваше мнение и стремимся стать еще лучше!
-            </p>
-        {% else %}
-            <p>Отзывов пока нет, но мы будем рады услышать ваше мнение после визита!</p>
+  <section>
+    <h2>Наши клиенты о нас</h2>
+    {% if total_reviews_count > 0 %}
+      <dl>
+        {% if average_client_rating is not None %}
+          <dt>Средняя оценка</dt>
+          <dd><strong>{{ average_client_rating|floatformat:1 }} / 5</strong></dd>
         {% endif %}
-    </section>
 
-</div>
+        {% if median_client_rating is not None %}
+          <dt>Медианная оценка</dt>
+          <dd>
+            <strong>{{ median_client_rating|floatformat:1 }} / 5</strong>.
+            Половина клиентов оценила нас на {{ median_client_rating|floatformat:1 }} или выше.
+          </dd>
+        {% endif %}
+
+        <dt>Всего отзывов</dt>
+        <dd>{{ total_reviews_count }}. Мы ценим ваше мнение и стремимся стать еще лучше!</dd>
+      </dl>
+    {% else %}
+      <p>Отзывов пока нет, но мы будем рады услышать ваше мнение после визита!</p>
+    {% endif %}
+  </section>
+
+</main>
 {% endblock %}

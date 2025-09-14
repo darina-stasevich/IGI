@@ -2,165 +2,182 @@
 {% load static %}
 
 {% block title %}Главная - Клиника "Здоровье"{% endblock %}
-
 {% block content_title %}Добро пожаловать!{% endblock %}
 
 {% block content %}
+<main id="home" lang="ru">
 
+  <header id="welcome">
     {% if company_profile %}
-        {% if company_profile.logo %}
-            <img src="{{ company_profile.logo.url }}" alt="Логотип компании">
-        {% elif company_profile.logo_url %}
-            <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
-        {% endif %}
+      {% if company_profile.logo %}
+        <figure id="company-logo">
+          <img src="{{ company_profile.logo.url }}" alt="Логотип компании" loading="lazy" decoding="async">
+        </figure>
+      {% elif company_profile.logo_url %}
+        <figure id="company-logo">
+          <img src="{{ company_profile.logo_url }}" alt="Логотип компании" loading="lazy" decoding="async">
+        </figure>
+      {% endif %}
     {% endif %}
-
-
     <p>{{ welcome_message }}</p>
+  </header>
 
-    {% if banner_images %}
-        <style>
-            .carousel-container {
-                position: relative;
-                max-width: 800px;
-                overflow: hidden;
-            }
+  {% if banner_images %}
+    <style>
+      .carousel-container {
+        position: relative;
+        max-width: 800px;
+        overflow: hidden;
+      }
+      .carousel-slide {
+        display: none;
+      }
+      .carousel-slide img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .carousel-slide.active {
+        display: block;
+      }
+      .carousel-prev, .carousel-next {
+        position: absolute;
+        top: 50%;
+        width: auto;
+      }
+      .carousel-prev { left: 0; }
+      .carousel-next { right: 0; }
+    </style>
 
-            .carousel-slide {
-                display: none;
-            }
+    <section id="hero" title="Баннеры">
+      <div class="carousel-container">
+        {% for image_path in banner_images %}
+          <figure class="carousel-slide {% if forloop.first %}active{% endif %}">
+            <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}" loading="lazy" decoding="async">
+            <figcaption hidden>Слайд №{{ forloop.counter }}</figcaption>
+          </figure>
+        {% endfor %}
 
-            .carousel-slide img {
-                width: 100%;
-                height: auto;
-                display: block;
-            }
+        <nav id="carousel-controls">
+          <button type="button" title="Предыдущий слайд" class="carousel-prev" onclick="changeSlide(-1)"><</button>
+          <button type="button" title="Следующий слайд" class="carousel-next" onclick="changeSlide(1)">></button>
+        </nav>
+      </div>
 
-            .carousel-slide.active {
-                display: block;
-            }
+      <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll(".carousel-slide");
 
-            .carousel-prev, .carousel-next {
-                position: absolute;
-                top: 50%;
-                width: auto;
-            }
+        function showSlide(n) {
+          slides.forEach((slide) => slide.classList.remove("active"));
+          slides[n].classList.add("active");
+        }
 
-            .carousel-prev {
-                left: 0;
-            }
+        function changeSlide(n) {
+          slideIndex += n;
+          if (slideIndex >= slides.length) slideIndex = 0;
+          if (slideIndex < 0) slideIndex = slides.length - 1;
+          showSlide(slideIndex);
+        }
 
-            .carousel-next {
-                right: 0;
-            }
-        </style>
+        showSlide(slideIndex);
+      </script>
+    </section>
+  {% endif %}
 
-        <div class="carousel-container">
-            {% for image_path in banner_images %}
-                <div class="carousel-slide {% if forloop.first %}active{% endif %}">
-                    <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}">
-                </div>
-            {% endfor %}
+  {% if latest_services %}
+    <section id="services">
+      <h2>Наши услуги</h2>
+      <ul id="services-list">
+        {% for service in latest_services %}
+          <li>
+            {% include "_service_card.html" with service=service show_category=True %}
+          </li>
+        {% endfor %}
+      </ul>
+      <p>
+        <a href="{% url 'service_list' %}" title="Перейти к списку всех услуг">Посмотреть все услуги →</a>
+      </p>
+    </section>
+  {% endif %}
 
-            <button class="carousel-prev" onclick="changeSlide(-1)"><</button>
-            <button class="carousel-next" onclick="changeSlide(1)">></button>
-        </div>
-
-        <script>
-            let slideIndex = 0;
-            const slides = document.querySelectorAll(".carousel-slide");
-
-            function showSlide(n) {
-                slides.forEach((slide) => slide.classList.remove("active"));
-                slides[n].classList.add("active");
-            }
-
-            function changeSlide(n) {
-                slideIndex += n;
-                if (slideIndex >= slides.length) {
-                    slideIndex = 0;
-                }
-                if (slideIndex < 0) {
-                    slideIndex = slides.length - 1;
-                }
-                showSlide(slideIndex);
-            }
-
-            showSlide(slideIndex);
-        </script>
-    {% endif %}
-
-    {% if latest_services %}
-        <div>
-            <h2>Наши услуги</h2>
-            <div>
-                {% for service in latest_services %}
-                    <div>
-                        {% include "_service_card.html" with service=service show_category=True %}
-                    </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'service_list' %}">Посмотреть все услуги &rarr;</a>
-        </div>
-    {% endif %}
-
+  <section id="news">
     {% if latest_article %}
-        <div>
-            <h3>Последняя новость: <a
-                    href="{% url 'article_detail' latest_article.slug %}">{{ latest_article.title }}</a></h3>
+      <article id="latest-article">
+        <h3>
+          Последняя новость:
+          <a href="{% url 'article_detail' latest_article.slug %}" title="Читать новость «{{ latest_article.title }}»">
+            {{ latest_article.title }}
+          </a>
+        </h3>
 
-            {% if latest_article.image %}
-                <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}">
-            {% elif latest_article.image_url %}
-                <img src="{{ latest_article.image_url }}" alt="{{ latest_article.title }}">
-            {% endif %}
-
-            <p><strong>Дата публикации:</strong> {{ latest_article.published_date|date:"d F Y, H:i" }}</p>
-            <p>{{ latest_article.short_description }}</p>
-        </div>
-    {% else %}
-        <p>Пока нет опубликованных новостей.</p>
-    {% endif %}
-
-    <hr>
-
-    <p>Используйте навигацию для доступа к другим разделам сайта.</p>
-
-    {% if not user.is_authenticated %}
-        <p>Пожалуйста, <a href="{% url 'user_login' %}">войдите</a> или <a href="{% url 'client_register' %}">зарегистрируйтесь</a>.
-        </p>
-    {% else %}
-        <p>Вы вошли как: {{ user.username }}.</p>
-        {% if user.profile %}
-            <p>Ваша роль: {{ user.profile.get_role_display }}.</p>
-            {% if user.profile.role == 'client' %}
-                <p><a href="{% url 'client_dashboard' %}">Перейти в кабинет клиента</a></p>
-            {% elif user.profile.role == 'doctor' %}
-                <p><a href="{% url 'doctor_dashboard' %}">Перейти в кабинет врача</a></p>
-            {% endif %}
-        {% else %}
-            <p>Профиль пользователя не найден.</p>
+        {% if latest_article.image %}
+          <figure>
+            <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}" loading="lazy" decoding="async">
+          </figure>
+        {% elif latest_article.image_url %}
+          <figure>
+            <img src="{{ latest_article.image_url }}" alt="{{ latest_article.title }}" loading="lazy" decoding="async">
+          </figure>
         {% endif %}
+
+        <p>
+          <strong>Дата публикации:</strong>
+          <time datetime="{{ latest_article.published_date|date:'c' }}">
+            {{ latest_article.published_date|date:"d F Y, H:i" }}
+          </time>
+        </p>
+        <p>{{ latest_article.short_description }}</p>
+      </article>
+    {% else %}
+      <p>Пока нет опубликованных новостей.</p>
     {% endif %}
+  </section>
 
-    {% if partners %}
-        <div style="text-align: center">
-        <hr>
-            <h2>Наши партнеры</h2>
-            <div style="display: flex; justify-content: center; gap: 40px;">
+  <hr>
 
-                {% for partner in partners %}
-                    <div class="partner-logo">
-                        <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer"
-                           title="{{ partner.name }}">
-                            <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}"
-                                 style="max-height: 80px; max-width: 150px;">
-                        </a>
-                    </div>
-                {% endfor %}
+  <section id="site-hint">
+    <p>Используйте навигацию для доступа к другим разделам сайта.</p>
+  </section>
 
-            </div>
-        </div>
+  <section id="auth">
+    {% if not user.is_authenticated %}
+      <p>
+        Пожалуйста,
+        <a href="{% url 'user_login' %}" title="Войти в личный кабинет">войдите</a>
+        или
+        <a href="{% url 'client_register' %}" title="Зарегистрироваться как клиент">зарегистрируйтесь</a>.
+      </p>
+    {% else %}
+      <p>Вы вошли как: {{ user.username }}.</p>
+      {% if user.profile %}
+        <p>Ваша роль: {{ user.profile.get_role_display }}.</p>
+        {% if user.profile.role == 'client' %}
+          <p><a href="{% url 'client_dashboard' %}" title="Перейти в кабинет клиента">Перейти в кабинет клиента</a></p>
+        {% elif user.profile.role == 'doctor' %}
+          <p><a href="{% url 'doctor_dashboard' %}" title="Перейти в кабинет врача">Перейти в кабинет врача</a></p>
+        {% endif %}
+      {% else %}
+        <p>Профиль пользователя не найден.</p>
+      {% endif %}
     {% endif %}
+  </section>
 
+  {% if partners %}
+    <section id="partners" title="Наши партнеры">
+      <hr>
+      <h2>Наши партнеры</h2>
+      <ul style="display: flex; justify-content: center; list-style: none;">
+        {% for partner in partners %}
+          <li>
+            <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer" title="{{ partner.name }}">
+              <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" style="max-height: 80px; max-width: 150px;" loading="lazy" decoding="async">
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+</main>
 {% endblock %}

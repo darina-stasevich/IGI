@@ -2,48 +2,34 @@
 {% load static %}
 
 {% block title %}Словарь терминов (FAQ) - Клиника "Здоровье"{% endblock %}
-
 {% block content_title %}Словарь терминов и понятий (FAQ){% endblock %}
 
 {% block content %}
-    {% if faq_items %}
-        <div class="faq-list-container">
-            {% for item in faq_items %}
-                <div class="faq-item">
-
-                    <h4 class="faq-question-toggle" style="cursor: pointer; margin-bottom: 10px;">
-                        {{ item.question }}
-                    </h4>
-
-                    <div class="faq-answer-content" style="display: none;">
-                        <p>{{ item.answer|linebreaksbr }}</p>
-                        <p>
-                            Добавлено: {{ item.date_added|date:"d F Y" }}
-                        </p>
-                    </div>
-
-                </div>
-                <hr>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>В данный момент в этом разделе нет записей. Пожалуйста, зайдите позже.</p>
-    {% endif %}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const faqToggles = document.querySelectorAll('.faq-question-toggle');
-
-            faqToggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const answerContent = toggle.nextElementSibling;
-                    if (answerContent.style.display === 'none') {
-                        answerContent.style.display = 'block';
-                    } else {
-                        answerContent.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
+<main id="faq" lang="ru">
+  {% if faq_items %}
+    <section id="faq-list">
+      {% for item in faq_items %}
+        <article>
+          <details>
+            <summary>{{ item.question }}</summary>
+            <div>
+              <p>{{ item.answer|linebreaksbr }}</p>
+              <p>
+                Добавлено:
+                <time datetime="{{ item.date_added|date:'Y-m-d' }}">
+                  {{ item.date_added|date:"d F Y" }}
+                </time>
+              </p>
+            </div>
+          </details>
+        </article>
+        {% if not forloop.last %}<hr>{% endif %}
+      {% endfor %}
+    </section>
+  {% else %}
+    <section id="faq-empty">
+      <p>В данный момент в этом разделе нет записей. Пожалуйста, зайдите позже.</p>
+    </section>
+  {% endif %}
+</main>
 {% endblock %}

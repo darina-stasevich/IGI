@@ -13,65 +13,85 @@
 
 {% block content %}
     {% if company_profile %}
-        {% if company_profile.logo %}
-            <img src="{{ company_profile.logo.url }}" alt="Логотип компании">
-        {% elif company_profile.logo_url %}
-            <img src="{{ company_profile.logo_url }}" alt="Логотип компании">
-        {% endif %}
+        <article id="about-company">
 
-        <p>{{ company_profile.main_info_text|linebreaksbr }}</p>
+            {% if company_profile.logo or company_profile.logo_url %}
+                <figure>
+                    {% if company_profile.logo %}
+                        <img src="{{ company_profile.logo.url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
+                             decoding="async">
+                    {% else %}
+                        <img src="{{ company_profile.logo_url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
+                             decoding="async">
+                    {% endif %}
+                </figure>
+            {% endif %}
 
-        {% if company_profile.video_url %}
-            {% with embed_url=company_profile.get_embed_url %}
-                {% if embed_url %}
-                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
-                        <iframe src="{{ embed_url }}"
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                title="Видео плеер"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                        </iframe>
-                    </div>
-                {% else %}
-                    <p>
-                        Не удалось встроить видео.
-                        <a href="{{ company_profile.video_url }}" target="_blank" rel="noopener noreferrer">Посмотреть
-                            видео по ссылке</a>
-                    </p>
-                {% endif %}
-            {% endwith %}
-        {% endif %}
+            <section id="main-info">
+                <p>{{ company_profile.main_info_text|linebreaksbr }}</p>
+            </section>
 
-        {% if company_profile.history_text %}
-            <hr>
-            <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
-            <p>{{ company_profile.history_text|linebreaksbr }}</p>
-        {% endif %}
+            {% if company_profile.video_url %}
+                {% with embed_url=company_profile.get_embed_url %}
+                    {% if embed_url %}
+                        <section id="about-video">
+                            <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+                                <iframe
+                                        src="{{ embed_url }}"
+                                        style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                                        title="Видео о клинике"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allowfullscreen>
+                                </iframe>
+                            </div>
+                        </section>
+                    {% else %}
+                        <p>
+                            Не удалось встроить видео.
+                            <a href="{{ company_profile.video_url }}" target="_blank" rel="noopener noreferrer">Посмотреть
+                                видео по ссылке</a>
+                        </p>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
 
-        {% if company_profile.requisites_text %}
-            <hr>
-            <h3>{{ company_profile.requisites_title|default:"Реквизиты" }}</h3>
-            <pre>{{ company_profile.requisites_text }}</pre>
-        {% endif %}
+            {% if company_profile.history_text %}
+                <section id="history">
+                    <hr>
+                    <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
+                    <p>{{ company_profile.history_text|linebreaksbr }}</p>
+                </section>
+            {% endif %}
 
-        {% if company_profile.certificate_text %}
-            <div>
-                {% if company_profile.certificate_text %}
+            {% if company_profile.requisites_text %}
+                <section id="requisites">
+                    <hr>
+                    <h3>{{ company_profile.requisites_title|default:"Реквизиты" }}</h3>
+                    <pre>{{ company_profile.requisites_text }}</pre>
+                </section>
+            {% endif %}
+
+            {% if company_profile.certificate_text %}
+                <section id="certificates">
+                    <hr>
+                    <h3>{{ company_profile.certificate_title|default:"Сертификаты и лицензии" }}</h3>
                     <div>
-                        <h3>{{ company_profile.certificate_title }}</h3>
-                        <div>
-                            {{ company_profile.certificate_text }}
-                        </div>
+                        {{ company_profile.certificate_text|linebreaksbr }}
                     </div>
-                {% endif %}
-            </div>
-        {% endif %}
+                </section>
+            {% endif %}
 
-        <p>
-            Информация последний раз обновлена: {{ company_profile.last_updated|date:"d F Y, H:i" }}
-        </p>
-
+            <footer>
+                <p>
+                    Информация последний раз обновлена:
+                    <time datetime="{{ company_profile.last_updated|date:'c' }}">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
+                </p>
+            </footer>
+        </article>
     {% else %}
-        <p>Информация о компании в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
+        <section>
+            <p>Информация о компании в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
+        </section>
     {% endif %}
 {% endblock %}

@@ -9,41 +9,56 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        <h1>
-            {% if current_category %}
-                Услуги в категории: {{ current_category.name }}
-            {% else %}
-                Все услуги
-            {% endif %}
-        </h1>
-        <hr>
+    <section id="services" lang="ru">
+        <header>
+            <h1 id="services-heading">
+                {% if current_category %}
+                    Услуги в категории: {{ current_category.name }}
+                {% else %}
+                    Все услуги
+                {% endif %}
+            </h1>
+            <hr>
+        </header>
 
         <div>
             <aside>
-                <h4>Категории услуг</h4>
-                <ul>
-                    <li><a href="{% url 'service_list' %}">Все категории</a></li>
-                    {% for category in categories %}
-                        <li><a href="{% url 'service_list' %}?category_id={{ category.id }}">{{ category.name }}</a>
+                <h2 id="categories-heading">Категории услуг</h2>
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="{% url 'service_list' %}">Все категории</a>
                         </li>
-                    {% endfor %}
-                </ul>
+                        {% for category in categories %}
+                            <li>
+                                <a href="{% url 'service_list' %}?category_id={{ category.id }}">
+                                    {{ category.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
             </aside>
 
-            <main>
+            <section id="services-list">
                 {% if services %}
-                    {% for service in services %}
-                        {% if current_category %}
-                            {% include "_service_card.html" with service=service show_category=False %}
-                        {% else %}
-                            {% include "_service_card.html" with service=service show_category=True %}
-                        {% endif %}
-                    {% endfor %}
+                    <ul>
+                        {% for service in services %}
+                            <li>
+                                {% if current_category %}
+                                    {% include "_service_card.html" with service=service show_category=False %}
+                                {% else %}
+                                    {% include "_service_card.html" with service=service show_category=True %}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 {% else %}
-                    <p>В данной категории пока нет услуг или услуги не найдены.</p>
+                    <section>
+                        <p>В данной категории пока нет услуг или услуги не найдены.</p>
+                    </section>
                 {% endif %}
-            </main>
+            </section>
         </div>
-    </div>
+    </section>
 {% endblock %}

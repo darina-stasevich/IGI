@@ -2,101 +2,121 @@
 {% load tz %}
 
 {% block title %}
-    {{ page_title|default:"Отзывы" }} - {{ block.super }}
+  {{ page_title|default:"Отзывы" }} - {{ block.super }}
 {% endblock %}
 
 {% block content_title %}
-    {{ page_title|default:"Отзывы" }}
+  {{ page_title|default:"Отзывы" }}
 {% endblock %}
 
 {% block content %}
-    <div>
-        {% if not user.is_authenticated or user.is_authenticated and user.profile.role == 'client' %}
-            <div>
-                <a href="{% url 'add_review' %}">Написать отзыв</a>
-            </div>
-        {% endif %}
+  <section id="reviews-page">
 
-        <form method="get" action="{% url 'review_list' %}">
-            <div>
-                <div>
-                    <label for="service_category_filter">Фильтр по типу услуги:</label>
-                    <select name="service_category" id="service_category_filter"
-                            onchange="this.form.submit()">
-                        <option value="">Все типы услуг</option>
-                        {% for category in available_service_categories %}
-                            <option value="{{ category.id }}"
-                                    {% if category.id == selected_category_id %}selected{% endif %}>
-                                {{ category.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+    {% if not user.is_authenticated or user.is_authenticated and user.profile.role == 'client' %}
+      <nav>
+        <a href="{% url 'add_review' %}">Написать отзыв</a>
+      </nav>
+    {% endif %}
 
-                <div>
-                    <label for="sort_filter">Сортировать по:</label>
-                    <select name="sort" id="sort_filter" onchange="this.form.submit()">
-                        {% for key, display_name in sort_options.items %}
-                            <option value="{{ key }}" {% if key == current_sort_key %}selected{% endif %}>
-                                {{ display_name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </form>
+    <form method="get" action="{% url 'review_list' %}">
+      <fieldset>
+        <legend>Фильтры</legend>
 
-        {% if reviews %}
-            <div>
-                {% for review in reviews %}
-                    {% timezone user_active_timezone_name|default:"UTC" %}
-                        <div>
-                            <div>
-            <span>
-              <strong>
-                {% if review.appointment.client.user_profile.user.get_full_name %}
-                    {{ review.appointment.client.user_profile.user.get_full_name }}
-                {% else %}
-                    {{ review.appointment.client.user_profile.user.username }}
-                {% endif %}
-              </strong>
-            </span>
-                                <span>
-              Оценка: <strong>{{ review.rating }}/5</strong>
-            </span>
-                                <span>
-              {{ review.created_at|date:"d F Y, H:i" }}
-            </span>
-                            </div>
-                            <div>
-                                <p>{{ review.comment|linebreaksbr }}</p>
-                            </div>
-                            <div>
-                                <small>
-                                    Категория услуги:
-                                    <strong>{{ review.appointment.service.category.name }}</strong><br>
-                                    Услуга: <strong>{{ review.appointment.service.name }}</strong><br>
-                                    Врач:
-                                    {% if review.appointment.doctor.user_profile.user.get_full_name %}
-                                        {{ review.appointment.doctor.user_profile.user.get_full_name }}
-                                    {% else %}
-                                        {{ review.appointment.doctor.user_profile.user.username }}
-                                    {% endif %}
-                                    ({{ review.appointment.doctor.category.name|default:"Общая практика" }})
-                                </small>
-                            </div>
-                        </div>
-                    {% endtimezone %}
-                {% endfor %}
-            </div>
-        {% else %}
-            <div>
-                {% if current_service_category %}
-                    Отзывов по типу услуги "{{ current_service_category.name }}" пока нет.
-                {% else %}
-                    Пока нет ни одного отзыва.
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
+        <div>
+          <label for="service_category_filter">Фильтр по типу услуги:</label>
+          <select name="service_category" id="service_category_filter" onchange="this.form.submit()">
+            <option value="">Все типы услуг</option>
+            {% for category in available_service_categories %}
+              <option value="{{ category.id }}" {% if category.id == selected_category_id %}selected{% endif %}>
+                {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label for="sort_filter">Сортировать по:</label>
+          <select name="sort" id="sort_filter" onchange="this.form.submit()">
+            {% for key, display_name in sort_options.items %}
+              <option value="{{ key }}" {% if key == current_sort_key %}selected{% endif %}>
+                {{ display_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <noscript>
+          <button type="submit">Применить</button>
+        </noscript>
+      </fieldset>
+    </form>
+
+    {% if reviews %}
+      <section id="reviews-list">
+        <ul>
+          {% for review in reviews %}
+            {% timezone user_active_timezone_name|default:"UTC" %}
+              <li>
+                <article>
+                  <header>
+                    <h3>
+                      {% if review.appointment.client.user_profile.user.get_full_name %}
+                        {{ review.appointment.client.user_profile.user.get_full_name }}
+                      {% else %}
+                        {{ review.appointment.client.user_profile.user.username }}
+                      {% endif %}
+                    </h3>
+                    <p>
+                      Оценка:
+                      <meter min="0" max="5" value="{{ review.rating }}"></meter>
+                      <strong>{{ review.rating }}/5</strong>
+                      ·
+                      <time datetime="{{ review.created_at|date:'c' }}">
+                        {{ review.created_at|date:"d F Y, H:i" }}
+                      </time>
+                    </p>
+                  </header>
+
+                  <section>
+                    <p>{{ review.comment|linebreaksbr }}</p>
+                  </section>
+
+                  <footer>
+                    <dl>
+                      <dt>Категория услуги:</dt>
+                      <dd><strong>{{ review.appointment.service.category.name }}</strong></dd>
+
+                      <dt>Услуга:</dt>
+                      <dd><strong>{{ review.appointment.service.name }}</strong></dd>
+
+                      <dt>Врач:</dt>
+                      <dd>
+                        {% if review.appointment.doctor.user_profile.user.get_full_name %}
+                          {{ review.appointment.doctor.user_profile.user.get_full_name }}
+                        {% else %}
+                          {{ review.appointment.doctor.user_profile.user.username }}
+                        {% endif %}
+                        ({{ review.appointment.doctor.category.name|default:"Общая практика" }})
+                      </dd>
+                    </dl>
+                  </footer>
+                </article>
+              </li>
+            {% endtimezone %}
+          {% endfor %}
+        </ul>
+      </section>
+    {% else %}
+      <section id="no-reviews">
+        <p>
+          {% if current_service_category %}
+            Отзывов по типу услуги "{{ current_service_category.name }}" пока нет.
+          {% else %}
+            Пока нет ни одного отзыва.
+          {% endif %}
+        </p>
+      </section>
+    {% endif %}
+
+  </section>
 {% endblock %}

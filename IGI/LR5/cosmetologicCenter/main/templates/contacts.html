@@ -2,85 +2,114 @@
 {% load static %}
 
 {% block title %}Контакты - Клиника "Здоровье"{% endblock %}
-
 {% block content_title %}Наши контакты{% endblock %}
 
 {% block content %}
+<main id="contacts" lang="ru">
 
-    {% if company_profile %}
-        <div>
-            <h4>{{ company_profile.main_info_title|default:"Клиника Здоровье" }}</h4>
-            <p><em>Для записи к врачу или уточнения информации, пожалуйста, воспользуйтесь контактами специалистов ниже или общей формой записи (если есть).</em></p>
-        </div>
-    {% endif %}
+  {% if company_profile %}
+    <section id="intro">
+      <h2>{{ company_profile.main_info_title|default:"Клиника Здоровье" }}</h2>
+      <p><em>Для записи к врачу или уточнения информации, пожалуйста, воспользуйтесь контактами специалистов ниже или общей формой записи (если есть).</em></p>
+    </section>
+  {% endif %}
 
-    {% if doctors %}
-        <h3>Наши врачи</h3>
-        <div>
-            {% for doctor in doctors %}
-                <div>
-                    <div>
-                        {% if doctor.contact_page_photo %}
-                            <img src="{{ doctor.contact_page_photo.url }}" alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}" width="120">
-                        {% elif doctor.user_profile.photo %}
-                             <img src="{{ doctor.user_profile.photo.url }}" alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}" width="120">
-                        {% else %}
-                            <img src="{% static 'images/default_avatar.png' %}" alt="Фото отсутствует" width="120">
-                        {% endif %}
+  {% if doctors %}
+    <section id="doctors">
+      <h3>Наши врачи</h3>
+      <ul id="doctors-list" style="list-style: none;">
+        {% for doctor in doctors %}
+          <li>
+            <article id="doctor-{{ doctor.id }}">
+              <header>
+                <figure>
+                  {% if doctor.contact_page_photo %}
+                    <img src="{{ doctor.contact_page_photo.url }}"
+                         alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}"
+                         width="120" loading="lazy" decoding="async">
+                  {% elif doctor.user_profile.photo %}
+                    <img src="{{ doctor.user_profile.photo.url }}"
+                         alt="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}"
+                         width="120" loading="lazy" decoding="async">
+                  {% else %}
+                    <img src="{% static 'images/default_avatar.png' %}"
+                         alt="Фото отсутствует" width="120" loading="lazy" decoding="async">
+                  {% endif %}
+                </figure>
 
-                        <h5>{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}</h5>
-                        {% if doctor.category %}
-                            <p>{{ doctor.category.name }}</p>
-                        {% endif %}
+                <h4>{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}</h4>
+                {% if doctor.category %}
+                  <p>{{ doctor.category.name }}</p>
+                {% endif %}
+              </header>
 
-                        <p>
-                            {{ doctor.contact_page_description|default:doctor.bio|truncatewords:30|linebreaksbr }}
-                        </p>
+              <section id="doctor-desc-{{ doctor.id }}">
+                <p>{{ doctor.contact_page_description|default:doctor.bio|truncatewords:30|linebreaksbr }}</p>
+              </section>
 
-                        {% if doctor.user_profile.phone_number %}
-                            <p><strong>Телефон:</strong> {{ doctor.user_profile.phone_number }}</p>
-                        {% endif %}
-                        {% if doctor.user_profile.user.email %}
-                            <p><strong>Email:</strong> <a href="mailto:{{ doctor.user_profile.user.email }}">{{ doctor.user_profile.user.email }}</a></p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+              <address id="doctor-contacts-{{ doctor.id }}">
+                {% if doctor.user_profile.phone_number %}
+                  <p><strong>Телефон:</strong> <a href="tel:{{ doctor.user_profile.phone_number }}">{{ doctor.user_profile.phone_number }}</a></p>
+                {% endif %}
+                {% if doctor.user_profile.user.email %}
+                  <p><strong>Email:</strong> <a href="mailto:{{ doctor.user_profile.user.email }}">{{ doctor.user_profile.user.email }}</a></p>
+                {% endif %}
+              </address>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
 
-    {% if other_staff %}
-        <h3>Администрация и персонал</h3>
-        <div>
-            {% for staff_member in other_staff %}
-                <div>
-                     <div>
-                        {% if staff_member.photo %}
-                            <img src="{{ staff_member.photo.url }}" alt="{{ staff_member.full_name }}" width="120">
-                        {% else %}
-                            <img src="{% static 'images/default_avatar.png' %}" alt="Фото отсутствует" width="120">
-                        {% endif %}
+  {% if other_staff %}
+    <section id="staff">
+      <h3>Администрация и персонал</h3>
+      <ul id="staff-list" style="list-style: none;">
+        {% for staff_member in other_staff %}
+          <li>
+            <article id="staff-{{ staff_member.id }}">
+              <header>
+                <figure>
+                  {% if staff_member.photo %}
+                    <img src="{{ staff_member.photo.url }}"
+                         alt="{{ staff_member.full_name }}" width="120" loading="lazy" decoding="async">
+                  {% else %}
+                    <img src="{% static 'images/default_avatar.png' %}"
+                         alt="Фото отсутствует" width="120" loading="lazy" decoding="async">
+                  {% endif %}
+                </figure>
 
-                        <h5>{{ staff_member.full_name }}</h5>
-                        <p>{{ staff_member.position }}</p>
+                <h4>{{ staff_member.full_name }}</h4>
+                <p>{{ staff_member.position }}</p>
+              </header>
 
-                        {% if staff_member.work_description %}
-                            <p>{{ staff_member.work_description|linebreaksbr }}</p>
-                        {% endif %}
-                        {% if staff_member.phone %}
-                            <p><strong>Телефон:</strong> {{ staff_member.phone }}</p>
-                        {% endif %}
-                        {% if staff_member.email %}
-                            <p><strong>Email:</strong> <a href="mailto:{{ staff_member.email }}">{{ staff_member.email }}</a></p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+              {% if staff_member.work_description %}
+                <section id="staff-desc-{{ staff_member.id }}">
+                  <p>{{ staff_member.work_description|linebreaksbr }}</p>
+                </section>
+              {% endif %}
 
-    {% if not doctors and not other_staff %}
-        <p>Контактная информация сотрудников в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
-    {% endif %}
+              <address id="staff-contacts-{{ staff_member.id }}">
+                {% if staff_member.phone %}
+                  <p><strong>Телефон:</strong> <a href="tel:{{ staff_member.phone }}">{{ staff_member.phone }}</a></p>
+                {% endif %}
+                {% if staff_member.email %}
+                  <p><strong>Email:</strong> <a href="mailto:{{ staff_member.email }}">{{ staff_member.email }}</a></p>
+                {% endif %}
+              </address>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
 
+  {% if not doctors and not other_staff %}
+    <section id="no-contacts">
+      <p>Контактная информация сотрудников в данный момент не заполнена. Пожалуйста, зайдите позже.</p>
+    </section>
+  {% endif %}
+
+</main>
 {% endblock %}

@@ -6,38 +6,58 @@
 {% block content_title %}Актуальные вакансии{% endblock %}
 
 {% block content %}
-    {% if vacancies %}
-        <div>
-            {% for vacancy in vacancies %}
-                <div>
-                    <h4>{{ vacancy.title }}</h4>
+  {% if vacancies %}
+    <section id="vacancies" lang="ru" aria-label="Список вакансий">
+      {% for vacancy in vacancies %}
+        <article>
+          <header>
+            <h3>{{ vacancy.title }}</h3>
+          </header>
 
-                    {% if vacancy.doctor_category %}
-                        <p>{{ vacancy.doctor_category.name }}</p>
-                    {% endif %}
+          {% if vacancy.doctor_category or vacancy.salary_info %}
+            <section aria-label="Ключевые параметры вакансии">
+              <dl>
+                {% if vacancy.doctor_category %}
+                  <dt>Категория:</dt>
+                  <dd itemprop="occupationalCategory">{{ vacancy.doctor_category.name }}</dd>
+                {% endif %}
+                {% if vacancy.salary_info %}
+                  <dt>Уровень заработной платы:</dt>
+                  <dd itemprop="baseSalary">{{ vacancy.salary_info }}</dd>
+                {% endif %}
+              </dl>
+            </section>
+          {% endif %}
 
-                    <div>
-                        {{ vacancy.short_description|linebreaksbr }}
-                    </div>
+          {% if vacancy.short_description %}
+            <section aria-label="Описание" itemprop="description">
+              <p>{{ vacancy.short_description|linebreaksbr }}</p>
+            </section>
+          {% endif %}
 
-                    {% if vacancy.salary_info %}
-                        <p><strong>Уровень заработной платы:</strong> {{ vacancy.salary_info }}</p>
-                    {% endif %}
+          <footer>
+            <p>
+              <span>Дата публикации: </span>
+              <time datetime="{{ vacancy.date_posted|date:'c' }}" itemprop="datePosted">
+                {{ vacancy.date_posted|date:"d F Y" }}
+              </time>
+            </p>
 
-                    <p>
-                        Дата публикации: {{ vacancy.date_posted|date:"d F Y" }}
-                    </p>
-
-                    {% if vacancy.contact_info %}
-                        <div>
-                            <strong>Как откликнуться:</strong><br>
-                            {{ vacancy.contact_info|linebreaksbr }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>В данный момент открытых вакансий нет. Загляните позже или свяжитесь с нами для получения информации о возможных будущих возможностях.</p>
-    {% endif %}
+            {% if vacancy.contact_info %}
+              <section id="apply-{{ forloop.counter }}" aria-labelledby="apply-heading-{{ forloop.counter }}">
+                <h4>Как откликнуться</h4>
+                <address itemprop="applicationContact">
+                  {{ vacancy.contact_info|linebreaksbr }}
+                </address>
+              </section>
+            {% endif %}
+          </footer>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <section>
+      <p>В данный момент открытых вакансий нет. Загляните позже или свяжитесь с нами для получения информации о возможных будущих возможностях.</p>
+    </section>
+  {% endif %}
 {% endblock %}

@@ -3,129 +3,157 @@
 {% load tz %}
 
 {% block title %}Мои записи - {{ block.super }}{% endblock %}
-
 {% block content_title %}{{ form_title|default:"Мои записи" }}{% endblock %}
 
 {% block content %}
-<div>
-    <form method="get" action="{% url 'client_appointments' %}">
-        <div>
-            <div>
-                <label for="status">Статус:</label>
-                <select name="status" id="status">
-                    <option value="">Все статусы</option>
-                    {% for status_value, status_display in status_choices %}
-                        <option value="{{ status_value }}" {% if status_value == current_status_filter %}selected{% endif %}>
-                            {{ status_display }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="procedure_year">Год процедуры:</label>
-                <select name="procedure_year" id="procedure_year">
-                    <option value="">Любой год</option>
-                    {% for year in available_years %}
-                        <option value="{{ year }}" {% if year|stringformat:"s" == current_procedure_year %}selected{% endif %}>
-                            {{ year }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="procedure_month">Месяц процедуры:</label>
-                <select name="procedure_month" id="procedure_month">
-                    <option value="">Любой месяц</option>
-                    {% for month_data in available_months %}
-                        <option value="{{ month_data.value }}" {% if month_data.value|stringformat:"s" == current_procedure_month %}selected{% endif %}>
-                            {{ month_data.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label>Сортировка:</label>
-                <div>
-                    <label>
-                        <input type="radio" name="sort_order" value="-start_datetime" {% if current_sort_order == '-start_datetime' or not current_sort_order %}checked{% endif %} autocomplete="off">
-                        Дата услуги (сначала новые)
-                    </label>
-                    <label>
-                        <input type="radio" name="sort_order" value="start_datetime" {% if current_sort_order == 'start_datetime' %}checked{% endif %} autocomplete="off">
-                        Дата услуги (сначала старые)
-                    </label>
-                    <label>
-                        <input type="radio" name="sort_order" value="-created_at" {% if current_sort_order == '-created_at' %}checked{% endif %} autocomplete="off">
-                        Дата заказа (сначала новые)
-                    </label>
-                    <label>
-                        <input type="radio" name="sort_order" value="created_at" {% if current_sort_order == 'created_at' %}checked{% endif %} autocomplete="off">
-                        Дата заказа (сначала старые)
-                    </label>
-                </div>
-            </div>
-            <div>
-                <button type="submit">Применить</button>
-            </div>
-        </div>
-    </form>
+<main id="client-appointments" lang="ru">
 
-    {% if appointments %}
-        <div>
-            {% for app in appointments %}
-                {% timezone user_active_timezone_name|default:"UTC" %}
-                <div>
-                    <div>
-                        <h5>Услуга: {{ app.service.name }}</h5>
-                        <small>Заказ создан: {{ app.created_at|date:"d.m.Y H:i" }}</small>
-                    </div>
-                    <hr>
-                    <div>
-                        <div>
-                            <p><strong>Дата и время:</strong><br>{{ app.start_datetime|date:"l, d F Y" }}<br>{{ app.start_datetime|date:"H:i" }} - {{ app.end_datetime|date:"H:i" }}</p> {# Был class="appointment-info" #}
-                            <p><strong>Статус:</strong>
-                                <span>
-                                    {{ app.get_status_display }}
-                                </span>
-                            </p>
-                        </div>
-                        <div>
-                            <p><strong>Врач:</strong><br>
-                                {% if app.doctor.user_profile.user.get_full_name %}
-                                    {{ app.doctor.user_profile.user.get_full_name }}
-                                {% else %}
-                                    {{ app.doctor.user_profile.user.username }}
-                                {% endif %}
-                                <br><small>({{ app.doctor.category.name|default:"категория не указана" }})</small>
-                            </p>
-                            <p><strong>Кабинет:</strong> {{ app.service.office_number|default:"не указан" }}</p>
-                        </div>
-                    </div>
-                     <p>
-                        <strong>Цена на момент бронирования:</strong> {{ app.price_at_booking }} руб.
-                    </p>
-                    {% if app.notes_by_client %}
-                        <p>
-                            <small><strong>Ваше примечание:</strong><br>{{ app.notes_by_client|linebreaksbr }}</small>
-                        </p>
-                    {% endif %}
-
-                    {% if app.status == 'booked' %}
-                    <div>
-                        <form method="POST" action="{% url 'cancel_appointment' app.id %}" onsubmit="return confirm('Вы уверены, что хотите отменить эту запись? Это действие необратимо.');">
-                            {% csrf_token %}
-                            <button type="submit">Отказаться от записи</button>
-                        </form>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endtimezone %}
+  <section id="filters">
+    <form method="get" action="{% url 'client_appointments' %}" id="appointments-filter" name="appointments-filter">
+      <h3>Фильтры</h3>
+      <ul>
+        <li>
+          <label for="status">Статус:</label>
+          <select name="status" id="status">
+            <option value="">Все статусы</option>
+            {% for status_value, status_display in status_choices %}
+              <option value="{{ status_value }}" {% if status_value == current_status_filter %}selected{% endif %}>
+                {{ status_display }}
+              </option>
             {% endfor %}
-        </div>
-    {% else %}
-        <div>
-            У вас пока нет записей на прием, соответствующих выбранным фильтрам, или вы еще не делали записей.
-        </div>
-    {% endif %}
-</div>
+          </select>
+        </li>
+
+        <li>
+          <label for="procedure_year">Год процедуры:</label>
+          <select name="procedure_year" id="procedure_year">
+            <option value="">Любой год</option>
+            {% for year in available_years %}
+              <option value="{{ year }}" {% if year|stringformat:"s" == current_procedure_year %}selected{% endif %}>
+                {{ year }}
+              </option>
+            {% endfor %}
+          </select>
+        </li>
+
+        <li>
+          <label for="procedure_month">Месяц процедуры:</label>
+          <select name="procedure_month" id="procedure_month">
+            <option value="">Любой месяц</option>
+            {% for month_data in available_months %}
+              <option value="{{ month_data.value }}" {% if month_data.value|stringformat:"s" == current_procedure_month %}selected{% endif %}>
+                {{ month_data.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </li>
+
+        <li>
+          <span id="sort-label">Сортировка:</span>
+          <div role="group" aria-labelledby="sort-label">
+            <label>
+              <input type="radio" name="sort_order" value="-start_datetime" {% if current_sort_order == '-start_datetime' or not current_sort_order %}checked{% endif %} autocomplete="off">
+              Дата услуги (сначала новые)
+            </label>
+            <label>
+              <input type="radio" name="sort_order" value="start_datetime" {% if current_sort_order == 'start_datetime' %}checked{% endif %} autocomplete="off">
+              Дата услуги (сначала старые)
+            </label>
+            <label>
+              <input type="radio" name="sort_order" value="-created_at" {% if current_sort_order == '-created_at' %}checked{% endif %} autocomplete="off">
+              Дата заказа (сначала новые)
+            </label>
+            <label>
+              <input type="radio" name="sort_order" value="created_at" {% if current_sort_order == 'created_at' %}checked{% endif %} autocomplete="off">
+              Дата заказа (сначала старые)
+            </label>
+          </div>
+        </li>
+
+        <li>
+          <button type="submit" title="Применить выбранные фильтры">Применить</button>
+        </li>
+      </ul>
+    </form>
+  </section>
+
+  {% if appointments %}
+    <section id="appointments-list" aria-live="polite">
+      {% for app in appointments %}
+        {% timezone user_active_timezone_name|default:"UTC" %}
+        <article id="appointment-{{ app.id }}" class="appointment-card">
+          <header>
+            <h3>Услуга: {{ app.service.name }}</h3>
+            <p>
+              <small>
+                Заказ создан:
+                <time datetime="{{ app.created_at|date:'c' }}">{{ app.created_at|date:"d.m.Y H:i" }}</time>
+              </small>
+            </p>
+          </header>
+
+          <hr>
+
+          <div class="appointment-details">
+            <div class="appointment-info">
+              <p>
+                <strong>Дата и время:</strong><br>
+                <time datetime="{{ app.start_datetime|date:'c' }}">
+                  {{ app.start_datetime|date:"l, d F Y" }}
+                </time><br>
+                <time datetime="{{ app.start_datetime|time:'H:i' }}">{{ app.start_datetime|date:"H:i" }}</time>
+                —
+                <time datetime="{{ app.end_datetime|time:'H:i' }}">{{ app.end_datetime|date:"H:i" }}</time>
+              </p>
+              <p>
+                <strong>Статус:</strong>
+                <span class="status status-{{ app.status }}">{{ app.get_status_display }}</span>
+              </p>
+            </div>
+
+            <div class="appointment-meta">
+              <p>
+                <strong>Врач:</strong><br>
+                {% if app.doctor.user_profile.user.get_full_name %}
+                  {{ app.doctor.user_profile.user.get_full_name }}
+                {% else %}
+                  {{ app.doctor.user_profile.user.username }}
+                {% endif %}
+                <br>
+                <small>({{ app.doctor.category.name|default:"категория не указана" }})</small>
+              </p>
+              <p><strong>Кабинет:</strong> {{ app.service.office_number|default:"не указан" }}</p>
+            </div>
+          </div>
+
+          <p>
+            <strong>Цена на момент бронирования:</strong> {{ app.price_at_booking }} руб.
+          </p>
+
+          {% if app.notes_by_client %}
+            <p>
+              <small><strong>Ваше примечание:</strong><br>{{ app.notes_by_client|linebreaksbr }}</small>
+            </p>
+          {% endif %}
+
+          {% if app.status == 'booked' %}
+            <div class="appointment-actions">
+              <form method="post" action="{% url 'cancel_appointment' app.id %}" onsubmit="return confirm('Вы уверены, что хотите отменить эту запись? Это действие необратимо.');">
+                {% csrf_token %}
+                <button type="submit" title="Отменить запись">Отказаться от записи</button>
+              </form>
+            </div>
+          {% endif %}
+        </article>
+        {% endtimezone %}
+        {% if not forloop.last %}<hr>{% endif %}
+      {% endfor %}
+    </section>
+  {% else %}
+    <section id="no-appointments">
+      <p>У вас пока нет записей на прием, соответствующих выбранным фильтрам, или вы еще не делали записей.</p>
+    </section>
+  {% endif %}
+
+</main>
 {% endblock %}

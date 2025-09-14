@@ -2,65 +2,87 @@
 {% load static %}
 
 {% block title %}Кабинет клиента - {{ block.super }}{% endblock %}
-
 {% block content_title %}Кабинет клиента{% endblock %}
 
 {% block content %}
-<div>
+<main id="client-dashboard" lang="ru">
+
+  <section id="intro">
     <p>Добро пожаловать, {{ user.first_name|default:user.username }}!</p>
     <p>Здесь вы можете просмотреть и обновить свои личные данные.</p>
+  </section>
 
-    <hr>
-    <h4>{{ form_title|default:"Редактирование профиля" }}</h4>
+  <hr>
 
-    <form method="post" novalidate>
-        {% csrf_token %}
+  <section id="profile-info">
+    <h2>Данные учетной записи</h2>
+    <dl>
+      <dt>Логин</dt>
+      <dd>{{ user.username }}</dd>
 
-        {% if form.non_field_errors %}
-            <div>
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+      <dt>Email</dt>
+      <dd>{{ user.email }}</dd>
+    </dl>
+  </section>
 
-        <div>
-            <p><strong>Логин:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-        </div>
+  <hr>
 
-        {% for field in form %}
-            <div>
-                <label for="{{ field.id_for_label }}">{{ field.label }}
-                    {% if field.field.required %}<span>*</span>{% endif %}
-                </label>
+  <section id="profile-edit">
+    <h2>{{ form_title|default:"Редактирование профиля" }}</h2>
 
-                {{ field }}
+    <form method="post" novalidate id="profile-form" name="profile-form" accept-charset="utf-8">
+      {% csrf_token %}
 
-                {% if field.help_text %}
-                    <small>{{ field.help_text|safe }}</small>
-                {% endif %}
+      {% if form.non_field_errors %}
+        <section id="form-non-field-errors">
+          <ul>
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
 
-                {% if field.errors %}
-                    <div>
-                        {% for error in field.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+      {% for field in form %}
+        <section id="field-{{ field.name }}">
+          <label for="{{ field.id_for_label }}">
+            {{ field.label }}
+            {% if field.field.required %}<abbr title="обязательное поле">*</abbr>{% endif %}
+          </label>
 
-        <div>
-            <button type="submit">Обновить данные</button>
-        </div>
+          {{ field }}
+
+          {% if field.help_text %}
+            <small id="help-{{ field.name }}">{{ field.help_text|safe }}</small>
+          {% endif %}
+
+          {% if field.errors %}
+            <ul id="errors-{{ field.name }}">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </section>
+      {% endfor %}
+
+      <p>
+        <button type="submit" id="submit-profile" name="submit-profile" title="Сохранить изменения профиля">
+          Обновить данные
+        </button>
+      </p>
     </form>
-    <hr>
+  </section>
 
-    <div>
-        <a href="{% url 'user_logout' %}">Выйти</a>
-        <a href="{% url 'delete_profile' %}">Удалить профиль</a>
-    </div>
+  <hr>
 
-</div>
+  <section id="account-actions">
+    <p>
+      <a href="{% url 'user_logout' %}">Выйти</a>
+      ·
+      <a href="{% url 'delete_profile' %}">Удалить профиль</a>
+    </p>
+  </section>
+
+</main>
 {% endblock %}

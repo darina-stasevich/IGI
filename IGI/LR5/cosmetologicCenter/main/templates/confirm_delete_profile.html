@@ -2,18 +2,40 @@
 {% load static %}
 
 {% block title %}Подтверждение удаления профиля - {{ block.super }}{% endblock %}
-
 {% block content_title %}Подтверждение удаления профиля{% endblock %}
 
 {% block content %}
-<div>
-    <h4>Вы уверены, что хотите удалить свой профиль?</h4>
-    <p><strong>Внимание!</strong> Это действие необратимо. Все ваши данные, включая информацию профиля и историю записей на услуги, будут безвозвратно удалены.</p>
+<main id="delete-profile-confirm" lang="ru">
+  <section id="warning" role="alert" aria-live="assertive">
+    <h2>Вы уверены, что хотите удалить свой профиль?</h2>
+    <p>
+      <strong>Внимание!</strong> Это действие необратимо. Все ваши данные, включая информацию профиля и историю записей на услуги, будут безвозвратно удалены.
+    </p>
+    <ul>
+      <li>Данные учетной записи и профиль</li>
+      <li>История записей и сопутствующие сведения</li>
+      <li>Иные персональные данные, связанные с вашим аккаунтом</li>
+    </ul>
+  </section>
 
-    <form method="post" action="{% url 'delete_profile' %}">
-        {% csrf_token %}
-        <button type="submit" >Да, удалить мой профиль</button>
-        <a href="{% url 'client_dashboard' %}" >Нет, вернуться в кабинет</a>
+  <section id="actions">
+    <form method="post" action="{% url 'delete_profile' %}" id="delete-profile-form" name="delete-profile-form" accept-charset="utf-8">
+      {% csrf_token %}
+
+      <p>
+        <label for="confirm-checkbox">
+          <input type="checkbox" id="confirm-checkbox" name="confirm" required>
+          Я понимаю последствия и подтверждаю удаление моего профиля.
+        </label>
+      </p>
+
+      <p>
+        <button type="submit" id="confirm-delete" name="confirm-delete" title="Удалить профиль без возможности восстановления">
+          Да, удалить мой профиль
+        </button>
+        <a href="{% url 'client_dashboard' %}" id="cancel-delete" title="Вернуться в кабинет без удаления">Нет, вернуться в кабинет</a>
+      </p>
     </form>
-</div>
+  </section>
+</main>
 {% endblock %}

@@ -6,21 +6,17 @@
 {% block content_title %}{{ service.name }}{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: auto;">
+    <div>
+        {% include "_service_card.html" with service=service show_category=True %}
 
-    {# Мы можем переиспользовать нашу карточку для отображения основной информации #}
-    {% include "_service_card.html" with service=service show_category=True %}
+        <div>
+            <a href="{% url 'find_available_slots' %}?category={{ service.category.id }}&service={{ service.id }}">
+                Записаться на услугу
+            </a>
+        </div>
 
-    <div style="margin-top: 20px; text-align: center;">
-        {# --- КЛЮЧЕВОЙ МОМЕНТ --- #}
-        {# Эта ссылка ведет на страницу записи, ПЕРЕДАВАЯ ID категории и услуги в GET-параметрах #}
-        <a href="{% url 'find_available_slots' %}?category={{ service.category.id }}&service={{ service.id }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 1.2em;">
-            Записаться на услугу
-        </a>
+        <hr>
+        <a href="{% url 'service_list' %}">&larr; Вернуться к списку всех услуг</a>
+
     </div>
-
-    <hr style="margin-top: 30px;">
-    <a href="{% url 'service_list' %}">&larr; Вернуться к списку всех услуг</a>
-
-</div>
 {% endblock %}

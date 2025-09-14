@@ -10,72 +10,89 @@
 {% endblock %}
 
 {% block content %}
-<div>
-
-  <form method="get">
-    <div>
-      <div>
-        <label for="date_filter_input">Выберите дату:</label> 
-        <input type="date" name="date" id="date_filter_input" value="{{ selected_date_str }}"> 
-      </div>
-      <div>
-        <label>Или выберите период:</label> 
-        <div> 
-            <button type="submit" name="period" value="today">Сегодня</button> 
-            <button type="submit" name="period" value="week">Эта неделя</button> 
-            <button type="submit" name="period" value="month">Этот месяц</button> 
-        </div>
-      </div>
-       <div>
-         <button type="submit">Показать</button>
-       </div>
-    </div>
-  </form>
+<main id="doctor-schedule" lang="ru">
+  <section id="filters" title="Фильтр расписания">
+    <form method="get" id="schedule-filter" name="schedule-filter">
+      <h3>Параметры отображения</h3>
+      <ul id="filter-controls">
+        <li>
+          <label for="date_filter_input">Выберите дату:</label>
+          <input type="date" name="date" id="date_filter_input" value="{{ selected_date_str }}">
+        </li>
+        <li>
+          <span id="period-label">Или выберите период:</span>
+          <div id="period-buttons">
+            <button type="submit" name="period" value="today" title="Показать расписание за сегодня">Сегодня</button>
+            <button type="submit" name="period" value="week" title="Показать расписание за текущую неделю">Эта неделя</button>
+            <button type="submit" name="period" value="month" title="Показать расписание за текущий месяц">Этот месяц</button>
+          </div>
+        </li>
+        <li>
+          <button type="submit" title="Показать расписание по выбранной дате">Показать</button>
+        </li>
+      </ul>
+    </form>
+  </section>
 
   {% if appointments %}
-    <div>
-      {% for app in appointments %}
-        {% timezone user_active_timezone_name|default:"UTC" %}
-        <div>
-          <div>
-            <div>{{ app.start_datetime|date:"d F Y" }} ({{ app.start_datetime|date:"l" }})</div>
-            <div>
-              {{ app.start_datetime|date:"H:i" }} - {{ app.end_datetime|date:"H:i" }}
-            </div>
-          </div>
-          <div>
-            <p><strong>Услуга:</strong> {{ app.service.name }}</p>
-            <p>
-              <strong>Клиент:</strong>
-              {% if app.client.user_profile.user.get_full_name %}
-                {{ app.client.user_profile.user.get_full_name }}
-              {% else %}
-                {{ app.client.user_profile.user.username }}
-              {% endif %}
-              {% if app.client.user_profile.phone_number %}
-                <small> (Тел: {{ app.client.user_profile.phone_number }})</small>
-              {% endif %}
-            </p>
-            <p>
-              <strong>Статус:</strong>
-              <span>
-                {{ app.get_status_display }}
-              </span>
-            </p>
-            {% if app.notes_by_client %}
-              <p>
-                <small><strong>Примечание клиента:</strong><br>{{ app.notes_by_client|linebreaksbr }}</small>
-              </p>
-            {% endif %}
-          </div>
-        </div>
-        {% endtimezone %}
-      {% endfor %}
-    </div>
+    <section id="appointments" title="Список записей">
+      <ul id="appointments-list">
+        {% for app in appointments %}
+          {% timezone user_active_timezone_name|default:"UTC" %}
+          <li id="appointment-{{ app.id }}">
+            <article>
+              <header id="appointment-header-{{ app.id }}">
+                <h3 id="appointment-date-{{ app.id }}">
+                  <time datetime="{{ app.start_datetime|date:'Y-m-d' }}">
+                    {{ app.start_datetime|date:"d F Y" }}
+                  </time>
+                  ({{ app.start_datetime|date:"l" }})
+                </h3>
+                <p id="appointment-time-{{ app.id }}">
+                  <time datetime="{{ app.start_datetime|time:'H:i' }}">{{ app.start_datetime|date:"H:i" }}</time>
+                  —
+                  <time datetime="{{ app.end_datetime|time:'H:i' }}">{{ app.end_datetime|date:"H:i" }}</time>
+                </p>
+              </header>
+
+              <section id="appointment-details-{{ app.id }}" title="Детали записи">
+                <dl>
+                  <dt>Услуга</dt>
+                  <dd>{{ app.service.name }}</dd>
+
+                  <dt>Клиент</dt>
+                  <dd>
+                    {% if app.client.user_profile.user.get_full_name %}
+                      {{ app.client.user_profile.user.get_full_name }}
+                    {% else %}
+                      {{ app.client.user_profile.user.username }}
+                    {% endif %}
+                    {% if app.client.user_profile.phone_number %}
+                      <small> (Тел: {{ app.client.user_profile.phone_number }})</small>
+                    {% endif %}
+                  </dd>
+
+                  <dt>Статус</dt>
+                  <dd>{{ app.get_status_display }}</dd>
+                </dl>
+
+                {% if app.notes_by_client %}
+                  <section id="appointment-notes-{{ app.id }}" title="Примечание клиента">
+                    <p><small><strong>Примечание клиента:</strong><br>{{ app.notes_by_client|linebreaksbr }}</small></p>
+                  </section>
+                {% endif %}
+              </section>
+            </article>
+          </li>
+          {% endtimezone %}
+          {% if not forloop.last %}<hr>{% endif %}
+        {% endfor %}
+      </ul>
+    </section>
   {% else %}
-    <div>
-      На выбранный период ({{ page_subtitle|lower }}) у вас нет записей.
-    </div>
+    <section id="no-appointments">
+      <p>На выбранный период ({{ page_subtitle|lower }}) у вас нет записей.</p>
+    </section>
   {% endif %}
-</div>
+</main>
 {% endblock %}

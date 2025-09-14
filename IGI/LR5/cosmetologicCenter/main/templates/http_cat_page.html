@@ -6,52 +6,67 @@
 {% block content_title %}{{ page_title|default:"HTTP Коты и Факты о числах" }}{% endblock %}
 
 {% block content %}
-<div>
-    <p>Введите любое число, чтобы увидеть соответствующего кота и интересный факт об этом числе!</p>
-    <p>
-        Источник изображений котов: <a href="https://http.cat/" target="_blank" rel="noopener noreferrer">http.cat</a><br>
-        Источник фактов о числах: <a href="http://numbersapi.com/" target="_blank" rel="noopener noreferrer">numbersapi.com</a>
-    </p>
-
-    <form method="POST" action="{% url 'http_cat' %}">
-        {% csrf_token %}
-        <div>
-            <label for="status_code_or_number">Число (или HTTP Статус-код):</label>
-            <input type="text" id="status_code_or_number" name="status_code_or_number" value="{{ status_code_input|default:'' }}" required pattern="\d+" title="Введите число">
-        </div>
-        <button type="submit">Показать магию!</button>
-    </form>
-
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
-    {% if api_error_message %}
-        <p>{{ api_error_message }}</p>
-    {% endif %}
-
     <div>
-        {% if image_url %}
-            <div>
-                <h3>Кот для статуса {{ status_code_input }}:</h3>
-                <img src="{{ image_url }}" alt="Кот для HTTP статуса {{ status_code_input }}">
-            </div>
-        {% elif request.method == 'POST' and not error_message and status_code_input %}
-            <div>
-                 <p>Не удалось найти кота для числа/статуса {{ status_code_input }} на http.cat.</p>
-            </div>
-        {% endif %}
+        <section id="intro">
+            <p>Введите любое число, чтобы увидеть соответствующего кота и интересный факт об этом числе!</p>
+            <aside id="sources">
+                <h2>Источники</h2>
+                <ul>
+                    <li>
+                        Источник изображений котов:
+                        <a href="https://http.cat/" target="_blank" rel="noopener noreferrer external">http.cat</a>
+                    </li>
+                    <li>
+                        Источник фактов о числах:
+                        <a href="http://numbersapi.com/" target="_blank" rel="noopener noreferrer external">numbersapi.com</a>
+                    </li>
+                </ul>
+            </aside>
+        </section>
 
-        {% if number_fact %}
-            <div>
-                <h3>Факт о числе {{ status_code_input }}:</h3>
-                <p>"{{ number_fact }}"</p>
-            </div>
-        {% elif request.method == 'POST' and not api_error_message and not error_message and status_code_input %}
-            <div>
-                <p>Не удалось получить факт о числе {{ status_code_input }} от numbersapi.com.</p>
-            </div>
-        {% endif %}
+        <section id="query-form">
+            <form method="POST" action="{% url 'http_cat' %}">
+                {% csrf_token %}
+                <div>
+                    <label for="status_code_or_number">Число (или HTTP Статус-код):</label>
+                    <input type="text" id="status_code_or_number" name="status_code_or_number"
+                           value="{{ status_code_input|default:'' }}" required pattern="\d+" title="Введите число">
+                </div>
+                <button type="submit">Показать магию!</button>
+            </form>
+        </section>
+
+        <section id="messages">
+            {% if error_message %}
+                <p>{{ error_message }}</p>
+            {% endif %}
+            {% if api_error_message %}
+                <p>{{ api_error_message }}</p>
+            {% endif %}
+        </section>
+
+        <section id="results">
+            {% if image_url %}
+                <div>
+                    <h3>Кот для статуса {{ status_code_input }}:</h3>
+                    <img src="{{ image_url }}" alt="Кот для HTTP статуса {{ status_code_input }}">
+                </div>
+            {% elif request.method == 'POST' and not error_message and status_code_input %}
+                <div>
+                    <p>Не удалось найти кота для числа/статуса {{ status_code_input }} на http.cat.</p>
+                </div>
+            {% endif %}
+
+            {% if number_fact %}
+                <div>
+                    <h3>Факт о числе {{ status_code_input }}:</h3>
+                    <p>"{{ number_fact }}"</p>
+                </div>
+            {% elif request.method == 'POST' and not api_error_message and not error_message and status_code_input %}
+                <div>
+                    <p>Не удалось получить факт о числе {{ status_code_input }} от numbersapi.com.</p>
+                </div>
+            {% endif %}
+        </section>
     </div>
-
-</div>
 {% endblock %}

@@ -2,39 +2,36 @@
 {% load static %}
 
 {% block title %}Оплата заказа{% endblock %}
-
 {% block content_title %}Подтверждение и оплата{% endblock %}
 
 {% block content %}
-<div>
+<main id="payment">
 
-    <div>
-        <h3>Детали заказа</h3>
-        <p>
-            Количество услуг для оплаты: <strong>{{ items_count }} шт.</strong>
-        </p>
-        <p>
-            К оплате: {{ total_price }} руб.
-        </p>
-    </div>
+  <section id="order-summary">
+    <h2>Детали заказа</h2>
+    <dl>
+      <dt>Количество услуг для оплаты</dt>
+      <dd><data value="{{ items_count }}">{{ items_count }}</data> шт.</dd>
 
-    <div>
-        <h4>Это страница-симулятор оплаты</h4>
-        <p>Для завершения бронирования, пожалуйста, нажмите на кнопку "Оплатить" ниже.</p>
-        <p>Реальная платежная система не подключена.</p>
+      <dt>К оплате</dt>
+      <dd><data value="{{ total_price }}">{{ total_price }}</data> руб.</dd>
+    </dl>
+  </section>
 
-        <form action="{% url 'process_payment' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">
-                Оплатить {{ total_price }} руб.
-            </button>
-        </form>
+  <section id="payment-simulator">
+    <h2>Симулятор оплаты</h2>
+    <p>Для завершения бронирования нажмите кнопку «Оплатить» ниже.</p>
+    <p>Реальная платёжная система не подключена.</p>
 
-    </div>
+    <form action="{% url 'process_payment' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Оплатить {{ total_price }} руб.</button>
+    </form>
+  </section>
 
-    <div>
-        <a href="{% url 'cart_view' %}">&larr; Вернуться в корзину</a>
-    </div>
+  <nav>
+    <a href="{% url 'cart_view' %}">&larr; Вернуться в корзину</a>
+  </nav>
 
-</div>
+</main>
 {% endblock %}

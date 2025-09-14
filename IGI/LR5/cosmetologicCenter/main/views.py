@@ -1305,13 +1305,17 @@ def service_detail_view(request, pk):
 
 @login_required
 def cart_view(request):
-
-    cart_items = Appointment.objects.filter(
-        client_id=request.user.profile.id,
-        status='booked'
-    ).order_by('start_datetime')
-
-    total_price = sum(item.price_at_booking for item in cart_items)
+    try:
+        client_instance = request.user.profile.client_profile
+    except Client.DoesNotExist:
+        cart_items = Appointment.objects.none()
+        total_price = 0
+    else:
+        cart_items = Appointment.objects.filter(
+            client=client_instance,
+            status='booked'
+        ).order_by('start_datetime')
+        total_price = sum(item.price_at_booking for item in cart_items)
 
     context = {
         'cart_items': cart_items,
@@ -1321,20 +1325,34 @@ def cart_view(request):
 
 @login_required
 def remove_from_cart_view(request, appointment_id):
-    item_to_delete = get_object_or_404(
-        Appointment,
-        pk=appointment_id,
-        client_id=request.user.profile.id,
-        status='booked'
-    )
-    item_to_delete.delete()
+    try:
+        client_instance = request.user.profile.client_profile
+        item_to_delete = get_object_or_404(
+            Appointment,
+            pk=appointment_id,
+            client=client_instance,
+            status='booked'
+        )
+        item_to_delete.delete()
+    except Client.DoesNotExist:
+        messages.error(request, "Профиль клиента не найден.")
+
     return redirect('cart_view')
 
 
 @login_required
 def payment_page_view(request):
-    cart_items = Appointment.objects.filter(client_id=request.user.profile.id, status='booked')
+    try:
+        client_instance = request.user.profile.client_profile
+        cart_items = Appointment.objects.filter(
+            client=client_instance,
+            status='booked'
+        )
+    except Client.DoesNotExist:
+        cart_items = Appointment.objects.none()
+
     if not cart_items.exists():
+        messages.info(request, "Ваша корзина пуста.")
         return redirect('cart_view')
 
     total_price = sum(item.price_at_booking for item in cart_items)
@@ -1346,11 +1364,23 @@ def payment_page_view(request):
 @transaction.atomic
 def process_payment_view(request):
     if request.method == 'POST':
-        items_to_pay = Appointment.objects.filter(client_id=request.user.profile.id, status='booked')
+        try:
+            client_instance = request.user.profile.client_profile
+            items_to_pay = Appointment.objects.filter(
+                client=client_instance,
+                status='booked'
+            )
+            if items_to_pay.exists():
+                items_to_pay.update(status='paid')
+                messages.success(request, "Оплата прошла успешно! Ваши записи подтверждены.")
+                return redirect('booking_success')
+            else:
+                messages.warning(request, "Нечего оплачивать.")
+                return redirect('cart_view')
+        except Client.DoesNotExist:
+            messages.error(request, "Профиль клиента не найден.")
+            return redirect('home')
 
-        items_to_pay.update(status='paid')
-
-        return redirect('booking_success')
     return redirect('home')
 
 
