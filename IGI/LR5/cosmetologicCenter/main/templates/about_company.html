@@ -50,6 +50,7 @@
                                 </iframe>
                             </div>
                         </section>
+
                     {% else %}
                         <p>
                             Не удалось встроить видео.
@@ -61,7 +62,8 @@
             {% endif %}
 
             {% if company_profile.history_text %}
-                <section id="history" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
+                <section id="history" itemprop="additionalProperty" itemscope
+                         itemtype="https://schema.org/PropertyValue">
                     <meta itemprop="name" content="История компании">
                     <hr>
                     <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
@@ -80,7 +82,8 @@
             {% endif %}
 
             {% if company_profile.certificate_text %}
-                <section id="certificates" itemprop="hasCertification" itemscope itemtype="https://schema.org/EducationalOccupationalCredential">
+                <section id="certificates" itemprop="hasCertification" itemscope
+                         itemtype="https://schema.org/EducationalOccupationalCredential">
                     <meta itemprop="name" content="Сертификаты и лицензии">
                     <hr>
                     <h3>{{ company_profile.certificate_title|default:"Сертификаты и лицензии" }}</h3>
@@ -91,9 +94,10 @@
             {% endif %}
 
             <footer>
-                 <p>
+                <p>
                     Информация последний раз обновлена:
-                    <time datetime="{{ company_profile.last_updated|date:'c' }}" itemprop="dateModified">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
+                    <time datetime="{{ company_profile.last_updated|date:'c' }}"
+                          itemprop="dateModified">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
                 </p>
             </footer>
         </article>

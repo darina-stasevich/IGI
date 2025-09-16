@@ -339,6 +339,31 @@ print(sum_to(5))  # 15
             </div>
         </section>
 
+        <section id="video-demo">
+            <video width="360" height="240"
+                   src="{% static 'videos/2025-06-26 11-21-48.mkv' %}"
+                   autoplay controls preload="none" muted>
+                Video cannot be displayed
+            </video>
+        </section>
+
+        <section id="audio-demo">
+            <audio controls autoplay>
+                <source src="{% static 'audio/mobileringtone.online_never-gonna-give-you-up.mp3' %}"/>
+                Audio content cannot be played
+            </audio>
+        </section>
+
+        <section id="adaptive-image">
+            <img
+                    src="{% static 'images/banners/banner1.png' %}"
+                    srcset="
+      {% static 'images/banners/banner1.png' %} 1x,
+      {% static 'images/banners/banner2.png' %} 2x,
+      {% static 'images/banners/banner3.png' %} 3x"
+                    alt="Адаптивное изображение"
+                    loading="lazy" decoding="async">
+        </section>
         <p><a href="/">Вернуться на главную</a></p>
     </article>
 {% endblock %}
