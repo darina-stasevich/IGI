@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Лабораторная: Примеры code/var/samp/kbd{% endblock %}
 {% block content_title %}Демонстрация семантических тегов{% endblock %}
 
@@ -61,6 +61,122 @@ print(sum_to(5))  # 15
             <p translate="no" lang="en">
                 this is example.
             </p>
+        </section>
+
+        <section id="quatrain-demo">
+            <h2>Четверостишие: фиксированный и потенциальный перенос строки</h2>
+
+            <p>
+                Я помню чудное мгновенье:<br>
+                Передо мной явилась ты,<br>
+                Как мимолетное виденье,<br>
+                Как гений чистой красоты.
+            </p>
+
+            <p>
+                Я помню
+                <wbr>
+                чудное
+                <wbr>
+                мгновенье:<br>
+                Передо мной
+                <wbr>
+                явилась ты,<br>
+                Как мимолетное
+                <wbr>
+                виденье,<br>
+                Как гений
+                <wbr>
+                чистой красоты.
+            </p>
+
+            <p translate="no">пре<wbr>вы<wbr>со<wbr>ко<wbr>мно<wbr>го<wbr>рас<wbr>смот<wbr>ри<wbr>тель<wbr>ству<wbr>ющий<wbr></p>
+        </section>
+        <section>
+            <p>
+                Пример только времени: встреча в
+                <mark>
+                    <time datetime="18:30">18:30</time>
+                </mark>
+                .
+            </p>
+            <p>
+                Пример только даты: День знаний —
+                <time datetime="2025-09-01">1 сентября 2025</time>
+                .
+            </p>
+            <p>
+                <time datetime="2025-09-14T16:45:35Z" translate="no">14.09.2025 16:45 UTC</time>
+                .
+            </p>
+        </section>
+        <section id="href-demo">
+
+            <ul>
+                <li>
+                    Файл для скачивания:
+                    <a href="{% static 'files/emnet.docx' %}"
+                       download="emnet.docx"
+                       type="text/plain">
+                        emnet.docx
+                    </a>
+                </li>
+                <li>
+                    Ссылка на изображение (открыть в новой вкладке):
+                    <a href="{% static 'images/default_avatar.png' %}"
+                       target="_blank"
+                       rel="noopener">
+                        sample-photo.jpg
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section id="table-demo">
+            <table>
+                <caption>Расходы по отделам и месяцам</caption>
+                <thead>
+                <tr>
+                    <th id="h-dept" scope="col" rowspan="2">Отдел</th>
+                    <th id="h-jan" scope="colgroup" colspan="2">Январь</th>
+                    <th id="h-feb" scope="colgroup" colspan="2">Февраль</th>
+                    <th id="h-total" scope="col" rowspan="2">Итого</th>
+                </tr>
+                <tr>
+                    <th id="h-jan-sum" scope="col">Сумма, ₽</th>
+                    <th id="h-jan-notes" scope="col">Заметка</th>
+                    <th id="h-feb-sum" scope="col">Сумма, ₽</th>
+                    <th id="h-feb-notes" scope="col">Заметка</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th id="d-it" scope="row">ИТ</th>
+                    <td headers="d-it h-jan h-jan-sum">350 000</td>
+                    <td headers="d-it h-jan h-jan-notes">Апгрейд серверов</td>
+                    <td headers="d-it h-feb h-feb-sum">120 000</td>
+                    <td headers="d-it h-feb h-feb-notes">Лицензии ПО</td>
+                    <td headers="d-it h-total">470 000</td>
+                </tr>
+                <tr>
+                    <th id="d-mkt" scope="row">Маркетинг</th>
+                    <td headers="d-mkt h-jan h-jan-sum">200 000</td>
+                    <td headers="d-mkt h-jan h-jan-notes">SMM и креатив</td>
+                    <td headers="d-mkt h-feb h-feb-sum">300 000</td>
+                    <td headers="d-mkt h-feb h-feb-notes">Контекст/таргет</td>
+                    <td headers="d-mkt h-total">500 000</td>
+                </tr>
+                <tr>
+                    <th id="d-sales" scope="row">Продажи</th>
+                    <td headers="d-sales h-jan h-jan-sum">100 000</td>
+                    <td headers="d-sales h-jan h-jan-notes h-feb h-feb-notes" colspan="2">Единая заметка на два
+                        месяца
+                    </td>
+                    <td headers="d-sales h-feb h-feb-sum">150 000</td>
+                    <td headers="d-sales h-total">250 000</td>
+                </tr>
+                </tbody>
+            </table>
         </section>
 
         <p><a href="/">Вернуться на главную</a></p>
