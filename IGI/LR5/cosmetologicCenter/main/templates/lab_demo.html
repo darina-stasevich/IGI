@@ -90,7 +90,31 @@ print(sum_to(5))  # 15
                 чистой красоты.
             </p>
 
-            <p translate="no">пре<wbr>вы<wbr>со<wbr>ко<wbr>мно<wbr>го<wbr>рас<wbr>смот<wbr>ри<wbr>тель<wbr>ству<wbr>ющий<wbr></p>
+            <p translate="no">пре
+                <wbr>
+                вы
+                <wbr>
+                со
+                <wbr>
+                ко
+                <wbr>
+                мно
+                <wbr>
+                го
+                <wbr>
+                рас
+                <wbr>
+                смот
+                <wbr>
+                ри
+                <wbr>
+                тель
+                <wbr>
+                ству
+                <wbr>
+                ющий
+                <wbr>
+            </p>
         </section>
         <section>
             <p>
@@ -133,7 +157,7 @@ print(sum_to(5))  # 15
         </section>
 
         <section id="table-demo">
-            <table>
+            <table border="1">
                 <caption>Расходы по отделам и месяцам</caption>
                 <thead>
                 <tr>
@@ -177,6 +201,142 @@ print(sum_to(5))  # 15
                 </tr>
                 </tbody>
             </table>
+        </section>
+
+        <section id="plain-form-demo">
+            <h2>Простая форма: input разных типов (без разметки)</h2>
+            <form id="plain-form" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+
+                <input type="hidden" name="form_type" value="plain_demo">
+
+                <!-- text -->
+                <label>
+                    Имя пользователя:
+                    <input type="text" name="username" id="pf-username"
+                           placeholder="Введите имя"
+                           size="20"
+                           maxlength="30">
+                </label>
+
+                <!-- password -->
+                <label>
+                    Пароль:
+                    <input type="password" name="password" id="pf-password" maxlength="30">
+                </label>
+
+                <!-- checkbox -->
+                <label>
+                    push-уведомления:
+                    <input type="checkbox" name="subscribe" value="yes" id="pf-subscribe">
+                </label>
+
+                <!-- radio (required) -->
+                <span>Выберите пол:</span>
+                <input type="radio" name="gender" id="pf-male" value="male" required> <label
+                    for="pf-male">Мужской</label>
+                <input type="radio" name="gender" id="pf-female" value="female"> <label for="pf-female">Женский</label>
+
+                <!-- select, optgroup, disabled -->
+                <label>
+                    Выберите фрукт:
+                    <select name="fruit" id="pf-fruit">
+                        <option value="" disabled selected>Выберите фрукт</option>
+                        <optgroup label="Цитрусовые">
+                            <option value="orange">Апельсин</option>
+                            <option value="lemon" disabled>Лимон</option>
+                        </optgroup>
+                        <optgroup label="Ягоды">
+                            <option value="strawberry">Клубника</option>
+                            <option value="blueberry">Черника</option>
+                        </optgroup>
+                        <option value="apple">Яблоко</option>
+                    </select>
+                </label>
+
+                <!-- datalist -->
+                <label>
+                    Город:
+                    <input type="text" name="city" list="pf-city-list" id="pf-city">
+                    <datalist id="pf-city-list">
+                        <option value="Минск"></option>
+                        <option value="Гродно"></option>
+                        <option value="Брест"></option>
+                        <option value="Гомель"></option>
+                        <option value="Могилев"></option>
+                        <option value="Витебск"></option>
+                    </datalist>
+                </label>
+
+                <!-- file -->
+                <label>
+                    Фото для загрузки:
+                    <input type="file" name="photo" id="pf-photo" accept=".jpg,.jpeg,.png,image/*">
+                </label>
+
+                <!-- readonly -->
+                <label>
+                    readonly text:
+                    <input type="text" name="usercode" value="USR-001" readonly>
+                </label>
+
+                <!-- color -->
+                <label>
+                    Цвет:
+                    <input type="color" name="theme_color" value="#000000">
+                </label>
+
+                <!-- date -->
+                <label>
+                    Дата рождения:
+                    <input type="date" name="birthday" id="pf-birthday">
+                </label>
+
+                <!-- range -->
+                <label>
+                    Уровень настроения:
+                    <input type="range" name="comfort_level" min="0" max="10" value="5" id="pf-comfort">
+                </label>
+
+                <!-- textarea -->
+                <label>
+                    О себе:
+                    <textarea name="about" rows="3" cols="32"></textarea>
+                </label>
+
+                <!-- image button -->
+                <input type="image"
+                       src="{% static 'images/default_avatar.png' %}"
+                       alt="Отправить"
+                       name="img_submit"
+                       height="40"
+                       width="80"
+                       border="1">
+
+                <!-- submit/reset buttons -->
+                <input type="submit" value="Отправить">
+                <input type="reset" value="Очистить">
+            </form>
+
+            <div>
+                <h3>Данные, отправленные через форму:</h3>
+                {% if plain_demo_submitted %}
+                    <output id="plain-form-output">{{ plain_demo_text }}</output>
+                    <details>
+                        <summary>Показать подробный список</summary>
+                        <ul>
+                            {% for key, value in plain_demo_pairs %}
+                                <li><strong>{{ key }}</strong> = {{ value }}</li>
+                            {% endfor %}
+                            {% for key, filename in plain_demo_files %}
+                                <li><strong>{{ key }}</strong> = [Файл: {{ filename }}]</li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                {% else %}
+                    <output id="plain-form-output">Отправьте форму, чтобы увидеть данные.</output>
+                {% endif %}
+            </div>
         </section>
 
         <p><a href="/">Вернуться на главную</a></p>

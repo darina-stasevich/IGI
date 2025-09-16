@@ -42,6 +42,7 @@ urlpatterns = [
     path('payment/', views.payment_page_view, name='payment_page'),
     path('payment/process/', views.process_payment_view, name='process_payment'),
     path('booking-success/', views.booking_success_view, name='booking_success'),
-    path('lab/demo/', TemplateView.as_view(template_name='lab_demo.html'), name='lab_demo'),
+    path('lab/demo/', views.lab_demo_view, name='lab_demo'),
+
 
 ]

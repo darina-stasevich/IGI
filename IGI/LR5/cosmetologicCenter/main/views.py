@@ -1387,3 +1387,23 @@ def process_payment_view(request):
 @login_required
 def booking_success_view(request):
     return render(request, 'booking_success.html')
+
+def lab_demo_view(request):
+    context = {}
+    if request.method == 'POST' and request.POST.get('form_type') == 'plain_demo':
+        # Собрать пары ключ=значение, исключив служебные поля
+        skip = {'csrfmiddlewaretoken', 'form_type', 'img_submit.x', 'img_submit.y'}
+        pairs = [(k, v) for k, v in request.POST.items() if k not in skip]
+
+        # Собрать файлы (только имена для отображения)
+        files = [(k, f.name) for k, f in request.FILES.items()]
+
+        # Строка для <output>
+        parts = [f"{k}={v}" for k, v in pairs] + [f"{k}=[Файл: {name}]" for k, name in files]
+        context.update(
+            plain_demo_submitted=True,
+            plain_demo_pairs=pairs,
+            plain_demo_files=files,
+            plain_demo_text=', '.join(parts) if parts else 'Нет данных',
+        )
+    return render(request, 'lab_demo.html', context)
