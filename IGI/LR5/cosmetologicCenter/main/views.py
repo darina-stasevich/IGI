@@ -25,7 +25,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.http import require_POST
-
+from django.db.models import Case, When, BooleanField, Value
 from .forms import ClientRegistrationForm, DoctorRegistrationForm, UserLoginForm, ClientProfileUpdateForm, ReviewForm, \
     DoctorLeaveRequestForm, DoctorDayOffRequestForm, AppointmentNotesForm
 from .models import UserProfile, Client, Appointment, ServiceCategory, Service, Review, Doctor, DoctorLeave, \
@@ -1035,15 +1035,21 @@ def public_promo_code_list_view(request):
 
     current_date = timezone.localdate()
 
-    active_promo_codes = PromoCode.objects.filter(
+    all_promo_codes = PromoCode.objects.filter(
         is_active=True,
-        valid_from__lte=current_date,
-        valid_to__gte=current_date,).extra(
+        valid_from__lte=current_date
+    ).extra(
         where=["(max_uses IS NULL OR used_count < max_uses)"]
-    ).order_by('-valid_to', 'code')
+    ).annotate(
+        is_currently_valid=Case(
+            When(valid_to__gte=current_date, then=Value(True)),
+            default=Value(False),
+            output_field=BooleanField()
+        )
+    ).order_by('-is_currently_valid', '-valid_to')
 
     context = {
-        'promo_codes': active_promo_codes,
+        'promo_codes': all_promo_codes,
         'current_date': current_date,
         'page_title': "Акции и промокоды",
     }

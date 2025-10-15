@@ -360,26 +360,38 @@ class ReviewAdmin(admin.ModelAdmin):
 class CompanyProfileAdmin(admin.ModelAdmin):
     list_display = ('main_info_title', 'last_updated')
     readonly_fields = ('last_updated',)
-
     fieldsets = (
         ('Основная информация', {
-            'fields': ('main_info_title', 'main_info_text', 'logo_url', 'video_url')
+            'fields': ('main_info_title', 'main_info_text', 'video_url')
         }),
-        ('Лицензии и сертификаты (опционально)', {
-            'classes': ('collapse',),
-            'fields': ('certificate_title', 'certificate_text')
-        }),
-        ('История компании (опционально)', {
-            'classes': ('collapse',),
+        ('История компании', {
+            'classes': ('collapse',),  # Секция будет по умолчанию свернута
             'fields': ('history_title', 'history_text')
         }),
-        ('Реквизиты (опционально)', {
+        ('Реквизиты', {
             'classes': ('collapse',),
             'fields': ('requisites_title', 'requisites_text')
         }),
-        (None, {
-            'fields': ('last_updated',)
-        })
+        ('Настройки Сертификата/Лицензии', {
+            'description': "Все поля для динамического отображения сертификата на сайте.",
+            'fields': (
+                # Сгруппируем поля по логике
+                'cert_title',
+                'cert_subtitle',
+                'cert_city',
+                'cert_issue_date',
+                'cert_org_name',
+                'cert_org_inn_kpp',
+                'cert_registry_number',
+                'cert_director_name',
+                'cert_director_title',
+                'cert_licensee_ogrn',
+                'cert_licensee_legal_address',
+                'cert_licensee_activity_address',
+                'cert_seal_image_url',
+                'cert_footer_logo_url',
+            )
+        }),
     )
 
     def has_add_permission(self, request):

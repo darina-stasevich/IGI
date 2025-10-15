@@ -4,6 +4,12 @@
 {% block title %}Словарь терминов (FAQ) - Клиника "Здоровье"{% endblock %}
 {% block content_title %}Словарь терминов и понятий (FAQ){% endblock %}
 
+{% block extra_head %}
+  <style media="all">
+    @import url("{% static 'css/faq_style.css' %}");
+  </style>
+{% endblock %}
+
 {% block content %}
 <main id="faq" lang="ru">
   {% if faq_items %}
@@ -23,7 +29,6 @@
             </div>
           </details>
         </article>
-        {% if not forloop.last %}<hr>{% endif %}
       {% endfor %}
     </section>
   {% else %}

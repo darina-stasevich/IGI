@@ -5,71 +5,49 @@
 {% block content_title %}Новости и статьи{% endblock %}
 
 {% block extra_head %}
-<style>
-  .news-card .news-image {
-    width: 320px;
-    height: 200px;
-    overflow: hidden;
-  }
-  .news-card .news-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-</style>
+  <style media="all">
+    @import url("{% static 'css/article_list_style.css' %}");
+  </style>
 {% endblock %}
 
 {% block content %}
   {% if articles %}
-    <section id="news-list" itemscope itemtype="https://schema.org/ItemList">
-      <meta itemprop="name" content="Новости и статьи клиники «Здоровье»">
-
+    <div id="news-list" itemscope itemtype="https://schema.org/ItemList">
       {% for article in articles %}
         <article id="article-{{ article.slug }}" class="news-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/NewsArticle">
           <meta itemprop="position" content="{{ forloop.counter }}">
-
-          <header>
-            <h3 id="article-title-{{ article.slug }}">
-              <a href="{% url 'article_detail' article.slug %}" itemprop="url">
-                <span itemprop="headline">{{ article.title }}</span>
-              </a>
-            </h3>
-            <p>
-              <time datetime="{{ article.published_date|date:'c' }}" itemprop="datePublished">
-                Опубликовано: {{ article.published_date|date:"d F Y" }}
-              </time>
-              {% if article.author %}
-                | Автор: <span itemprop="author" itemscope itemtype="https://schema.org/Person">
-                  <span itemprop="name">{{ article.author.get_full_name|default:article.author.username }}</span>
-                </span>
-              {% endif %}
-            </p>
-          </header>
-
           {% if article.image or article.image_url %}
             <figure>
-              {% if article.image %}
-                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200" itemprop="image">
-              {% else %}
-                <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async" width="320" height="200" itemprop="image">
-              {% endif %}
-              {% if article.short_description %}
-                <figcaption id="desc-{{ article.slug }}">{{ article.short_description }}</figcaption>
-              {% endif %}
+              <a href="{% url 'article_detail' article.slug %}" tabindex="-1">
+                {% if article.image %}
+                  <img src="{{ article.image.url }}" alt="">
+                {% else %}
+                  <img src="{{ article.image_url }}" alt="">
+                {% endif %}
+              </a>
             </figure>
           {% endif %}
+          <div class="card-content">
+            <header>
+              <h3>
+                <a href="{% url 'article_detail' article.slug %}" title="{{ article.title }}">{{ article.title }}</a>
+              </h3>
+              <p class="meta-info">
+                <time datetime="{{ article.published_date|date:'c' }}">{{ article.published_date|date:"d F Y" }}</time>
+                {% if article.author %}| <span>{{ article.author.get_full_name|default:article.author.username }}</span>{% endif %}
+              </p>
+            </header>
 
-          {% if article.short_description %}
-            <p itemprop="description">{{ article.short_description }}</p>
-          {% endif %}
+            {% if article.short_description %}
+              <p class="description">{{ article.short_description }}</p>
+            {% endif %}
 
-          <p>
-            <a href="{% url 'article_detail' article.slug %}">Читать далее</a>
-          </p>
+            <a href="{% url 'article_detail' article.slug %}" class="read-more-btn">Читать далее</a>
+          </div>
         </article>
       {% endfor %}
-    </section>
-
-    {% endif %}
+    </div>
+  {% else %}
+    <p>На данный момент нет опубликованных статей.</p>
+  {% endif %}
 {% endblock %}

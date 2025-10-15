@@ -1,24 +1,55 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Лабораторная: Примеры code/var/samp/kbd{% endblock %}
-{% block content_title %}Демонстрация семантических тегов{% endblock %}
+
+{% block title %}Лабораторная: Демонстрация стилей{% endblock %}
+{% block content_title %}Демонстрация семантических тегов и стилей CSS{% endblock %}
+
+{% block extra_head %}
+    <style media="all">
+        @import url("{% static 'css/lab_demo_style.css' %}");
+    </style>
+{% endblock %}
 
 {% block content %}
-    <article>
+
+    <article class="demo-article">
         <section>
-            <h2>Встроенные примеры</h2>
-            <p>
-                Вызов функции с параметром <var>n</var>: <code translate="no">sum_to(<var>n</var>)</code>.
-                Формула суммы: <code translate="no">S = <var>n</var>(<var>n</var> + 1) / 2</code>.
+            <h2>Встроенные примеры и интервалы</h2>
+
+            <p class="paragraph-with-indent">
+                Переходы в CSS позволяют плавно перейти от одного состояния элемента к другому. отдельные свойства анимируются от начального состояния до конечного (только два состояния).
             </p>
+
             <p>
-                Пример запуска в REPL: <code translate="no">sum_to(5)</code><br>
-                Ожидаемый результат: <samp translate="no">15</samp>
+                Копирование строки: нажмите <kbd>Ctrl</kbd> + <kbd>C</kbd> (Windows/Linux) или <kbd>Cmd</kbd> +
+                <kbd>C</kbd> (macOS).
             </p>
-            <p>
-                Копирование строки: нажмите <kbd>Ctrl</kbd> + <kbd>C</kbd> (Windows/Linux) или
-                <kbd>Cmd</kbd> + <kbd>C</kbd> (macOS).
+
+            <p class="spacing-demo">
+                В этом предложении увеличен интервал между словами и буквами.
             </p>
+        </section>
+
+        <section id="quatrain-demo">
+            <h2>Перенос и разрыв слов</h2>
+
+            <div class="word-break-demo">
+                <p>
+                    Этот блок демонстрирует принудительный перенос слов с помощью <code>overflow-wrap:
+                    break-word;</code>. Например, вот такое длинноесловобезпробелов:
+                    превысокомногорассмотрительствующий.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Позиционирование блоков</h2>
+            <div class="positioning-container">
+                Это родительский блок (<code>position: relative</code>).
+                <div class="positioned-box">
+                    А это дочерний блок (<code>position: absolute</code>).
+                </div>
+            </div>
         </section>
 
         <section>
@@ -29,9 +60,6 @@
 
 print(sum_to(5))  # 15
 </code></pre>
-            <p>Вывод программы: <samp translate="no">15</samp></p>
-            <p>Запуск: выделите блок и нажмите <kbd>Ctrl</kbd> + <kbd>C</kbd>, затем вставьте в REPL <kbd>Ctrl</kbd> +
-                <kbd>V</kbd>.</p>
         </section>
 
         <section id="attrs-demo">
@@ -43,12 +71,13 @@ print(sum_to(5))  # 15
             </p>
 
             <h3>dir (направление письма)</h3>
-            <p lang="ar" dir="rtl" tabindex="0" aria-label="Пример справа налево">
+            <q lang="ar" dir="rtl" tabindex="0" aria-label="Пример справа налево">
                 مثال للنص من اليمين إلى اليسار — العربية.
-            </p>
-            <p lang="en" dir="ltr" tabindex="0" aria-label="Пример слева направо">
+            </q>
+            <br>
+            <q lang="en" dir="ltr" tabindex="0" aria-label="Пример слева направо">
                 Left-to-right sample text — English.
-            </p>
+            </q>
 
             <h3>hidden</h3>
             <p hidden id="hidden-example">
@@ -157,7 +186,7 @@ print(sum_to(5))  # 15
         </section>
 
         <section id="table-demo">
-            <table border="3">
+            <table>
                 <caption>Расходы по отделам и месяцам</caption>
                 <thead>
                 <tr>
@@ -193,11 +222,18 @@ print(sum_to(5))  # 15
                 <tr>
                     <th id="d-sales" scope="row">Продажи</th>
                     <td headers="d-sales h-jan h-jan-sum">100 000</td>
-                    <td headers="d-sales h-jan h-jan-notes h-feb h-feb-notes" colspan="2">Единая заметка на два
-                        месяца
-                    </td>
+                    <td headers="d-sales h-jan h-jan-notes">Бонусы</td>
                     <td headers="d-sales h-feb h-feb-sum">150 000</td>
+                    <td headers="d-sales h-feb h-feb-notes">Комиссии</td>
                     <td headers="d-sales h-total">250 000</td>
+                </tr>
+                <tr>
+                    <th id="d-hr" scope="row">Кадры</th>
+                    <td headers="d-hr h-jan h-jan-sum">80 000</td>
+                    <td headers="d-hr h-jan h-jan-notes">Обучение</td>
+                    <td headers="d-hr h-feb h-feb-sum"></td>
+                    <td headers="d-hr h-feb h-feb-notes">Нет расходов</td>
+                    <td headers="d-hr h-total">80 000</td>
                 </tr>
                 </tbody>
             </table>
@@ -262,13 +298,13 @@ print(sum_to(5))  # 15
                 </label>
 
                 <datalist id="pf-city-list">
-                        <option value="Минск"></option>
-                        <option value="Гродно"></option>
-                        <option value="Брест"></option>
-                        <option value="Гомель"></option>
-                        <option value="Могилев"></option>
-                        <option value="Витебск"></option>
-                    </datalist>
+                    <option value="Минск"></option>
+                    <option value="Гродно"></option>
+                    <option value="Брест"></option>
+                    <option value="Гомель"></option>
+                    <option value="Могилев"></option>
+                    <option value="Витебск"></option>
+                </datalist>
 
                 <!-- file -->
                 <label>

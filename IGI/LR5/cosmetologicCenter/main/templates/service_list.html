@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     {% if current_category %}
@@ -6,6 +7,12 @@
     {% else %}
         Все услуги
     {% endif %}
+{% endblock %}
+
+{% block extra_head %}
+  <style media="all">
+    @import url("{% static 'css/service_list_style.css' %}");
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +28,7 @@
             <hr>
         </header>
 
-        <div>
+        <div class=service-layout-grid">
             <aside>
                 <h2 id="categories-heading">Категории услуг</h2>
                 <nav>
@@ -40,9 +47,9 @@
                 </nav>
             </aside>
 
-            <section id="services-list">
+           <section id="services-list">
                 {% if services %}
-                    <ul>
+                    <ul class="service-cards-grid">
                         {% for service in services %}
                             <li>
                                 {% if current_category %}

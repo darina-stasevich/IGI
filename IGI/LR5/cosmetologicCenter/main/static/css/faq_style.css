@@ -1,0 +1,67 @@
+#faq-list {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#faq-list article {
+    margin-bottom: 1rem;
+}
+
+#faq-list details {
+    background-color: var(--color-background-content);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: box-shadow 0.3s ease;
+}
+
+#faq-list details[open] {
+    box-shadow: var(--box-shadow, 0 4px 12px rgba(0,0,0,0.05));
+}
+
+#faq-list summary {
+    position: relative;
+    padding: 1.25rem 3rem 1.25rem 1.25rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+/* list marker лист маркер */
+#faq-list summary::-webkit-details-marker {
+    display: none;
+}
+
+#faq-list summary::after {
+    content: '+';
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    transition: transform 0.3s ease;
+}
+
+#faq-list details[open] summary::after {
+    content: '\00D7';
+    transform: translateY(-50%) rotate(360deg);
+}
+
+#faq-list details > div {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+#faq-list details > div p:first-child {
+    margin-top: 0;
+}
+
+#faq-list time {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-style: italic;
+}

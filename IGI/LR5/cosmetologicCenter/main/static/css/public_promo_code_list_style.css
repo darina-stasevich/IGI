@@ -1,0 +1,106 @@
+#promotions ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.promo-card {
+    background: var(--color-background-content);
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.promo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* селектор, псевдокласс, псевдоэлемент*/
+.promo-card::before,
+.promo-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--color-background-page);
+}
+.promo-card::before {
+    left: -15px;
+}
+.promo-card::after {
+    right: -15px;
+}
+
+.promo-card header,
+.promo-card section {
+    padding: 1rem 2rem;
+}
+
+.promo-card header h3 {
+    margin: 0;
+    text-align: center;
+}
+.promo-card code {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border: 2px dashed var(--color-primary);
+    background-color: rgba(32, 201, 151, 0.05);
+    font-size: 1.5em;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    color: var(--color-primary-dark);
+}
+
+
+.promo-card dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1rem;
+    margin-top: auto;
+}
+.promo-card dt {
+    color: var(--color-text-secondary);
+}
+.promo-card dd {
+    margin-left: 0;
+    font-weight: bold;
+    text-align: right;
+}
+.promo-card data {
+    color: var(--color-accent);
+    font-size: 1.2em;
+}
+
+.promo-card.archived {
+    filter: grayscale(100%);
+    opacity: 0.6;
+    box-shadow: none;
+}
+.promo-card.archived:hover {
+    transform: none;
+}
+.promo-card.archived::after {
+    content: 'АРХИВ';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 3rem;
+    font-weight: bold;
+    color: rgba(0,0,0,0.2);
+    border: 5px solid rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: auto;
+    height: auto;
+    background: none;
+}

@@ -1,21 +1,38 @@
-<div style="border: 1px solid #eee; margin-bottom: 15px; border-radius: 5px;">
-    <div>
+{# Заменяем <div> на <article> и добавляем класс, который ожидает наш CSS #}
+<article class="service-card">
+
+    {# БЛОК 1: Шапка. Занимает первую строку грида (grid-template-rows: auto) #}
+    <header>
         <h4>{{ service.name }}</h4>
-        {% if show_category %}
-            <h5>Категория: {{ service.category.name }}</h5>
+        {% if show_category and service.category %}
+            {# Используем <small> для второстепенной информации, это семантичнее чем h5 #}
+            <small>Категория: {{ service.category.name }}</small>
         {% endif %}
+    </header>
 
+    {# БЛОК 2: Описание. Занимает вторую, "резиновую" строку грида (1fr) #}
+    <div class="service-description">
         <p>{{ service.description|linebreaksbr }}</p>
-        <p><strong>Стоимость:</strong> {{ service.price }} руб.</p>
-        <p><strong>Длительность:</strong> {{ service.duration_minutes }} минут</p>
-        {% if service.office_number %}
-            <p><strong>Кабинет:</strong> {{ service.office_number }}</p>
-        {% endif %}
+
+        {# Дополнительную информацию тоже помещаем сюда #}
+        <ul>
+            <li><strong>Длительность:</strong> {{ service.duration_minutes }} минут</li>
+            {% if service.office_number %}
+                <li><strong>Кабинет:</strong> {{ service.office_number }}</li>
+            {% endif %}
+        </ul>
     </div>
 
-    <div>
-        <a href="{% url 'service_detail' service.pk %}">
-            Подробнее и запись
+    {# БЛОК 3: Футер. Занимает третью строку грида (auto), прижимаясь к низу #}
+    <footer>
+        <div class="service-price">
+            {{ service.price }} руб.
+        </div>
+
+        {# Добавляем класс .btn, чтобы ссылка выглядела как кнопка (стили из style.css) #}
+        <a href="{% url 'service_detail' service.pk %}" class="btn">
+            Подробнее
         </a>
-    </div>
-</div>
+    </footer>
+
+</article>

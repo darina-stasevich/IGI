@@ -1,0 +1,66 @@
+
+#about-video {
+    margin: 3rem 0;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    max-width: 100%;
+    border-radius: 0.35rem;
+    border: 1px solid rgba(78, 159, 9, 0.5);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* История компании (по годам) */
+#history .history-timeline {
+    position: relative;
+    padding-left: 50px;
+    border-left: 3px solid var(--color-primary);
+}
+
+#history .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+#history .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -59.5px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    border: 3px solid var(--color-background-content);
+}
+
+#history .timeline-item strong {
+    display: block;
+    font-size: 1.3em;
+    color: var(--color-primary-dark);
+}
+
+#requisites pre {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--border-radius);
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+#logo:hover {
+       transform: translateY(-20px);
+}

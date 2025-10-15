@@ -3,59 +3,69 @@
 
 {% block title %}Акции и промокоды - {{ block.super }}{% endblock %}
 
+{% block extra_head %}
+    <style media="all">
+        @import url("{% static 'css/public_promo_code_list_style.css' %}");
+    </style>
+{% endblock %}
+
 {% block content_title %}Доступные акции и промокоды{% endblock %}
 
 {% block content %}
-<section id="promotions">
-  <p>Ознакомьтесь с нашими текущими акциями и промокодами, которые вы можете использовать для получения скидок на услуги!</p>
-  <p>
-    Промокоды действительны на
-    <time datetime="{{ current_date|date:'c' }}">{{ current_date|date:"d.m.Y" }}</time>.
-    Условия могут меняться.
-  </p>
+    <section id="promotions">
+        <p>Ознакомьтесь с нашими текущими акциями и промокодами, которые вы можете использовать для получения скидок на
+            услуги!</p>
+        <p>
+            Промокоды действительны на
+            <time datetime="{{ current_date|date:'c' }}">{{ current_date|date:"d.m.Y" }}</time>
+            .
+            Условия могут меняться.
+        </p>
 
-  {% if promo_codes %}
-    <ul>
-      {% for promo in promo_codes %}
-        <li>
-          <article>
-            <header>
-              <h3>Промокод: <code>{{ promo.code }}</code></h3>
-            </header>
+        {% if promo_codes %}
+            <ul>
+                {% for promo in promo_codes %}
+                    <li>
+                        <article class="promo-card {% if promo.valid_to < current_date %}archived{% endif %}">
+                            <header>
+                                <h3>Промокод: <code>{{ promo.code }}</code></h3>
+                            </header>
 
-            <section>
-              {% if promo.description %}
-                <p>{{ promo.description|linebreaksbr }}</p>
-              {% else %}
-                <p><em>Описание отсутствует.</em></p>
-              {% endif %}
-            </section>
+                            <section>
+                                {% if promo.description %}
+                                    <p>{{ promo.description|linebreaksbr }}</p>
+                                {% else %}
+                                    <p><em>Описание отсутствует.</em></p>
+                                {% endif %}
+                            </section>
 
-            <section>
-              <dl>
-                <dt>Скидка</dt>
-                <dd>
-                  {% if promo.discount_percentage %}
-                    <data value="{{ promo.discount_percentage|floatformat:'-0' }}">{{ promo.discount_percentage|floatformat:"-0" }}%</data>
-                  {% elif promo.discount_amount %}
-                    <data value="{{ promo.discount_amount|floatformat:'-2' }}">{{ promo.discount_amount|floatformat:"-2" }} руб.</data>
-                  {% else %}
-                    Не указана
-                  {% endif %}
-                </dd>
+                            <section>
+                                <dl>
+                                    <dt>Скидка</dt>
+                                    <dd>
+                                        {% if promo.discount_percentage %}
+                                            <data value="{{ promo.discount_percentage|floatformat:'-0' }}">{{ promo.discount_percentage|floatformat:"-0" }}%</data>
+                                        {% elif promo.discount_amount %}
+                                            <data value="{{ promo.discount_amount|floatformat:'-2' }}">{{ promo.discount_amount|floatformat:"-2" }}
+                                                руб.
+                                            </data>
+                                        {% else %}
+                                            Не указана
+                                        {% endif %}
+                                    </dd>
 
-                <dt>Действителен до</dt>
-                <dd>
-                  <time datetime="{{ promo.valid_to|date:'c' }}">{{ promo.valid_to|date:"d.m.Y" }}</time>
-                </dd>
-              </dl>
-            </section>
-          </article>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>К сожалению, на данный момент активных промокодов нет. Загляните позже!</p>
-  {% endif %}
-</section>
+                                    <dt>Действителен до</dt>
+                                    <dd>
+                                        <time datetime="{{ promo.valid_to|date:'c' }}">{{ promo.valid_to|date:"d.m.Y" }}</time>
+                                    </dd>
+                                </dl>
+                            </section>
+                        </article>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>К сожалению, на данный момент активных промокодов нет. Загляните позже!</p>
+        {% endif %}
+    </section>
 {% endblock %}

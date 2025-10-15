@@ -2,6 +2,26 @@
 {% load static %}
 
 {% block title %}Главная - Клиника "Здоровье"{% endblock %}
+
+{% block extra_head %}
+<style>
+    .carousel-container { position: relative; max-width: 800px; margin: 2rem auto; overflow: hidden; border-radius: 0.35rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+    .carousel-slide { display: none; }
+    .carousel-slide img { width: 100%; height: auto; display: block; }
+    .carousel-slide.active { display: block; }
+    .carousel-prev, .carousel-next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 18px; transition: 0.6s ease; border-radius: 0 3px 3px 0; user-select: none; background-color: rgba(0, 0, 0, 0.3); }
+    .carousel-next { right: 0; border-radius: 3px 0 0 3px; }
+    .carousel-prev:hover, .carousel-next:hover { background-color: rgba(0, 0, 0, 0.8); }
+    #partners { text-align: center; padding: 2rem 0; margin-top: 2rem; }
+    #partners h2 { margin-bottom: 2.5rem; font-size: 2rem; }
+    #partners ul { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; list-style: none; padding: 0; gap: 2.5rem; }
+    #partners li a { display: flex; justify-content: center; align-items: center; width: 160px; height: 160px; border-radius: 50%; background-color: #ffffff; border: 1px solid #dee2e6; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    #partners li a:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12); }
+    #partners li img { width: 75%; height: auto; object-fit: contain; }
+
+</style>
+{% endblock %}
+
 {% block content_title %}Добро пожаловать!{% endblock %}
 
 {% block content %}
@@ -18,37 +38,11 @@
           <img src="{{ company_profile.logo_url }}" alt="Логотип компании" loading="lazy" decoding="async">
         </figure>
       {% endif %}
-    {% endif %}
     <p>{{ welcome_message }}</p>
+  {% endif %}
   </header>
 
   {% if banner_images %}
-    <style>
-      .carousel-container {
-        position: relative;
-        max-width: 800px;
-        overflow: hidden;
-      }
-      .carousel-slide {
-        display: none;
-      }
-      .carousel-slide img {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-      .carousel-slide.active {
-        display: block;
-      }
-      .carousel-prev, .carousel-next {
-        position: absolute;
-        top: 50%;
-        width: auto;
-      }
-      .carousel-prev { left: 0; }
-      .carousel-next { right: 0; }
-    </style>
-
     <section id="hero" title="Баннеры">
       <div class="carousel-container">
         {% for image_path in banner_images %}
@@ -57,29 +51,26 @@
             <figcaption hidden>Слайд №{{ forloop.counter }}</figcaption>
           </figure>
         {% endfor %}
-
         <nav id="carousel-controls">
-          <button type="button" title="Предыдущий слайд" class="carousel-prev" onclick="changeSlide(-1)"><</button>
-          <button type="button" title="Следующий слайд" class="carousel-next" onclick="changeSlide(1)">></button>
+          <button type="button" title="Предыдущий слайд" class="carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
+          <button type="button" title="Следующий слайд" class="carousel-next" onclick="changeSlide(1)">&#10095;</button>
         </nav>
       </div>
 
       <script>
         let slideIndex = 0;
         const slides = document.querySelectorAll(".carousel-slide");
-
         function showSlide(n) {
+          if (!slides.length) return;
           slides.forEach((slide) => slide.classList.remove("active"));
           slides[n].classList.add("active");
         }
-
         function changeSlide(n) {
           slideIndex += n;
           if (slideIndex >= slides.length) slideIndex = 0;
           if (slideIndex < 0) slideIndex = slides.length - 1;
           showSlide(slideIndex);
         }
-
         showSlide(slideIndex);
       </script>
     </section>
@@ -100,39 +91,6 @@
       </p>
     </section>
   {% endif %}
-
-  <section id="news">
-    {% if latest_article %}
-      <article id="latest-article">
-        <h3>
-          Последняя новость:
-          <a href="{% url 'article_detail' latest_article.slug %}" title="Читать новость «{{ latest_article.title }}»">
-            {{ latest_article.title }}
-          </a>
-        </h3>
-
-        {% if latest_article.image %}
-          <figure>
-            <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}" loading="lazy" decoding="async">
-          </figure>
-        {% elif latest_article.image_url %}
-          <figure>
-            <img src="{{ latest_article.image_url }}" alt="{{ latest_article.title }}" loading="lazy" decoding="async">
-          </figure>
-        {% endif %}
-
-        <p>
-          <strong>Дата публикации:</strong>
-          <time datetime="{{ latest_article.published_date|date:'c' }}">
-            {{ latest_article.published_date|date:"d F Y, H:i" }}
-          </time>
-        </p>
-        <p>{{ latest_article.short_description }}</p>
-      </article>
-    {% else %}
-      <p>Пока нет опубликованных новостей.</p>
-    {% endif %}
-  </section>
 
   <hr>
 
@@ -157,8 +115,6 @@
         {% elif user.profile.role == 'doctor' %}
           <p><a href="{% url 'doctor_dashboard' %}" title="Перейти в кабинет врача">Перейти в кабинет врача</a></p>
         {% endif %}
-      {% else %}
-        <p>Профиль пользователя не найден.</p>
       {% endif %}
     {% endif %}
   </section>
@@ -167,11 +123,11 @@
     <section id="partners" title="Наши партнеры">
       <hr>
       <h2>Наши партнеры</h2>
-          <ul style="display: flex; justify-content: center; list-style: none;">
+      <ul>
         {% for partner in partners %}
           <li>
             <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer" title="{{ partner.name }}">
-              <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" style="max-height: 80px; max-width: 150px;" loading="lazy" decoding="async">
+              <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" loading="lazy" decoding="async">
             </a>
           </li>
         {% endfor %}

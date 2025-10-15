@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load tz %}
 
 {% block title %}
   {{ page_title|default:"Отзывы" }} - {{ block.super }}
+{% endblock %}
+
+{% block extra_head %}
+  <style media="all">
+    @import url("{% static 'css/review_list_style.css' %}");
+  </style>
 {% endblock %}
 
 {% block content_title %}
@@ -56,7 +63,7 @@
         <ul>
           {% for review in reviews %}
             {% timezone user_active_timezone_name|default:"UTC" %}
-              <li>
+              <li lang="ru">
                 <article>
                   <header>
                     <h3>
@@ -78,7 +85,7 @@
                   </header>
 
                   <section>
-                    <p>{{ review.comment|linebreaksbr }}</p>
+                    <p><q>{{ review.comment|linebreaksbr }}</q></p>
                   </section>
 
                   <footer>

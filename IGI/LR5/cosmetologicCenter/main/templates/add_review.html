@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
   {{ page_title|default:"Оставить отзыв" }} - {{ block.super }}
@@ -6,6 +7,12 @@
 
 {% block content_title %}
   {{ page_title|default:"Оставить отзыв" }}
+{% endblock %}
+
+{% block extra_head %}
+  <style media="all">
+    @import url("{% static 'css/article_list_style.css' %}");
+  </style>
 {% endblock %}
 
 {% block content %}

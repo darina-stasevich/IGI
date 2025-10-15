@@ -1,0 +1,222 @@
+.demo-article, article {
+    font-family: Georgia, 'Times New Roman', serif;
+    background-color: #fdfdfd;
+    border: 1px solid var(--color-border, #eee);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow, 0 4px 12px rgba(0,0,0,0.05));
+
+    margin: 2rem 0;
+    padding: 2rem;
+}
+
+.demo-article h2 {
+    text-transform: uppercase;
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-top: 3rem;
+}
+.demo-article h2:first-of-type {
+    margin-top: 0;
+}
+
+section > p {
+    line-height: 1.7;
+}
+/* селекторы, псевдоклассы, псевдоэлементы стль для h3*/
+p + h3 {
+    margin-top: 2rem;
+    color: var(--color-accent);
+}
+
+/* красная строка */
+.paragraph-with-indent {
+    text-indent: 3em;
+    line-height: 1.8;
+    text-align: justify; /* по ширине */
+}
+
+/* капитель (font-variant) */
+.demo-article kbd {
+    font-variant: small-caps;
+    font-weight: bold;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background-page);
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.spacing-demo {
+    word-spacing: 0.4em;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: #555;
+}
+
+.word-break-demo {
+    background-color: #fff8e1;
+    border: 1px dashed #ffc107;
+    padding: 0.5rem 1rem;
+    width: 300px;
+}
+
+/* wbr */
+.word-break-demo p {
+    word-break: break-all;
+}
+
+.positioning-container {
+    position: relative;
+    background-color: #e3f2fd;
+    border: 1px dashed #2196F3;
+    padding: 2rem;
+    min-height: 100px;
+    margin-top: 2rem;
+}
+
+.positioned-box {
+    position: absolute;
+    top: -15px;
+    right: 20px;
+
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+#attrs-demo p:first-of-type::first-line {
+    font-weight: bold;
+}
+
+#href-demo a::before {
+    content: "🔗 ";
+}
+#href-demo a[download]::after {
+    content: " (скачать)";
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+/* выделение */
+::selection {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+/* селекторы атрибутов */
+a[target="_blank"] {
+    background-color: #e3f2fd;
+}
+input[type="reset"] {
+    border: 2px dashed red;
+}
+/* prefix */
+input[id^="pf-"] {
+    border-left: 3px solid var(--color-primary);
+}
+/* suffix */
+a[href$=".docx"] {
+    font-weight: bold;
+}
+
+
+#href-demo ul {
+    list-style: none;
+    padding-left: 0;
+}
+#href-demo li:first-child {
+    font-size: 1.1em;
+}
+#href-demo li:last-child {
+    opacity: 0.7;
+}
+
+#table-demo tbody tr:nth-child(even) {
+    background-color: var(--color-background-page);
+}
+
+#plain-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+input:required + label::after {
+    content: " *";
+    color: red;
+}
+option:disabled {
+    color: #ccc;
+    background-color: #ff0000;
+}
+input[readonly] {
+    background-color: #eee;
+    cursor: not-allowed;
+}
+input:checked + label {
+    font-weight: bold;
+    color: var(--color-primary);
+}
+input[type="range"]:in-range {
+    accent-color: green;
+}
+
+
+/*  кавычки для языка */
+p:lang(ar) {
+    font-size: 1.2em;
+    background-color: #fff8e1;
+}
+q:lang(ru) { quotes: "«" "»"; }
+q:lang(en) { quotes: "“" "”"; }
+
+#table-demo table {
+    border-collapse: collapse;
+    width: 90%;
+    margin: 2rem auto;
+}
+
+#table-demo caption {
+    caption-side: top;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding-bottom: 1rem;
+}
+
+#table-demo th,
+#table-demo td {
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+#table-demo thead th {
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+#table-demo tbody th {
+    text-align: left;
+}
+
+#table-demo tbody td {
+    text-align: right;
+}
+#table-demo tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+#table-demo tr > *:nth-child(6) {
+    font-weight: bold;
+    background-color: #fcf8e3;
+}
+
+#table-demo td:empty {
+    /*background-color: #e9e9e9;*/
+    background-color: red;
+}

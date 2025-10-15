@@ -1,0 +1,143 @@
+.certificate {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    min-height: 1100px;
+    margin: 40px auto;
+    padding: 40px;
+    background: linear-gradient(135deg, #ffffff, #efffe3);
+    border: 30px solid transparent;
+    border-image: url("https://i.postimg.cc/xjgCFYZ8/image.png") 30 stretch;
+    font-family: "Times New Roman", Times, serif;
+    color: #333333;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+}
+
+/* transform rotate scale matrix translatexy, skew */
+.certificate:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.certificate-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://i.postimg.cc/Bn9CYxkq/image.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: -1;
+    opacity: 0.05;
+}
+
+.certificate-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.certificate-header {
+    margin-bottom: 3rem;
+}
+
+.certificate-header h1 {
+    font-size: 4.8rem;
+    color: #8B0000;
+    margin: 10px 0;
+    letter-spacing: 2px;
+}
+
+.certificate-header .subtitle {
+    font-size: 1.8rem;
+    color: #555;
+}
+
+.meta-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 3rem 0;
+    font-size: 1.4rem;
+}
+
+.org-info {
+    margin: 2rem 0 3rem 0;
+}
+
+.org-info .org-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.org-info .org-inn {
+    font-size: 1.4rem;
+    font-weight: normal;
+    text-align: center;
+}
+
+.org-info .registry-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    background-image: linear-gradient(to right, #0000ff, #ff0000);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.signature-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 5rem;
+    text-align: left;
+}
+
+.director-details .director-name {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.director-details .director-title {
+    font-size: 1.2rem;
+    color: #444;
+}
+
+.seal-container .seal-image {
+    width: 140px;
+    height: 140px;
+    opacity: 0.8;
+}
+
+.footer-divider {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+}
+
+
+.licensee-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-top: auto;
+}
+
+.licensee-details .footer-logo {
+    width: 90px;
+    height: 130px;
+    opacity: 0.5;
+}
+
+.licensee-details .details-text {
+    text-align: left;
+}

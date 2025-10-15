@@ -1,0 +1,115 @@
+
+#reviews-page {
+    font-family: var(--font-primary), sans-serif;
+}
+
+#reviews-page form fieldset {
+    border: 1px solid var(--color-border, #eee);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+/* системный шрифт */
+#reviews-page form legend {
+    font: small-caption;
+    font-weight: bold;
+    padding: 0 0.5em;
+}
+#reviews-page form select {
+    font: menu;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 4px;
+    background-color: white;
+}
+
+#reviews-page form select:enabled {
+    border-color: var(--color-primary);
+}
+
+#reviews-page form select:focus {
+    outline: 2px solid var(--color-accent, #fd7e14);
+    box-shadow: 0 0 5px rgba(253, 126, 20, 0.5);
+}
+
+#reviews-page nav a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+}
+
+#reviews-page nav a:link {
+    background-color: var(--color-primary);
+    color: white;
+}
+#reviews-page nav a:visited {
+    background-color: var(--color-primary-dark, #157347);
+    color: #e0e0e0;
+}
+
+#reviews-page nav a:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+#reviews-page nav a:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+#reviews-list ul {
+    list-style: none;
+    padding: 0;
+}
+#reviews-list li article {
+    border: 1px solid var(--color-border, #eee);
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+#reviews-list li:first-child article {
+    border-color: var(--color-primary);
+    border-width: 2px;
+}
+
+#reviews-list li:last-child article{
+    margin-bottom: 0;
+    border-color: var(--color-primary);
+    border-width: 5px;
+}
+
+#reviews-list li:nth-child(even) article {
+    background-color: var(--color-background-page, #f8f9fa);
+}
+
+#reviews-list header,
+#reviews-list section,
+#reviews-list footer {
+    padding: 1rem 1.5rem;
+}
+#reviews-list header {
+    background-color: rgba(32, 201, 151, 0.05);
+}
+#reviews-list header h3 { margin: 0; }
+#reviews-list footer {
+    background-color: rgba(0,0,0,0.02);
+    font-size: 0.9em;
+}
+#reviews-list footer dl { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 0; }
+#reviews-list footer dt { font-weight: normal; color: var(--color-text-secondary); }
+#reviews-list footer dd { margin-left: 0.5em; }
+
+meter {
+    width: 100px;
+    height: 15px;
+}
+meter:in-range {
+    border: 1px solid green;
+}
+meter:out-of-range {
+    border: 2px solid red;
+}

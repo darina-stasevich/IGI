@@ -1,0 +1,73 @@
+#doctors-list,
+#staff-list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 0;
+    list-style: none;
+}
+
+.employee-card {
+    border: 1px solid var(--color-border, #eee);
+    border-radius: var(--border-radius);
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    display: flex;
+    flex-direction: column;
+    /* flex: - flex-grow, flex-shrink и flex-basis.*/
+    flex: 1 1 350px;
+    max-width: 400px;
+    height: 100%;
+}
+
+.employee-card header {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.employee-card header img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid var(--color-background-page);
+}
+
+.employee-card header h4 {
+    margin: 0.5rem 0 0.25rem 0;
+    font-size: 1.25rem;
+}
+
+.employee-card header p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.employee-card .description {
+    padding: 1.5rem;
+    flex-grow: 1;
+    color: var(--color-text-secondary);
+}
+
+.employee-card address {
+    padding: 1.5rem;
+    background-color: var(--color-background-page, #f8f9fa);
+    font-style: normal;
+    font-size: 0.9rem;
+}
+
+.employee-card address p {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+}
+.employee-card address strong {
+    flex-shrink: 0;
+    margin-right: 0.5em;
+}

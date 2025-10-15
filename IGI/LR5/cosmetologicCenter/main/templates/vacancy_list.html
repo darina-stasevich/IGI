@@ -5,11 +5,17 @@
 
 {% block content_title %}Актуальные вакансии{% endblock %}
 
+{% block extra_head %}
+  <style media="all">
+    @import url("{% static 'css/vacancy_list_style.css' %}");
+  </style>
+{% endblock %}
+
 {% block content %}
   {% if vacancies %}
     <section id="vacancies" lang="ru" aria-label="Список вакансий">
       {% for vacancy in vacancies %}
-        <article>
+        <article class="vacancy-card">
           <header>
             <h3>{{ vacancy.title }}</h3>
           </header>
@@ -44,7 +50,7 @@
             </p>
 
             {% if vacancy.contact_info %}
-              <section id="apply-{{ forloop.counter }}" aria-labelledby="apply-heading-{{ forloop.counter }}">
+              <section id="apply-{{ forloop.counter }}">
                 <h4>Как откликнуться</h4>
                 <address itemprop="applicationContact">
                   {{ vacancy.contact_info|linebreaksbr }}

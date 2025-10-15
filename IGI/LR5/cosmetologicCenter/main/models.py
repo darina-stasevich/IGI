@@ -415,44 +415,44 @@ class Review(models.Model):
 
 
 class CompanyProfile(models.Model):
-    main_info_title = models.CharField(
-        max_length=200,
-        default="О нашей клинике",
-        verbose_name="Заголовок основного блока"
-    )
+    main_info_title = models.CharField(max_length=200, default="О нашей клинике",
+                                       verbose_name="Заголовок основного блока")
     main_info_text = models.TextField(verbose_name="Основной текст о компании")
-
-    history_title = models.CharField(
-        max_length=200,
-        default="Наша история",
-        blank=True,
-        verbose_name="Заголовок блока 'История'"
-    )
+    history_title = models.CharField(max_length=200, default="Наша история", blank=True,
+                                     verbose_name="Заголовок блока 'История'")
     history_text = models.TextField(blank=True, verbose_name="Текст истории по годам")
-
-    requisites_title = models.CharField(
-        max_length=200,
-        default="Реквизиты",
-        blank=True,
-        verbose_name="Заголовок блока 'Реквизиты'"
-    )
+    requisites_title = models.CharField(max_length=200, default="Реквизиты", blank=True,
+                                        verbose_name="Заголовок блока 'Реквизиты'")
     requisites_text = models.TextField(blank=True, verbose_name="Текст реквизитов")
-
-    certificate_title = models.CharField(
-        max_length=200,
-        default="Лицензии и сертификаты",
-        blank=True,
-        verbose_name="Заголовок блока 'Сертификаты'"
-    )
-    certificate_text = models.TextField(
-        blank=True,
-        verbose_name="Текст сертификата",
-        help_text="Содержимое сертификата в виде текста (можно вставить из PDF/скана после распознавания)."
-    )
-
-
-    logo_url = models.URLField(verbose_name="URL логотипа", blank=True, null=True)
     video_url = models.URLField(verbose_name="URL видео (например, YouTube, Vimeo)", blank=True, null=True)
+
+
+    cert_title = models.CharField(max_length=200, default="Лицензия", verbose_name="Сертификат: Главный заголовок",
+                                  help_text="Напр., 'Лицензия' или 'Свидетельство'")
+    cert_subtitle = models.CharField(max_length=200, default="на осуществление медицинской деятельности",
+                                     verbose_name="Сертификат: Подзаголовок")
+    cert_city = models.CharField(max_length=100, default="г. Москва", verbose_name="Сертификат: Город выдачи")
+    cert_issue_date = models.DateField(verbose_name="Сертификат: Дата выдачи", null=True, blank=True)
+
+    cert_org_name = models.CharField(max_length=255, verbose_name="Сертификат: Название организации", blank=True)
+    cert_org_inn_kpp = models.CharField(max_length=255, verbose_name="Сертификат: ИНН/КПП", blank=True,
+                                        help_text="Напр., 'ИНН 7701234567/КПП 770101001'")
+    cert_registry_number = models.CharField(max_length=100, verbose_name="Сертификат: Реестровый номер", blank=True)
+
+    cert_director_name = models.CharField(max_length=255, verbose_name="Сертификат: ФИО директора", blank=True)
+    cert_director_title = models.CharField(max_length=255, verbose_name="Сертификат: Должность директора", blank=True)
+
+    # Поля для футера
+    cert_licensee_ogrn = models.CharField(max_length=100, verbose_name="Сертификат (футер): ОГРН", blank=True)
+    cert_licensee_legal_address = models.CharField(max_length=255, verbose_name="Сертификат (футер): Юридический адрес",
+                                                   blank=True)
+    cert_licensee_activity_address = models.CharField(max_length=255,
+                                                      verbose_name="Сертификат (футер): Адрес осуществления деятельности",
+                                                      blank=True)
+
+    cert_seal_image_url = models.URLField(verbose_name="Сертификат: URL изображения печати", blank=True, null=True)
+    cert_footer_logo_url = models.URLField(verbose_name="Сертификат: URL логотипа в футере", blank=True, null=True)
+
 
     last_updated = models.DateTimeField(auto_now=True, verbose_name="Последнее обновление")
 
@@ -461,6 +461,7 @@ class CompanyProfile(models.Model):
 
     class Meta:
         verbose_name = "Профиль компании"
+        verbose_name_plural = "Профили компаний"
 
     def get_embed_url(self):
         if not self.video_url:
@@ -486,10 +487,36 @@ class CompanyProfile(models.Model):
 
         return None
 
+    def get_history_timeline(self):
+        """
+        Преобразует текстовое поле history_text в список словарей
+        для удобного использования в шаблоне.
+        Ожидаемый формат строки: "ГОД - Описание события"
+        """
+        timeline = []
+        if not self.history_text:
+            return timeline
+
+        for line in self.history_text.strip().splitlines():
+            if " - " in line:
+                # Разделяем строку по первому вхождению " - "
+                parts = line.split(" - ", 1)
+                timeline.append({
+                    'year': parts[0].strip(),
+                    'description': parts[1].strip()
+                })
+            elif line.strip():
+                # Если разделителя нет, считаем всю строку описанием без года
+                timeline.append({
+                    'year': None,
+                    'description': line.strip()
+                })
+        return timeline
+
 class Article(models.Model):
-    title = models.CharField(max_length=50, verbose_name="Заголовок")
+    title = models.CharField(max_length=100, verbose_name="Заголовок")
     slug = models.SlugField(
-        max_length=50,
+        max_length=100,
         unique=True,
         verbose_name="Slug (для URL)",
         help_text="Уникальная часть URL, генерируется из заголовка (например, 'novaya-statya-o-zdorovie')"

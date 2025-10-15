@@ -3,6 +3,106 @@
 
 {% block title %}О компании - Клиника "Здоровье"{% endblock %}
 
+{% block extra_head %}
+    <style media="all">
+        @import url("{% static 'css/certificate_style.css' %}");
+    </style>
+
+    <style media="all">
+        @import url("{% static 'css/about_company_style.css' %}");
+    </style>
+
+<style>
+.logo-box {
+    max-width: 360px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+#logo-svg {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.face-outline {
+    fill: #fff;
+    stroke: #e0e0e0;
+    stroke-width: 2;
+}
+
+.stroke-light {
+    stroke: #bfbfbf;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+}
+
+.colored { fill: #20c997; }
+.lips    { fill: #fd7e14; }
+.cheek   { fill: #fd7e14; fill-opacity: .35; }
+
+
+.feature { opacity: 0; }
+.schematic { opacity: 1; }
+
+
+#company-name {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    fill: #198754;
+    opacity: 0;
+}
+
+#brush {
+    transform-origin: 50% 50%;
+    animation: brush-orbit 7s linear forwards;
+}
+@keyframes brush-orbit {
+    0%   { transform: rotate(0deg)   translateY(-90px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateY(-90px) rotate(-360deg); }
+}
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+#eyes-schematic {
+    animation: fadeOut .5s ease forwards;
+    animation-delay: 1s;
+}
+#mouth-schematic {
+    animation: fadeOut .5s ease forwards;
+    animation-delay: 3s;
+}
+#eyes-detailed {
+    animation: fadeIn .5s ease forwards;
+    animation-delay: 1s;
+}
+#brows {
+    animation: fadeIn .6s ease forwards;
+    animation-delay: 2s;
+}
+#mouth-detailed {
+    animation: fadeIn .5s ease forwards;
+    animation-delay: 3s;
+}
+#nose {
+    animation: fadeIn .5s ease forwards;
+    animation-delay: 4s;
+}
+#cheeks {
+    animation: fadeIn .5s ease forwards;
+    animation-delay: 5s;
+}
+#company-name {
+    animation: fadeIn 1.2s ease forwards;
+    animation-delay: 6s;
+}
+</style>
+{% endblock %}
+
 {% block content_title %}
     {% if company_profile %}
         {{ company_profile.main_info_title|default:"О нашей клинике" }}
@@ -15,24 +115,65 @@
     {% if company_profile %}
         <article id="about-company" itemscope itemtype="https://schema.org/Organization">
             <meta itemprop="name" content="Клиника «Здоровье»">
-
-            {% if company_profile.logo or company_profile.logo_url %}
-                <figure>
-                    {% if company_profile.logo %}
-                        <img src="{{ company_profile.logo.url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
+                <figure id="logo">
+                <img src="{% static 'images/img.png' %}" alt="Логотип клиники «Здоровье»" loading="lazy"
                              decoding="async" itemprop="logo">
-                    {% else %}
-                        <img src="{{ company_profile.logo_url }}" alt="Логотип клиники «Здоровье»" loading="lazy"
-                             decoding="async" itemprop="logo">
-                    {% endif %}
                 </figure>
-            {% endif %}
 
+
+    <div class="logo-box">
+        <svg id="logo-svg" viewBox="-150 -150 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Логотип клиники">
+            <circle class="face-outline" cx="0" cy="0" r="110"></circle>
+
+            <g id="eyes-schematic" class="schematic">
+                <path class="stroke-light" d="M -55 -15 Q -45 -25 -35 -15"></path>
+                <path class="stroke-light" d="M  35 -15 Q  45 -25  55 -15"></path>
+            </g>
+            <g id="mouth-schematic" class="schematic">
+                <path class="stroke-light" d="M -35 40 L 35 40"></path>
+            </g>
+
+            <g id="eyes-detailed" class="feature">
+                <ellipse class="colored" cx="-45" cy="-18" rx="14" ry="10"></ellipse>
+                <ellipse class="colored" cx="45" cy="-18"  rx="14" ry="10"></ellipse>
+                <circle cx="-45" cy="-18" r="5" fill="#000"></circle>
+                <circle cx="45"  cy="-18" r="5" fill="#000"></circle>
+            </g>
+
+            <g id="brows" class="feature">
+                <path class="stroke-light" stroke-width="4" d="M -60 -35 Q -45 -50 -30 -35"></path>
+                <path class="stroke-light" stroke-width="4" d="M  30 -35 Q  45 -50  60 -35"></path>
+            </g>
+
+            <g id="mouth-detailed" class="feature">
+                <path class="lips" d="M -35 40 Q -5 65 35 40 Q 5 48 -35 40 Z"></path>
+            </g>
+
+            <g id="nose" class="feature">
+                <path class="stroke-light" d="M 0 -5 Q -6 15 0 20 Q 6 15 0 -5"></path>
+            </g>
+
+            <g id="cheeks" class="feature">
+                <circle class="cheek" cx="-65" cy="15" r="14"></circle>
+                <circle class="cheek" cx="65"  cy="15" r="14"></circle>
+            </g>
+
+            <g id="brush-shift" transform="translate(0,-80)">
+                <g id="brush">
+                    <rect x="-6" y="-15" width="12" height="70" fill="#d2b48c" rx="3"></rect>
+                    <rect x="-9" y="55" width="18" height="20" fill="#c0c0c0"></rect>
+                    <rect x="-12" y="75" width="24" height="26" fill="#8b4513" rx="2"></rect>
+                </g>
+            </g>
+
+            <text id="company-name" x="0" y="140" text-anchor="middle">Здоровье</text>
+        </svg>
+    </div>
             <section id="main-info" itemprop="description">
                 <p>{{ company_profile.main_info_text|linebreaksbr }}</p>
             </section>
 
-            {% if company_profile.video_url %}
+             {% if company_profile.video_url %}
                 {% with embed_url=company_profile.get_embed_url %}
                     {% if embed_url %}
                         <section id="about-video" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
@@ -67,8 +208,16 @@
                     <meta itemprop="name" content="История компании">
                     <hr>
                     <h3>{{ company_profile.history_title|default:"Наша история" }}</h3>
-                    <div itemprop="value">
-                        <p>{{ company_profile.history_text|linebreaksbr }}</p>
+
+                    <div class="history-timeline" itemprop="value">
+                        {% for item in company_profile.get_history_timeline %}
+                            <div class="timeline-item">
+                                {% if item.year %}
+                                    <strong>{{ item.year }}</strong>
+                                {% endif %}
+                                <p>{{ item.description }}</p>
+                            </div>
+                        {% endfor %}
                     </div>
                 </section>
             {% endif %}
@@ -80,22 +229,72 @@
                     <pre>{{ company_profile.requisites_text }}</pre>
                 </section>
             {% endif %}
-
-            {% if company_profile.certificate_text %}
+{% if company_profile.cert_title %}
                 <section id="certificates" itemprop="hasCertification" itemscope
                          itemtype="https://schema.org/EducationalOccupationalCredential">
                     <meta itemprop="name" content="Сертификаты и лицензии">
                     <hr>
-                    <h3>{{ company_profile.certificate_title|default:"Сертификаты и лицензии" }}</h3>
-                    <div itemprop="description">
-                        {{ company_profile.certificate_text|linebreaksbr }}
+                    <div class="certificate">
+                        <div class="certificate-border"></div>
+                        <div class="certificate-content">
+                            <header class="certificate-header">
+                                <h1>{{ company_profile.cert_title }}</h1>
+                                <p class="subtitle">{{ company_profile.cert_subtitle }}</p>
+                            </header>
+
+                            <section class="meta-info">
+                                <span class="city">{{ company_profile.cert_city }}</span>
+                                {% if company_profile.cert_issue_date %}
+                                    <span class="date">{{ company_profile.cert_issue_date|date:"d E Y" }}</span>
+                                {% endif %}
+                            </section>
+
+                            <section class="org-info">
+                                <p class="org-name">{{ company_profile.cert_org_name }}</p>
+                                <p class="org-inn">({{ company_profile.cert_org_inn_kpp }})</p>
+                                <h3 class="registry-number">Реестровый
+                                    номер: {{ company_profile.cert_registry_number }}</h3>
+                            </section>
+
+                            <section class="signature-area">
+                                <div class="director-details">
+                                    <p class="director-name">{{ company_profile.cert_director_name }}</p>
+                                    <p class="director-title">{{ company_profile.cert_director_title }}</p>
+                                </div>
+                                {% if company_profile.cert_seal_image_url %}
+                                    <div class="seal-container">
+                                        <img src="{{ company_profile.cert_seal_image_url }}" alt="Печать"
+                                             class="seal-image">
+                                    </div>
+                                {% endif %}
+                            </section>
+
+                            <hr class="footer-divider">
+
+                            <footer class="licensee-details">
+                                {% if company_profile.cert_footer_logo_url %}
+                                    <img src="{{ company_profile.cert_footer_logo_url }}" alt="Логотип"
+                                         class="footer-logo">
+                                {% endif %}
+                                <div class="details-text">
+                                    <p>
+                                        <strong>Лицензиат:</strong> {{ company_profile.cert_org_name }}<br>
+                                        <strong>ОГРН:</strong> {{ company_profile.cert_licensee_ogrn }},
+                                        <strong>ИНН:</strong> {{ company_profile.cert_org_inn_kpp }}<br>
+                                        <strong>Юридический
+                                            адрес:</strong> {{ company_profile.cert_licensee_legal_address }}<br>
+                                        <strong>Место осуществления
+                                            деятельности:</strong> {{ company_profile.cert_licensee_activity_address }}
+                                    </p>
+                                </div>
+                            </footer>
+
+                        </div>
                     </div>
                 </section>
             {% endif %}
-
             <footer>
-                <p>
-                    Информация последний раз обновлена:
+                <p>Информация последний раз обновлена:
                     <time datetime="{{ company_profile.last_updated|date:'c' }}"
                           itemprop="dateModified">{{ company_profile.last_updated|date:"d F Y, H:i" }}</time>
                 </p>
