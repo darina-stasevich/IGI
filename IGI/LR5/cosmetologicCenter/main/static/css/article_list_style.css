@@ -17,7 +17,7 @@
 }
 .news-card .card-content .read-more-btn:hover {
     background-color: var(--color-primary-dark);
-    color: #fff;
+    color: var(--color-background-content);
 }
 
 #news-list .news-card:last-child {
@@ -132,7 +132,7 @@
     margin-top: auto;
     padding: 0.5rem 1rem;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-background-content);
     border-radius: var(--border-radius);
     text-align: center;
     text-decoration: none;
@@ -141,7 +141,7 @@
 }
 .news-card .card-content .read-more-btn:hover {
     background-color: var(--color-primary-dark);
-    color: #fff;
+    color: var(--color-background-content);
 }
 
 .article-detail-page header {

@@ -131,9 +131,7 @@ class AdvancedSlider {
 
     updateOptions(newOptions) {
         if (!newOptions) return;
-        // Обновляем объект настроек
         Object.assign(this.options, newOptions);
-        // Если была изменена задержка, перезапускаем автопрокрутку с новым значением
         if (newOptions.delay !== undefined) {
             this.resetAutoPlay();
         }
@@ -158,7 +156,6 @@ class AdvancedSlider {
     }
 }
 
-// Этот код автоматически найдет все слайдеры на странице и запустит их.
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.carousel-container').forEach(sliderElement => {
         new AdvancedSlider(sliderElement);
@@ -173,12 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
         delayInput.addEventListener('change', (event) => {
             const newDelay = parseInt(event.target.value, 10);
 
-            // Проверяем, что значение корректно и что у слайдера есть экземпляр класса
             if (!isNaN(newDelay) && newDelay >= 500 && sliderElement.sliderInstance) {
-                // Вызываем новый метод updateOptions, чтобы применить изменения
                 sliderElement.sliderInstance.updateOptions({delay: newDelay});
 
-                // (Опционально) Сообщаем админу об успехе
                 console.log(`Задержка слайдера обновлена на ${newDelay} мс.`);
             }
         });

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Клиника{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/theme.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'css/preloader_style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -28,6 +29,10 @@
                 <a href="{% url 'user_login' %}">Вход</a> |
                 <a href="{% url 'client_register' %}">Регистрация</a>
             {% endif %}
+        </div>
+        <div class="theme-switcher">
+            <label for="theme-toggle">Тёмная тема</label>
+            <input type="checkbox" id="theme-toggle" aria-label="Переключить тему">
         </div>
     </div>
 </header>
