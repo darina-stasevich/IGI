@@ -3,23 +3,9 @@
 
 {% block title %}Главная - Клиника "Здоровье"{% endblock %}
 
-{% block extra_head %}
-<style>
-    .carousel-container { position: relative; max-width: 800px; margin: 2rem auto; overflow: hidden; border-radius: 0.35rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-    .carousel-slide { display: none; }
-    .carousel-slide img { width: 100%; height: auto; display: block; }
-    .carousel-slide.active { display: block; }
-    .carousel-prev, .carousel-next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 18px; transition: 0.6s ease; border-radius: 0 3px 3px 0; user-select: none; background-color: rgba(0, 0, 0, 0.3); }
-    .carousel-next { right: 0; border-radius: 3px 0 0 3px; }
-    .carousel-prev:hover, .carousel-next:hover { background-color: rgba(0, 0, 0, 0.8); }
-    #partners { text-align: center; padding: 2rem 0; margin-top: 2rem; }
-    #partners h2 { margin-bottom: 2.5rem; font-size: 2rem; }
-    #partners ul { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; list-style: none; padding: 0; gap: 2.5rem; }
-    #partners li a { display: flex; justify-content: center; align-items: center; width: 160px; height: 160px; border-radius: 50%; background-color: #ffffff; border: 1px solid #dee2e6; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    #partners li a:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12); }
-    #partners li img { width: 75%; height: auto; object-fit: contain; }
 
-</style>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/slider.css' %}"> {# Предполагается, что CSS вынесен в файл #}
 {% endblock %}
 
 {% block content_title %}Добро пожаловать!{% endblock %}
@@ -42,39 +28,47 @@
   {% endif %}
   </header>
 
-  {% if banner_images %}
-    <section id="hero" title="Баннеры">
-      <div class="carousel-container">
-        {% for image_path in banner_images %}
-          <figure class="carousel-slide {% if forloop.first %}active{% endif %}">
-            <img src="{% static image_path %}" alt="Баннер {{ forloop.counter }}" loading="lazy" decoding="async">
-            <figcaption hidden>Слайд №{{ forloop.counter }}</figcaption>
-          </figure>
-        {% endfor %}
-        <nav id="carousel-controls">
-          <button type="button" title="Предыдущий слайд" class="carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
-          <button type="button" title="Следующий слайд" class="carousel-next" onclick="changeSlide(1)">&#10095;</button>
-        </nav>
-      </div>
+{% if banner_images %}
+  <section id="hero" title="Баннеры">
+    <div class="carousel-container"
+         data-loop="true"
+         data-navs="true"
+         data-pags="true"
+         data-auto="true"
+         data-stop-mouse-hover="true"
+         data-delay={{ slider_delay }}>
 
-      <script>
-        let slideIndex = 0;
-        const slides = document.querySelectorAll(".carousel-slide");
-        function showSlide(n) {
-          if (!slides.length) return;
-          slides.forEach((slide) => slide.classList.remove("active"));
-          slides[n].classList.add("active");
-        }
-        function changeSlide(n) {
-          slideIndex += n;
-          if (slideIndex >= slides.length) slideIndex = 0;
-          if (slideIndex < 0) slideIndex = slides.length - 1;
-          showSlide(slideIndex);
-        }
-        showSlide(slideIndex);
-      </script>
-    </section>
-  {% endif %}
+      {% for item in banner_images %}
+        <figure class="carousel-slide">
+          <img src="{{ item.image }}"
+               alt="{{ item.alt_text|default:'Баннер' }}"
+               data-link="{{ item.link }}"
+               data-caption="{{ item.caption }}"
+               loading="lazy"
+               decoding="async">
+
+          <figcaption></figcaption>
+        </figure>
+      {% endfor %}
+
+    </div>
+  </section>
+
+  <script src="{% static 'js/slider.js' %}"></script>
+
+  {% if user.is_superuser %}
+  <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f0f5fa; border: 1px solid #c8d9e8; border-radius: 8px;">
+    <h4 style="margin: 0 0 10px;">Панель администратора</h4>
+      <form method="POST" action="">
+      {% csrf_token %}
+      <label for="delay-input">Задержка слайдера (мс):</label>
+      <input type="number" id="delay-input" name="slider_delay" value="{{ slider_delay }}" step="500" style="width: 80px;">
+      <button type="submit" style="padding: 5px 10px;">Сохранить и перезагрузить</button>
+    </form>
+  </div>
+{% endif %}
+
+{% endif %}
 
   {% if latest_services %}
     <section id="services">

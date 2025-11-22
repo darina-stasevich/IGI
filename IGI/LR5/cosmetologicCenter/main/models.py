@@ -678,3 +678,24 @@ class PartnerCompany(models.Model):
 
     def __str__(self):
         return self.name
+
+class Banner(models.Model):
+    image = models.ImageField(upload_to='banners/', help_text="Рекомендуемый размер: 1200x500px")
+    caption = models.CharField(max_length=200, blank=True, verbose_name="Подпись")
+    link = models.URLField(max_length=255, blank=True, verbose_name="Ссылка (URL)")
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name="Альтернативный текст (для SEO)")
+    display_order = models.PositiveIntegerField(default=0, db_index=True, verbose_name="Порядок отображения")
+    is_active = models.BooleanField(default=True, db_index=True, verbose_name="Активен")
+
+    slider_delay = models.PositiveIntegerField(
+        default=3000,
+        verbose_name="Задержка слайдера (мс)",
+        help_text="Используется значение из первого активного баннера. Рекомендуется ставить одинаковое значение для всех баннеров."
+    )
+    class Meta:
+        verbose_name = "Баннер"
+        verbose_name_plural = "Баннеры"
+        ordering = ['display_order']
+
+    def __str__(self):
+        return self.caption or f"Баннер #{self.id}"

@@ -30,7 +30,7 @@ from .forms import ClientRegistrationForm, DoctorRegistrationForm, UserLoginForm
     DoctorLeaveRequestForm, DoctorDayOffRequestForm, AppointmentNotesForm
 from .models import UserProfile, Client, Appointment, ServiceCategory, Service, Review, Doctor, DoctorLeave, \
     DoctorAvailabilityOverride, DoctorWeeklyAvailabilitySlot, PromoCode, Article, CompanyProfile, FaqItem, \
-    NonDoctorStaffContact, Vacancy, PartnerCompany
+    NonDoctorStaffContact, Vacancy, PartnerCompany, Banner
 
 
 # ---------- Аутентификация ----------
@@ -728,25 +728,40 @@ def doctor_day_off_request_view(request):
 # ---------- Общие представления ----------
 
 def home_view(request):
+    if request.method == 'POST' and request.user.is_superuser:
+        new_delay = request.POST.get('slider_delay')
+        if new_delay and new_delay.isdigit():
+            Banner.objects.filter(is_active=True).update(slider_delay=int(new_delay))
+        return redirect('home')
+
     latest_article = Article.objects.filter(is_published=True).order_by('-published_date').first()
 
     welcome_message = "Добро пожаловать в нашу клинику 'Здоровье'!"
 
     company_profile = CompanyProfile.objects.first()
 
-    banner_image_paths = []
-    try:
-        banners_dir = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'banners')
+    all_banners = Banner.objects.filter(is_active=True)
 
-        if os.path.isdir(banners_dir):
-            files = sorted(os.listdir(banners_dir))
+    banner_data = [
+        {
+            "image": banner.image.url,  # .url даст правильный путь к файлу
+            "caption": banner.caption,
+            "link": banner.link,
+            "alt_text": banner.alt_text,
+        }
+        for banner in all_banners
+    ]
 
-            image_files = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+    active_banners = Banner.objects.filter(is_active=True).order_by('display_order')
+    slider_delay_ms = 3000
 
-            banner_image_paths = [os.path.join('images', 'banners', f) for f in image_files]
+    if active_banners.exists():
+        slider_delay_ms = active_banners.first().slider_delay
 
-    except (IndexError, FileNotFoundError):
-        pass
+    banner_data = [
+        {"image": b.image.url, "caption": b.caption, "link": b.link, "alt_text": b.alt_text}
+        for b in active_banners
+    ]
 
     services_queryset = Service.objects.select_related('category')[:3]
 
@@ -756,7 +771,8 @@ def home_view(request):
         'welcome_message': welcome_message,
         'latest_article': latest_article,
         'company_profile': company_profile,
-        'banner_images': banner_image_paths,
+        'banner_images': banner_data,
+        'slider_delay': slider_delay_ms,
         'latest_services': services_queryset,
         'partners': active_partners,
     }

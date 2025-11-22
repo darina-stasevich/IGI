@@ -10,7 +10,8 @@ from django.utils.safestring import mark_safe
 from .models import (
     UserProfile, Client, DoctorCategory, ServiceCategory, Service, Doctor,
     DoctorWeeklyAvailabilitySlot, DoctorAvailabilityOverride, DoctorLeave,
-    Appointment, PromoCode, Review, Vacancy, NonDoctorStaffContact, FaqItem, Article, CompanyProfile, PartnerCompany
+    Appointment, PromoCode, Review, Vacancy, NonDoctorStaffContact, FaqItem, Article, CompanyProfile, PartnerCompany,
+    Banner
 )
 
 @admin.register(UserProfile)
@@ -529,3 +530,10 @@ class PartnerCompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'website_url', 'is_active')
     list_filter = ('is_active',)
     search_fields = ('name', 'description')
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'caption', 'is_active', 'display_order', 'slider_delay')
+    list_filter = ('is_active',)
+    list_editable = ('is_active', 'display_order', 'slider_delay')
+    search_fields = ('caption', 'link')
