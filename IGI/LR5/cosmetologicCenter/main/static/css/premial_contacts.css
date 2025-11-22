@@ -1,0 +1,287 @@
+
+.contacts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.9rem;
+    box-shadow: var(--box-shadow);
+    background-color: var(--color-background-content);
+    table-layout: fixed;
+}
+
+.contacts-table th,
+.contacts-table td {
+    padding: 12px 15px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: middle;
+    word-wrap: break-word;
+}
+
+.contacts-table th {
+    background-color: var(#f8f9fa);
+    font-weight: 600;
+}
+
+.contacts-table tr:nth-of-type(even) {
+    background-color: var(#f8f9fa);
+}
+
+.contacts-table tr:hover {
+    background-color: var(#e9ecef);
+}
+
+.contact-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.contact-photo-placeholder {
+    width: 80px;
+    height: 80px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.checkbox-cell, .header-checkbox {
+    text-align: center;
+}
+
+.sortable-header {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.sortable-header::after {
+    content: ' \2195';
+    opacity: 0.3;
+    position: absolute;
+    right: 10px;
+}
+
+.sortable-header.sorted-asc::after {
+    content: ' \25B2';
+    opacity: 1;
+}
+
+.sortable-header.sorted-desc::after {
+    content: ' \25BC';
+    opacity: 1;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    user-select: none;
+}
+
+.pagination-btn {
+    background-color: var(--color-background-content);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px 12px;
+    margin: 0 4px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.pagination-btn.active {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.pagination-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.search-container {
+    margin: 1.5rem 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius, 0.35rem);
+    flex-grow: 1; /* Поле поиска займет доступное пространство */
+    max-width: 400px;
+}
+
+.search-container button {
+    padding: 8px 15px;
+    border: none;
+    background-color: var(--color-primary, #20c997);
+    color: white;
+    border-radius: var(--border-radius, 0.35rem);
+    cursor: pointer;
+}
+
+.contacts-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.contacts-table tbody tr.selected {
+    background-color: #dbeafe; /* Приятный синий оттенок для выделения */
+}
+
+html.dark-theme .contacts-table tbody tr.selected {
+    background-color: #2b3a54; /* Темный синий для темной темы */
+}
+
+#contact-details-block {
+    margin-top: 2rem;
+    padding: 20px;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: var(--border-radius, 0.35rem);
+    background-color: var(--color-background-content, #fff);
+    box-shadow: var(--box-shadow);
+    display: none; /* Изначально блок скрыт */
+    gap: 20px;
+    align-items: center;
+}
+
+#contact-details-block.visible {
+    display: flex; /* Показываем как flex-контейнер */
+}
+
+#contact-details-block img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#contact-details-block .details-info h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--color-primary);
+}
+
+.form-container {
+    display: none; /* Форма по умолчанию скрыта */
+    padding: 20px;
+    margin-top: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius, 0.35rem);
+    background-color: var(--color-background-content);
+    box-shadow: var(--box-shadow);
+}
+
+.form-container.visible {
+    display: block;
+}
+
+/* Класс для отображения */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.form-grid .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Для полей на всю ширину */
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="url"],
+.form-container textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-container textarea {
+    min-height: 80px;
+}
+
+/* Стили для невалидных полей */
+.form-container input.invalid,
+.form-container textarea.invalid {
+    border-color: red;
+    background-color: #fff0f0;
+}
+
+#validation-messages {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+#validation-messages p {
+    margin: 5px 0;
+}
+
+.valid-msg {
+    color: green;
+}
+
+.invalid-msg {
+    color: red;
+}
+
+#add-row-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+#add-row-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.actions-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+/* --- НОВЫЕ СТИЛИ ДЛЯ ПРЕМИРОВАНИЯ --- */
+#bonus-order-output {
+    margin-top: 2rem;
+    padding: 20px;
+    border: 2px dashed var(--color-primary, #20c997);
+    border-radius: var(--border-radius, 0.35rem);
+    background-color: var(#f8f9fa);
+    white-space: pre-wrap; /* Сохраняет форматирование текста (переносы строк) */
+    font-family: 'Courier New', Courier, monospace;
+    display: none; /* Изначально скрыт */
+}
+
+#bonus-order-output.visible {
+    display: block;
+}

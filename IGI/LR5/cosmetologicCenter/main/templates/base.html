@@ -10,6 +10,7 @@
     <script src="{% static 'js/theme.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'css/preloader_style.css' %}">
     {% block extra_head %}{% endblock %}
+    <script src="{% static 'js/interactive-table.js' %}"></script>
 </head>
 <body>
 
@@ -41,8 +42,35 @@
     <div id="content-wrap">
         <nav id="primary-nav" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <a accesskey="1" href="{% url 'home' %}" itemprop="name url">Главная</a>
-            {% if not user.is_authenticated or user.profile.role != 'doctor' %}<a accesskey="2" href="{% url 'about_company' %}" itemprop="name url">О компании</a><a accesskey="3" href="{% url 'article_list' %}" itemprop="name url">Новости</a><a accesskey="4" href="{% url 'faq_list' %}" itemprop="name url" lang="en" translate="no">FAQ</a><a accesskey="5" href="{% url 'service_list' %}" itemprop="name url">Услуги</a><a accesskey="6" tabindex="4" href="{% url 'find_available_slots' %}" itemprop="name url">Запись на услугу</a><a accesskey="7" tabindex="3" href="{% url 'review_list' %}" itemprop="name url">Отзывы</a><a accesskey="8" href="{% url 'public_promo_code_list' %}" itemprop="name url">Акции и промокоды</a><a accesskey="9" href="{% url 'contacts' %}" itemprop="name url">Контакты</a><a accesskey="0" href="{% url 'vacancy_list' %}" itemprop="name url">Вакансии</a><a href="{% url 'privacy_policy' %}" itemprop="name url">Политика конфиденциальности</a><a href="{% url 'statistics' %}" itemprop="name url">Статистика</a><a href="{% url 'http_cat' %}" itemprop="name url"><span lang="en" translate="no">HTTP</span> Коты</a><a href="{% url 'lab_demo' %}" itemprop="name url">Дополнительный функционал</a>{% endif %}
-            {% if user.is_authenticated %}{% if user.profile %}{% if user.profile.role == 'client' %}<a href="{% url 'client_dashboard' %}" itemprop="name url">Мой кабинет</a><a href="{% url 'cart_view' %}" itemprop="name url">Корзина</a><a href="{% url 'client_appointments' %}" itemprop="name url">Мои записи</a><a href="{% url 'client_applied_promo_codes' %}" itemprop="name url">Мои промокоды</a>{% elif user.profile.role == 'doctor' %}<a href="{% url 'doctor_dashboard' %}" itemprop="name url">Кабинет врача</a><a href="{% url 'doctor_schedule' %}" itemprop="name url">Мое расписание</a><a href="{% url 'doctor_leave_requests' %}" itemprop="name url">Запросы на отпуск</a><a href="{% url 'doctor_day_off_requests' %}" itemprop="name url">Отгул/Сокращенный день</a>{% endif %}{% endif %}{% endif %}
+            {% if user.is_superuser %}
+                <a href="{% url 'premial_contacts' %}" itemprop="name url">Контакты сотрудников</a>
+            {% endif %}
+            {% if not user.is_authenticated or user.profile.role != 'doctor' %}
+                <a accesskey="2" href="{% url 'about_company' %}" itemprop="name url">О компании</a>
+                <a accesskey="3" href="{% url 'article_list' %}" itemprop="name url">Новости</a>
+                <a accesskey="4" href="{% url 'faq_list' %}" itemprop="name url" lang="en" translate="no">FAQ</a>
+                <a accesskey="5" href="{% url 'service_list' %}" itemprop="name url">Услуги</a>
+                <a accesskey="6" tabindex="4" href="{% url 'find_available_slots' %}" itemprop="name url">Запись на
+                    услугу</a>
+                <a accesskey="7" tabindex="3" href="{% url 'review_list' %}" itemprop="name url">Отзывы</a>
+                <a accesskey="8" href="{% url 'public_promo_code_list' %}" itemprop="name url">Акции и промокоды</a>
+                <a accesskey="9" href="{% url 'contacts' %}" itemprop="name url">Контакты</a>
+                <a accesskey="0" href="{% url 'vacancy_list' %}" itemprop="name url">Вакансии</a>
+                <a href="{% url 'privacy_policy' %}" itemprop="name url">Политика конфиденциальности</a>
+                <a href="{% url 'statistics' %}" itemprop="name url">Статистика</a>
+                <a href="{% url 'http_cat' %}" itemprop="name url"><span lang="en" translate="no">HTTP</span> Коты</a>
+                <a href="{% url 'lab_demo' %}" itemprop="name url">Дополнительный функционал</a>{% endif %}
+            {% if user.is_authenticated %}{% if user.profile %}{% if user.profile.role == 'client' %}
+                <a href="{% url 'client_dashboard' %}" itemprop="name url">Мой кабинет</a>
+                <a href="{% url 'cart_view' %}" itemprop="name url">Корзина</a>
+                <a href="{% url 'client_appointments' %}" itemprop="name url">Мои записи</a>
+                <a href="{% url 'client_applied_promo_codes' %}" itemprop="name url">Мои промокоды</a>
+            {% elif user.profile.role == 'doctor' %}
+                <a href="{% url 'doctor_dashboard' %}" itemprop="name url">Кабинет врача</a>
+                <a href="{% url 'doctor_schedule' %}" itemprop="name url">Мое расписание</a>
+                <a href="{% url 'doctor_leave_requests' %}" itemprop="name url">Запросы на отпуск</a>
+                <a href="{% url 'doctor_day_off_requests' %}" itemprop="name url">Отгул/Сокращенный день</a>{% endif %}
+            {% endif %}{% endif %}
         </nav>
 
         <main id="main-content" tabindex="-1">

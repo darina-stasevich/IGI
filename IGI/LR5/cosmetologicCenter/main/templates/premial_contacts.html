@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_head %}
+    <style media="all">
+        @import url("{% static 'css/premial_contacts.css' %}");
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>{{ page_title }}</h1>
+            <div class="actions-bar">
+        <button id="show-add-form-button">Добавить сотрудника</button>
+        {# --- 1. ДОБАВЛЕНА КНОПКА ПРЕМИРОВАНИЯ --- #}
+        <button id="generate-bonus-button">Премировать</button>
+    </div>
+        <div id="add-contact-form-container" class="form-container">
+    <h4>Новый сотрудник</h4>
+    {# Оборачиваем все в тег <form> #}
+    <form id="add-contact-form" method="POST" action="{% url 'add_doctor' %}" novalidate>
+        {% csrf_token %} {# Обязательный тег безопасности Django #}
+
+        <div class="form-grid">
+            {# Добавляем атрибут name к каждому полю, это КРИТИЧЕСКИ ВАЖНО для Django #}
+            <div class="form-group"><label for="add-name">ФИО</label><input type="text" id="add-name" name="name" required></div>
+            <div class="form-group"><label for="add-email">Email</label><input type="email" id="add-email" name="email" required></div>
+            <div class="form-group"><label for="add-phone">Телефон</label><input type="text" id="add-phone" name="phone" placeholder="+375 (XX) XXX-XX-XX" required></div>
+            <div class="form-group"><label for="add-photo-url">URL фото</label><input type="url" id="add-photo-url" name="photo_url" placeholder="https://example.com/photo.jpg" required></div>
+
+            <div class="form-group full-width">
+                <label for="add-category">Выполняемая работа (Категория)</label>
+                <select id="add-category" name="category" required>
+                    <option value="" disabled selected>-- Выберите категорию --</option>
+                    {% for category in doctor_categories %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group full-width"><label for="add-description">Описание работ</label><textarea id="add-description" name="description" required></textarea></div>
+        </div>
+        <div id="validation-messages"></div>
+        {# Теперь это кнопка type="submit" #}
+        <button type="submit" id="add-row-button" disabled>Добавить в таблицу</button>
+    </form>
+</div>
+        <p>Нажмите на заголовок столбца для сортировки. Используйте кнопки ниже для навигации по страницам.</p>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Введите имя для поиска...">
+            <button id="search-button">Найти</button>
+        </div>
+        {% if contacts %}
+            <div class="table-responsive">
+                <table class="contacts-table" id="interactive-contacts-table">
+                    <thead>
+                    <tr>
+                        <th class="header-checkbox"><input type="checkbox" id="select-all-contacts"
+                                                           title="Выбрать всех" disabled></th>
+                        <th>Фото</th>
+                        <th class="sortable-header" data-sort-by="name">ФИО</th>
+                        <th class="sortable-header" data-sort-by="category">Категория</th>
+                        <th class="sortable-header" data-sort-by="desc">Описание работ</th>
+                        <th>Телефон</th>
+                        <th>Email</th>
+                    </tr>
+                    </thead>
+                    <tbody id="contacts-table-body">
+                    {% for doctor in contacts %}
+                        <tr class="contact-row"
+                            data-name="{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}"
+                            data-photo-url="
+                                    {% if doctor.contact_page_photo %}{{ doctor.contact_page_photo.url }}{% else %}{% static "images/default_avatar.png" %}{% endif %}"
+                            data-category="{{ doctor.category.name|default:'' }}"
+                            data-description="{{ doctor.contact_page_description|default:doctor.bio }}"
+                            data-phone="{{ doctor.user_profile.phone_number|default:'Не указан' }}"
+                            data-email="{{ doctor.user_profile.user.email }}">
+
+                            <td><input type="checkbox" class="contact-checkbox" value="{{ doctor.pk }}"></td>
+                            <td>
+                                {% if doctor.contact_page_photo %}
+                                    <img src="{{ doctor.contact_page_photo.url }}" alt="Фото" class="contact-photo">
+                                {% else %}
+                                    <img src="{% static "images/default_avatar.png" %}" alt="Фото"
+                                         class="contact-photo">
+                                {% endif %}
+                            </td>
+                            <td data-cell="name">{{ doctor.user_profile.user.get_full_name|default:doctor.user_profile.user.username }}</td>
+                        <td data-cell="category">{{ doctor.category.name|default:'Без категории' }}</td>
+                            <td data-cell="desc">{{ doctor.contact_page_description|default:doctor.bio|truncatewords:15 }}</td>
+                            {# Оставляем обрезку для компактности таблицы #}
+                            <td>{{ doctor.user_profile.phone_number|default:"Не указан" }}</td>
+                            <td>
+                                <a href="mailto:{{ doctor.user_profile.user.email }}">{{ doctor.user_profile.user.email }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="pagination-controls" class="pagination-controls"></div>
+            <div id="contact-details-block"></div>
+            <div id="bonus-order-output"></div>
+        {% else %}
+            <p>На данный момент информация о контактах отсутствует.</p>
+        {% endif %}
+    </div>
+
+    {% block extra_scripts %}
+        <script src="{% static 'js/interactive-table.js' %}"></script>
+    {% endblock %}
+{% endblock %}

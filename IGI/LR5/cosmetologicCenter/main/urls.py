@@ -43,6 +43,6 @@ urlpatterns = [
     path('payment/process/', views.process_payment_view, name='process_payment'),
     path('booking-success/', views.booking_success_view, name='booking_success'),
     path('lab/demo/', views.lab_demo_view, name='lab_demo'),
-
-
+    path('premial_contacts/', views.premial_contacts_view, name='premial_contacts'),
+    path('premial_contacts/add/', views.add_doctor_view, name='add_doctor'),
 ]

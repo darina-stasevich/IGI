@@ -30,7 +30,7 @@ from .forms import ClientRegistrationForm, DoctorRegistrationForm, UserLoginForm
     DoctorLeaveRequestForm, DoctorDayOffRequestForm, AppointmentNotesForm
 from .models import UserProfile, Client, Appointment, ServiceCategory, Service, Review, Doctor, DoctorLeave, \
     DoctorAvailabilityOverride, DoctorWeeklyAvailabilitySlot, PromoCode, Article, CompanyProfile, FaqItem, \
-    NonDoctorStaffContact, Vacancy, PartnerCompany, Banner
+    NonDoctorStaffContact, Vacancy, PartnerCompany, Banner, DoctorCategory
 
 
 # ---------- Аутентификация ----------
@@ -1429,3 +1429,83 @@ def lab_demo_view(request):
             plain_demo_text=', '.join(parts) if parts else 'Нет данных',
         )
     return render(request, 'lab_demo.html', context)
+
+def premial_contacts_view(request):
+    """
+    Отображает страницу с контактами сотрудников.
+    """
+    contact_list = Doctor.objects.filter(show_on_contacts_page=True)\
+                                 .select_related('user_profile', 'user_profile__user')\
+                                 .order_by('contact_page_display_order')
+
+    doctor_categories = DoctorCategory.objects.all()
+
+    context = {
+        'page_title': 'Наши специалисты',
+        'contacts': contact_list,
+        'doctor_categories': doctor_categories
+    }
+    return render(request, 'premial_contacts.html', context)
+
+
+@transaction.atomic  # Гарантирует, что все шаги либо выполнятся, либо откатятся
+def add_doctor_view(request):
+    # Проверяем, что запрос отправлен методом POST и пользователь - администратор
+    if request.method != 'POST' or not request.user.is_superuser:
+        messages.error(request, 'Недопустимый запрос или недостаточно прав.')
+        return redirect('premial_contacts')
+
+    try:
+        # Получаем данные из POST-запроса формы
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        category_name = request.POST.get('category')
+        description = request.POST.get('description')
+
+        # Простая серверная проверка на случай, если JS отключен
+        if not all([name, email, phone, category_name, description]):
+            messages.error(request, 'Все поля формы должны быть заполнены.')
+            return redirect('premial_contacts')
+
+        # 1. Создаем пользователя
+        first_name = name.split(' ')[0]
+        last_name = ' '.join(name.split(' ')[1:])
+        username = f"{first_name.lower()}_{User.objects.count()}"
+
+        # --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+        # Создаем пользователя без пароля.
+        user = User(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name
+        )
+        # Явно устанавливаем, что у пользователя нет пароля для входа
+        user.set_unusable_password()
+        user.save()  # Сохраняем пользователя
+
+        # 2. Создаем профиль
+        user_profile = UserProfile.objects.create(user=user, phone_number=phone)
+
+        # 3. Находим категорию
+        category = DoctorCategory.objects.get(name=category_name)
+
+        # 4. Создаем доктора
+        Doctor.objects.create(
+            user_profile=user_profile,
+            category=category,
+            bio=description,
+            contact_page_description=description
+        )
+
+        messages.success(request, f'Сотрудник "{name}" успешно добавлен!')
+
+    except DoctorCategory.DoesNotExist:
+        messages.error(request, 'Выбранная категория не найдена. Попробуйте снова.')
+    except Exception as e:
+        # Теперь эта ошибка больше не должна возникать
+        messages.error(request, f'Произошла непредвиденная ошибка: {e}')
+
+    # В любом случае (успех или ошибка) возвращаем пользователя на страницу контактов
+    return redirect('premial_contacts')
