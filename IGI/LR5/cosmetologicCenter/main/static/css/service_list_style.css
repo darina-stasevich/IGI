@@ -66,3 +66,62 @@
         margin-bottom: 2rem;
     }
 }
+.pagination-nav {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pagination-btn:hover {
+    background: #f5f5f5;
+}
+
+.pagination-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-btn:disabled:hover {
+    background: white;
+}
+
+/* Кнопки "Назад"/"Вперед" - не квадратные */
+.pagination-prev,
+.pagination-next {
+    width: auto;
+    padding: 0 16px;
+}
+
+.pagination-ellipsis {
+    padding: 0 8px;
+    color: #666;
+}

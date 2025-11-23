@@ -10,36 +10,35 @@
 {% endblock %}
 
 {% block extra_head %}
-  <style media="all">
-    @import url("{% static 'css/service_list_style.css' %}");
-  </style>
+    <style media="all">
+        @import url("{% static 'css/service_list_style.css' %}");
+    </style>
 {% endblock %}
 
 {% block content %}
     <section id="services" lang="ru">
         <header>
-            <h1 id="services-heading">
-                {% if current_category %}
-                    Услуги в категории: {{ current_category.name }}
-                {% else %}
-                    Все услуги
-                {% endif %}
-            </h1>
+            <h1>{% if current_category %}{{ current_category.name }}{% else %}Все услуги{% endif %}</h1>
             <hr>
         </header>
 
-        <div class=service-layout-grid">
-            <aside>
-                <h2 id="categories-heading">Категории услуг</h2>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="{% url 'service_list' %}">Все категории</a>
+        <div class="service-layout-grid">
+            <!-- Боковая панель категорий - сделана уже -->
+            <aside class="categories-sidebar">
+                <div class="categories-header">
+                    <h2>Категории</h2>
+                </div>
+                <nav class="categories-nav">
+                    <ul class="categories-list">
+                        <li class="category-item {% if not current_category %}active{% endif %}">
+                            <a href="{% url 'service_list' %}" class="category-link">
+                                <span class="category-name">Все категории</span>
+                            </a>
                         </li>
-                        {% for category in categories %}
-                            <li>
-                                <a href="{% url 'service_list' %}?category_id={{ category.id }}">
-                                    {{ category.name }}
+                        {% for c in categories %}
+                            <li class="category-item {% if current_category.id == c.id %}active{% endif %}">
+                                <a href="{% url 'service_list' %}?category_id={{ c.id }}" class="category-link">
+                                    <span class="category-name">{{ c.name }}</span>
                                 </a>
                             </li>
                         {% endfor %}
@@ -47,11 +46,28 @@
                 </nav>
             </aside>
 
-           <section id="services-list">
+            <!-- Основной контент -->
+            <section id="services-list-section">
+                <!-- Улучшенные контролы пагинации -->
+                <div class="pagination-controls-wrapper">
+                    <div class="pagination-controls">
+                        <label for="per_page_selector" class="per-page-label">Показывать по:</label>
+                        <select id="per_page_selector" class="per-page-select">
+                            <option value="3" selected>3</option>
+                            <option value="6">6</option>
+                            <option value="9">9</option>
+                            <option value="12">12</option>
+                        </select>
+                        <div class="results-counter">
+                            <span id="results-count">{{ services|length }}</span> услуг
+                        </div>
+                    </div>
+                </div>
+
                 {% if services %}
-                    <ul class="service-cards-grid">
+                    <ul class="service-cards-grid" id="service-cards-container">
                         {% for service in services %}
-                            <li>
+                            <li class="service-card-wrapper">
                                 {% if current_category %}
                                     {% include "_service_card.html" with service=service show_category=False %}
                                 {% else %}
@@ -60,12 +76,16 @@
                             </li>
                         {% endfor %}
                     </ul>
+
+                    <!-- Улучшенная пагинация -->
+                    <div id="pagination-container" class="pagination-nav"></div>
                 {% else %}
-                    <section>
+                    <div class="no-services">
                         <p>В данной категории пока нет услуг или услуги не найдены.</p>
-                    </section>
+                    </div>
                 {% endif %}
             </section>
         </div>
     </section>
+    <script src="{% static 'js/service_paginator.js' %}"></script>
 {% endblock %}
