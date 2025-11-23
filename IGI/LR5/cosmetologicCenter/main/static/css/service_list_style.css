@@ -1,3 +1,8 @@
+:root {
+    --rotateX: 0deg;
+    --rotateY: 0deg;
+}
+
 .service-layout-grid {
 
     display: grid;
@@ -124,4 +129,107 @@
 .pagination-ellipsis {
     padding: 0 8px;
     color: #666;
+}
+
+/* --- СТИЛИ ДЛЯ САМОЙ КАРТОЧКИ --- */
+
+.service-card.card {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: var(--color-background-content, #fff);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius, 1em);
+
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+
+    /* ИСПРАВЛЕНИЕ: используем CSS переменные в transform */
+    transform:
+        perspective(100em)
+        rotateY(var(--rotateX, 0deg))
+        rotateX(var(--rotateY, 0deg));
+
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s linear; /* плавное следование за курсором */
+}
+
+/* Убираем transition при анимации сброса */
+.service-card.card.reset-animation {
+    animation: reset-card-animation 0.5s ease-out forwards;
+    transition: none;
+}
+/* Эффект свечения (адаптировано из примера) */
+.service-card.card::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background-color: var(--color-primary, #007bff);
+    opacity: 0;
+    transform: translateZ(-50px);
+    filter: blur(20px);
+    transition: opacity 0.4s ease-out; /* Оставляем плавность только для свечения */
+    pointer-events: none; /* Важно, чтобы псевдоэлемент не перехватывал события мыши */
+}
+
+
+/* Показываем свечение при наведении на обертку */
+.card-wrapper:hover .service-card.card::after {
+    opacity: 0.3;
+}
+
+/* Анимация для возврата в исходное положение */
+@keyframes reset-card-animation {
+    to {
+        transform: rotateY(0deg) rotateX(0deg);
+    }
+}
+
+/* Сохраняем ваши внутренние стили для карточки */
+.service-card header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border, #eee);
+}
+.service-card header h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-primary, #007bff);
+}
+.service-card .service-description {
+    padding: 1rem;
+}
+.service-card footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--color-background-page, #f8f9fa);
+    border-bottom-left-radius: var(--border-radius, 1em);
+    border-bottom-right-radius: var(--border-radius, 1em);
+}
+.service-card .service-price {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Остальные стили для сетки, пагинации и т.д. */
+.service-layout-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.card-wrapper {
+    min-height: 400px;
+    position: relative;
+    perspective: 1500px;
+    transform-style: preserve-3d;
+}
+
+/* Эффект глубины для внутренних элементов карточки */
+.service-card.card > * {
+    transform: translateZ(20px); /* приподнимаем контент */
+    position: relative;
+    z-index: 2;
 }

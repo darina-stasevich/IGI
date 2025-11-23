@@ -65,19 +65,16 @@
                 </div>
 
                 {% if services %}
-                    <ul class="service-cards-grid" id="service-cards-container">
-                        {% for service in services %}
-                            <li class="service-card-wrapper">
-                                {% if current_category %}
-                                    {% include "_service_card.html" with service=service show_category=False %}
-                                {% else %}
-                                    {% include "_service_card.html" with service=service show_category=True %}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                    <!-- Улучшенная пагинация -->
+                   <ul class="service-cards-grid" id="service-cards-container">
+                    {% for service in services %}
+                        {# --- УБИРАЕМ LI И ПРОСТО ВКЛЮЧАЕМ ШАБЛОН --- #}
+                        {% if current_category %}
+                            {% include "_service_card.html" with service=service show_category=False %}
+                        {% else %}
+                            {% include "_service_card.html" with service=service show_category=True %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
                     <div id="pagination-container" class="pagination-nav"></div>
                 {% else %}
                     <div class="no-services">
@@ -88,4 +85,5 @@
         </div>
     </section>
     <script src="{% static 'js/service_paginator.js' %}"></script>
+    <script src="{% static 'js/card_hover_effect.js' %}"></script>
 {% endblock %}

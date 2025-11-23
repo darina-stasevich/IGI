@@ -36,6 +36,10 @@ class ServicePaginator {
         });
 
         this.createPaginationButtons();
+
+        if (typeof initializeCardHoverEffects === 'function') {
+            initializeCardHoverEffects();
+        }
     }
 
     createPaginationButtons() {

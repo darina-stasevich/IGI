@@ -1,38 +1,29 @@
-{# Заменяем <div> на <article> и добавляем класс, который ожидает наш CSS #}
-<article class="service-card">
-
-    {# БЛОК 1: Шапка. Занимает первую строку грида (grid-template-rows: auto) #}
-    <header>
-        <h4>{{ service.name }}</h4>
-        {% if show_category and service.category %}
-            {# Используем <small> для второстепенной информации, это семантичнее чем h5 #}
-            <small>Категория: {{ service.category.name }}</small>
-        {% endif %}
-    </header>
-
-    {# БЛОК 2: Описание. Занимает вторую, "резиновую" строку грида (1fr) #}
-    <div class="service-description">
-        <p>{{ service.description|linebreaksbr }}</p>
-
-        {# Дополнительную информацию тоже помещаем сюда #}
-        <ul>
-            <li><strong>Длительность:</strong> {{ service.duration_minutes }} минут</li>
-            {% if service.office_number %}
-                <li><strong>Кабинет:</strong> {{ service.office_number }}</li>
+<li class="card-wrapper">
+    <article class="service-card card">
+        <header>
+            <h4>{{ service.name }}</h4>
+            {% if show_category and service.category %}
+                <small>Категория: {{ service.category.name }}</small>
             {% endif %}
-        </ul>
-    </div>
+        </header>
 
-    {# БЛОК 3: Футер. Занимает третью строку грида (auto), прижимаясь к низу #}
-    <footer>
-        <div class="service-price">
-            {{ service.price }} руб.
+        <div class="service-description">
+            <p>{{ service.description|linebreaksbr }}</p>
+            <ul>
+                <li><strong>Длительность:</strong> {{ service.duration_minutes }} минут</li>
+                {% if service.office_number %}
+                    <li><strong>Кабинет:</strong> {{ service.office_number }}</li>
+                {% endif %}
+            </ul>
         </div>
 
-        {# Добавляем класс .btn, чтобы ссылка выглядела как кнопка (стили из style.css) #}
-        <a href="{% url 'service_detail' service.pk %}" class="btn">
-            Подробнее
-        </a>
-    </footer>
-
-</article>
+        <footer>
+            <div class="service-price">
+                {{ service.price }} руб.
+            </div>
+            <a href="{% url 'service_detail' service.pk %}" class="btn">
+                Подробнее
+            </a>
+        </footer>
+    </article>
+</li>
