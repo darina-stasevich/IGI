@@ -453,3 +453,209 @@ const speakBtn = document.getElementById('speak-btn');
         });
     }
 });
+
+// ... весь ваш предыдущий код ...
+
+// --- НАЧАЛО НОВОГО КОДА ДЛЯ CHART.JS ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Получаем элементы DOM ---
+    const generateBtn = document.getElementById('generate-chart-btn');
+    const saveBtn = document.getElementById('save-chart-btn');
+    const canvas = document.getElementById('arcsin-chart');
+    if (!generateBtn) return; // Если мы не на той странице, выходим
+
+    const tableContainer = document.getElementById('chart-data-table-container');
+    const inputs = {
+        xStart: document.getElementById('chart-x-start'),
+        xEnd: document.getElementById('chart-x-end'),
+        points: document.getElementById('chart-points'),
+        terms: document.getElementById('chart-terms'),
+    };
+
+    let chartInstance = null; // Переменная для хранения нашего графика
+
+    // --- Математические функции ---
+
+    // Вспомогательная функция для вычисления факториала
+    function factorial(num) {
+        if (num < 0) return -1;
+        if (num === 0) return 1;
+        let result = 1;
+        for (let i = num; i > 1; i--) {
+            result *= i;
+        }
+        return result;
+    }
+
+    // Вычисление arcsin(x) через ряд Тейлора
+    function taylorArcsin(x, n_terms) {
+        let sum = 0;
+        for (let n = 0; n < n_terms; n++) {
+            const numerator = factorial(2 * n);
+            const denominator = (4 ** n) * (factorial(n) ** 2) * (2 * n + 1);
+            const term = (numerator / denominator) * (x ** (2 * n + 1));
+            sum += term;
+        }
+        return sum;
+    }
+
+    // --- Основная функция для генерации данных и графика ---
+    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ---
+    function generateChartAndTable() {
+        // 1. Получаем значения из полей ввода
+        const xStart = parseFloat(inputs.xStart.value);
+        const xEnd = parseFloat(inputs.xEnd.value);
+        const points = parseInt(inputs.points.value);
+        const terms = parseInt(inputs.terms.value);
+
+        if (xStart >= xEnd || points <= 1 || terms < 1) {
+            alert("Проверьте введенные параметры!");
+            return;
+        }
+
+        // 2. Генерируем наборы данных
+        const labels = [];
+        const mathData = [];
+        const seriesData = [];
+        const tableRows = [];
+
+        const step = (xEnd - xStart) / (points - 1);
+
+        for (let i = 0; i < points; i++) {
+            const x = xStart + i * step;
+            const fixedX = parseFloat(x.toFixed(4));
+            const mathValue = Math.asin(fixedX);
+            const seriesValue = taylorArcsin(fixedX, terms);
+
+            // --- ДОБАВЛЕНО ВЫЧИСЛЕНИЕ EPS ---
+            const eps = Math.abs(mathValue - seriesValue);
+
+            labels.push(fixedX);
+            mathData.push(mathValue);
+            seriesData.push(seriesValue);
+
+            // --- ДОБАВЛЕНА ЯЧЕЙКА ДЛЯ EPS В СТРОКУ ТАБЛИЦЫ ---
+            tableRows.push(`
+                <tr>
+                    <td>${fixedX}</td>
+                    <td>${seriesValue.toFixed(6)}</td>
+                    <td>${terms}</td>
+                    <td>${mathValue.toFixed(6)}</td>
+                    <td>${eps.toExponential(2)}</td>
+                </tr>
+            `);
+        }
+
+        // 3. Создаем и выводим таблицу
+        // --- ДОБАВЛЕН ЗАГОЛОВОК ДЛЯ EPS ---
+        tableContainer.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>F(x) (Ряд)</th>
+                        <th>n</th>
+                        <th>Math F(x)</th>
+                        <th>eps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows.join('')}
+                </tbody>
+            </table>
+        `;
+
+        // ... остальной код функции (создание графика) остается без изменений ...
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        const ctx = canvas.getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: `Ряд Тейлора (n=${terms})`,
+                        data: seriesData,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.1,
+                    },
+                    {
+                        label: 'Math.asin(x)',
+                        data: mathData,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.1,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Сравнение arcsin(x) и его разложения в ряд'
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 0,
+                                yMax: 0,
+                                borderColor: 'rgb(50, 50, 50)',
+                                borderWidth: 1,
+                                label: {
+                                    content: 'Ось X',
+                                    enabled: true,
+                                    position: 'start'
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'x'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'F(x)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // --- Функция для сохранения графика ---
+    function saveChart() {
+        if (!chartInstance) {
+            alert("Сначала постройте график!");
+            return;
+        }
+        const link = document.createElement('a');
+        link.href = chartInstance.toBase64Image();
+        link.download = 'arcsin_chart.png';
+        link.click();
+    }
+
+    // --- Навешиваем обработчики событий ---
+    generateBtn.addEventListener('click', generateChartAndTable);
+    saveBtn.addEventListener('click', saveChart);
+
+    // Генерируем график при первой загрузке
+    generateChartAndTable();
+});

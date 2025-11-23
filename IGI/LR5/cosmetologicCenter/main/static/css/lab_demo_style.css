@@ -157,3 +157,52 @@
     color: #2d780e;
     margin-top: 10px;
 }
+
+/* ... все ваши предыдущие стили ... */
+
+/* --- Стили для задачи с Chart.js --- */
+#chart-task-section {
+    margin-top: 2rem;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.chart-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+.chart-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+.chart-container {
+    position: relative;
+    max-width: 900px;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+#chart-data-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.9em;
+}
+
+#chart-data-table-container th,
+#chart-data-table-container td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+#chart-data-table-container th {
+    background-color: #e9ecef;
+}

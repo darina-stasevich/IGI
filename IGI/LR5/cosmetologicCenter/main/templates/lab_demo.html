@@ -558,5 +558,45 @@ print(sum_to(5))  # 15
         <div id="battery-output" class="api-result"></div>
     </section>
 
+    <div id="chart-task-section">
+        <h2>Демонстрация Chart.js: Разложение arcsin(x) в ряд</h2>
+        <p>Сравнение функции, вычисленной через разложение в ряд Тейлора, и функции из модуля Math.</p>
+
+        <!-- === Панель управления === -->
+        <div class="chart-controls">
+            <div class="form-group">
+                <label for="chart-x-start">Начало X (от -0.99)</label>
+                <input type="number" id="chart-x-start" value="-0.95" step="0.05" min="-0.99" max="0.99">
+            </div>
+            <div class="form-group">
+                <label for="chart-x-end">Конец X (до 0.99)</label>
+                <input type="number" id="chart-x-end" value="0.95" step="0.05" min="-0.99" max="0.99">
+            </div>
+            <div class="form-group">
+                <label for="chart-points">Кол-во точек</label>
+                <input type="number" id="chart-points" value="40" min="10" max="200">
+            </div>
+            <div class="form-group">
+                <label for="chart-terms">Кол-во членов ряда (n)</label>
+                <input type="number" id="chart-terms" value="5" min="1" max="50">
+            </div>
+        </div>
+
+        <div class="chart-buttons">
+            <button id="generate-chart-btn" class="btn btn-primary">Построить график и таблицу</button>
+            <button id="save-chart-btn" class="btn btn-success">Сохранить график</button>
+        </div>
+
+        <!-- === Область для графика и таблицы === -->
+        <div class="chart-container">
+            <canvas id="arcsin-chart"></canvas>
+        </div>
+
+        <h4>Таблица с данными:</h4>
+        <div id="chart-data-table-container">
+            <!-- Сюда будет сгенерирована таблица -->
+        </div>
+
+    </div>
     <script src="{% static 'js/lab_demo.js' %}"></script>
 {% endblock %}
