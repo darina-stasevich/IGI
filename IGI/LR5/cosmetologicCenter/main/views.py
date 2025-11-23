@@ -1509,3 +1509,7 @@ def add_doctor_view(request):
 
     # В любом случае (успех или ошибка) возвращаем пользователя на страницу контактов
     return redirect('premial_contacts')
+
+
+def animation_demo_view(request):
+    return render(request, "animation_demo.html")

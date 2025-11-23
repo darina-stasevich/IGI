@@ -45,4 +45,6 @@ urlpatterns = [
     path('lab/demo/', views.lab_demo_view, name='lab_demo'),
     path('premial_contacts/', views.premial_contacts_view, name='premial_contacts'),
     path('premial_contacts/add/', views.add_doctor_view, name='add_doctor'),
+    path('animation/', views.animation_demo_view, name='animation_demo'),
+
 ]

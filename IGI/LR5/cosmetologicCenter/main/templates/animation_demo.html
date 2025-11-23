@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Демонстрация анимаций{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/animation_demo.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Секция с Parallax-анимацией -->
+    <section id="parallax-container">
+        <h2 id="parallax-text">Молекулы</h2>
+        <img src="{% static 'images/molekula.png' %}" class="parallax-molecule" id="molecule1" />
+        <img src="{% static 'images/molekula.png' %}" class="parallax-molecule" id="molecule2" />
+        <img src="{% static 'images/molekula.png' %}" class="parallax-molecule" id="molecule3" />
+        <img src="{% static 'images/molekula.png' %}" class="parallax-molecule" id="molecule4" />
+    </section>
+
+    <!-- Секция с контентом, необходимая для создания прокрутки -->
+    <section id="sec-content">
+        <h2>Анимация при прокрутке</h2>
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. A earum ipsam laboriosam mollitia, architecto esse voluptates eligendi provident soluta et cupiditate sit nisi at dolorum iure dignissimos cumque amet necessitatibus blanditiis? Earum assumenda soluta reiciendis recusandae, incidunt tenetur nihil adipisci corrupti, quibusdam ullam numquam iusto veritatis facilis ab dicta, nobis inventore eius magni eveniet quo? Repellat nobis quos, facilis quam perspiciatis asperiores delectus, aliquid nihil molestias in at modi nulla minima deleniti. Minima aliquid magnam libero reiciendis et, nesciunt repellendus eum vel rerum alias ea enim fugiat eius. Quae dolores, amet nam ab officiis corrupti sequi eligendi quo culpa illum.</p>
+    </section>
+
+    <script src="{% static 'js/animation_demo.js' %}"></script>
+{% endblock %}

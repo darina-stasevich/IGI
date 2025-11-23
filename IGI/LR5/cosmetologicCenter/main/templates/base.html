@@ -76,6 +76,7 @@
     <div id="content-wrap">
         <nav id="primary-nav" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <a accesskey="1" href="{% url 'home' %}" itemprop="name url">Главная</a>
+            <a href="{% url 'animation_demo' %}">Анимация</a>
             {% if user.is_superuser %}
                 <a href="{% url 'premial_contacts' %}" itemprop="name url">Контакты сотрудников</a>
             {% endif %}
