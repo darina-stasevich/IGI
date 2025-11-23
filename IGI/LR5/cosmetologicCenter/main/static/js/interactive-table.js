@@ -3,6 +3,8 @@ class InteractiveTable {
         this.table = document.getElementById(tableId);
         if (!this.table) return;
 
+        this.preloader = document.getElementById('preloader');
+
         this.detailsContainer = document.getElementById('contact-details-block');
 
         // свойства для формы
@@ -45,7 +47,20 @@ class InteractiveTable {
         this.initDetailsView();
         this.initAddForm();
         this.initBonusSystem();
+        this.showPreloader();
+        setTimeout(() => {
+            this.render();
+            this.hidePreloader();
+        }, 300);
         this.render();
+    }
+
+    showPreloader() {
+        if (this.preloader) this.preloader.classList.add('visible');
+    }
+
+    hidePreloader() {
+        if (this.preloader) this.preloader.classList.remove('visible');
     }
 
      initBonusSystem() {
@@ -138,6 +153,9 @@ class InteractiveTable {
             if (!isFormValid) {
                 event.preventDefault(); // <-- Отмена отправки
                 alert('Пожалуйста, исправьте ошибки в форме перед отправкой.');
+            }
+            else{
+                this.showPreloader();
             }
             // Если форма валидна, мы ничего не делаем, и браузер отправляет ее на сервер
         });
@@ -243,33 +261,16 @@ class InteractiveTable {
 
     initSorters() {
         this.headers.forEach(header => {
-            header.addEventListener('click', () => {
-                const sortKey = header.dataset.sortBy;
-                const direction = (this.currentSort.key === sortKey && this.currentSort.direction === 'asc') ? 'desc' : 'asc';
-
-                this.currentSort = {key: sortKey, direction};
-                this.updateHeaderStyles(header, direction);
-                this.currentPage = 1;
-                this.render();
-            });
+            header.addEventListener('click', () => this.performSort(header));
         });
     }
 
     // --- НОВЫЙ МЕТОД ДЛЯ ИНИЦИАЛИЗАЦИИ ПОИСКА ---
     initSearch() {
         if (!this.searchButton || !this.searchInput) return;
-
-        this.searchButton.addEventListener('click', () => {
-            this.currentFilter = this.searchInput.value.trim().toLowerCase();
-            this.currentPage = 1; // Всегда сбрасываем на первую страницу при поиске
-            this.render();
-        });
-
-        // (Опционально) Поиск по нажатию Enter
+        this.searchButton.addEventListener('click', () => this.performSearch());
         this.searchInput.addEventListener('keyup', (event) => {
-            if (event.key === 'Enter') {
-                this.searchButton.click();
-            }
+            if (event.key === 'Enter') this.performSearch();
         });
     }
 
@@ -326,27 +327,52 @@ class InteractiveTable {
         });
     }
 
+    changePage(pageNumber) {
+        this.showPreloader();
+        setTimeout(() => {
+            this.currentPage = pageNumber;
+            this.render();
+            this.hidePreloader();
+        }, 200);
+    }
+
+    // Этот метод будет вызываться при поиске
+    performSearch() {
+        this.showPreloader();
+        setTimeout(() => {
+            this.currentFilter = this.searchInput.value.trim().toLowerCase();
+            this.currentPage = 1;
+            this.render();
+            this.hidePreloader();
+        }, 200);
+    }
+
+    // Этот метод будет вызываться при сортировке
+    performSort(header) {
+        this.showPreloader();
+        setTimeout(() => {
+            const sortKey = header.dataset.sortBy;
+            const direction = (this.currentSort.key === sortKey && this.currentSort.direction === 'asc') ? 'desc' : 'asc';
+
+            this.currentSort = { key: sortKey, direction };
+            this.updateHeaderStyles(header, direction);
+            this.currentPage = 1;
+            this.render();
+            this.hidePreloader();
+        }, 200);
+    }
+
     createPaginationButtons(totalPages) {
-        // ... этот метод остается без изменений ...
         this.paginationContainer.appendChild(
-            this.createButton('« Назад', () => {
-                this.currentPage--;
-                this.render();
-            }, this.currentPage === 1)
+            this.createButton('« Назад', () => this.changePage(this.currentPage - 1), this.currentPage === 1)
         );
         for (let i = 1; i <= totalPages; i++) {
-            const button = this.createButton(i, () => {
-                this.currentPage = i;
-                this.render();
-            });
+            const button = this.createButton(i, () => this.changePage(i));
             if (i === this.currentPage) button.classList.add('active');
             this.paginationContainer.appendChild(button);
         }
         this.paginationContainer.appendChild(
-            this.createButton('Вперед »', () => {
-                this.currentPage++;
-                this.render();
-            }, this.currentPage === totalPages)
+            this.createButton('Вперед »', () => this.changePage(this.currentPage + 1), this.currentPage === totalPages)
         );
     }
 

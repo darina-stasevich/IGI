@@ -1,138 +1,284 @@
 :root {
-  --a: 50px;
-  --thickness: 4px;
-  --dur: 4s;
+    --a: 50px;
+    --thickness: 4px;
+    --dur: 4s;
 }
 
 .preloader {
-  position: relative;
-  width: calc(var(--a) * 4);
-  height: calc(var(--a) * 2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  isolation: isolate;
-  margin: 0 auto 1rem;
+    position: relative;
+    width: calc(var(--a) * 4);
+    height: calc(var(--a) * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+    margin: 0 auto 1rem;
 }
 
 .pivot {
-  position: relative;
-  width: 0;
-  height: 0;
+    position: relative;
+    width: 0;
+    height: 0;
 }
 
 .wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  will-change: transform;
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
 }
 
 .rot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: 0 0;
-  will-change: transform;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    will-change: transform;
 }
 
 .bar {
-  position: absolute;
-  top: calc(0px - var(--thickness)/2);
-  left: var(--a);
-  width: var(--a);
-  height: var(--thickness);
-  border-radius: var(--thickness);
-  background: var(--color);
+    position: absolute;
+    top: calc(0px - var(--thickness) / 2);
+    left: var(--a);
+    width: var(--a);
+    height: var(--thickness);
+    border-radius: var(--thickness);
+    background: var(--color);
 }
 
-.line-blue  { --start-y: 0;                       --mirror-y: calc(4 * var(--a)/5); --color:#1e90ff; }
-.line-green { --start-y: calc(1 * var(--a)/5);    --mirror-y: calc(3 * var(--a)/5); --color:#2ecc71; }
-.line-orange{ --start-y: calc(2 * var(--a)/5);    --mirror-y: calc(2 * var(--a)/5); --color:#ff9933; }
-.line-red   { --start-y: calc(3 * var(--a)/5);    --mirror-y: calc(1 * var(--a)/5); --color:#ff3355; }
-.line-pink  { --start-y: calc(4 * var(--a)/5);    --mirror-y: 0;                    --color: #ff7bac; }
+.line-blue {
+    --start-y: 0;
+    --mirror-y: calc(4 * var(--a) / 5);
+    --color: #1e90ff;
+}
 
-.line-blue.wrap   { animation: move-blue var(--dur) linear infinite; }
-.line-blue .rot   { animation: rot-blue var(--dur) linear infinite; }
+.line-green {
+    --start-y: calc(1 * var(--a) / 5);
+    --mirror-y: calc(3 * var(--a) / 5);
+    --color: #2ecc71;
+}
 
-.line-green.wrap  { animation: move-green var(--dur) linear infinite; }
-.line-green .rot  { animation: rot-green var(--dur) linear infinite; }
+.line-orange {
+    --start-y: calc(2 * var(--a) / 5);
+    --mirror-y: calc(2 * var(--a) / 5);
+    --color: #ff9933;
+}
 
-.line-orange.wrap { animation: move-orange var(--dur) linear infinite; }
-.line-orange .rot { animation: rot-orange var(--dur) linear infinite; }
+.line-red {
+    --start-y: calc(3 * var(--a) / 5);
+    --mirror-y: calc(1 * var(--a) / 5);
+    --color: #ff3355;
+}
 
-.line-red.wrap    { animation: move-red var(--dur) linear infinite; }
-.line-red .rot    { animation: rot-red var(--dur) linear infinite; }
+.line-pink {
+    --start-y: calc(4 * var(--a) / 5);
+    --mirror-y: 0;
+    --color: #ff7bac;
+}
 
-.line-pink.wrap   { animation: move-pink var(--dur) linear infinite; }
-.line-pink .rot   { animation: rot-pink var(--dur) linear infinite; }
+.line-blue.wrap {
+    animation: move-blue var(--dur) linear infinite;
+}
+
+.line-blue .rot {
+    animation: rot-blue var(--dur) linear infinite;
+}
+
+.line-green.wrap {
+    animation: move-green var(--dur) linear infinite;
+}
+
+.line-green .rot {
+    animation: rot-green var(--dur) linear infinite;
+}
+
+.line-orange.wrap {
+    animation: move-orange var(--dur) linear infinite;
+}
+
+.line-orange .rot {
+    animation: rot-orange var(--dur) linear infinite;
+}
+
+.line-red.wrap {
+    animation: move-red var(--dur) linear infinite;
+}
+
+.line-red .rot {
+    animation: rot-red var(--dur) linear infinite;
+}
+
+.line-pink.wrap {
+    animation: move-pink var(--dur) linear infinite;
+}
+
+.line-pink .rot {
+    animation: rot-pink var(--dur) linear infinite;
+}
 
 @keyframes rot-blue {
-  0%,4%    { transform: rotate(0deg); }
-  12%,68%  { transform: rotate(-180deg); }
-  76%,100% { transform: rotate(0deg); }
+    0%, 4% {
+        transform: rotate(0deg);
+    }
+    12%, 68% {
+        transform: rotate(-180deg);
+    }
+    76%, 100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes rot-green {
-  0%,8%    { transform: rotate(0deg); }
-  16%,64%  { transform: rotate(-180deg); }
-  72%,100% { transform: rotate(0deg); }
+    0%, 8% {
+        transform: rotate(0deg);
+    }
+    16%, 64% {
+        transform: rotate(-180deg);
+    }
+    72%, 100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes rot-orange {
-  0%,12%   { transform: rotate(0deg); }
-  20%,60%  { transform: rotate(-180deg); }
-  68%,100% { transform: rotate(0deg); }
+    0%, 12% {
+        transform: rotate(0deg);
+    }
+    20%, 60% {
+        transform: rotate(-180deg);
+    }
+    68%, 100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes rot-red {
-  0%,16%   { transform: rotate(0deg); }
-  24%,56%  { transform: rotate(-180deg); }
-  64%,100% { transform: rotate(0deg); }
+    0%, 16% {
+        transform: rotate(0deg);
+    }
+    24%, 56% {
+        transform: rotate(-180deg);
+    }
+    64%, 100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes rot-pink {
-  0%,20%   { transform: rotate(0deg); }
-  28%,52%  { transform: rotate(-180deg); }
-  60%,100% { transform: rotate(0deg); }
+    0%, 20% {
+        transform: rotate(0deg);
+    }
+    28%, 52% {
+        transform: rotate(-180deg);
+    }
+    60%, 100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes move-blue {
-  0%    { transform: translateY(var(--start-y)); }
-  4%,12%  { transform: translateY(0); }
-  22%,64% { transform: translateY(var(--mirror-y)); }
-  68%,76% { transform: translateY(0); }
-  86%,100%{ transform: translateY(var(--start-y)); }
+    0% {
+        transform: translateY(var(--start-y));
+    }
+    4%, 12% {
+        transform: translateY(0);
+    }
+    22%, 64% {
+        transform: translateY(var(--mirror-y));
+    }
+    68%, 76% {
+        transform: translateY(0);
+    }
+    86%, 100% {
+        transform: translateY(var(--start-y));
+    }
 }
 
 @keyframes move-green {
-  0%     { transform: translateY(var(--start-y)); }
-  8%,16% { transform: translateY(0); }
-  26%,60%{ transform: translateY(var(--mirror-y)); }
-  64%,72%{ transform: translateY(0); }
-  82%,100%{ transform: translateY(var(--start-y)); }
+    0% {
+        transform: translateY(var(--start-y));
+    }
+    8%, 16% {
+        transform: translateY(0);
+    }
+    26%, 60% {
+        transform: translateY(var(--mirror-y));
+    }
+    64%, 72% {
+        transform: translateY(0);
+    }
+    82%, 100% {
+        transform: translateY(var(--start-y));
+    }
 }
 
 @keyframes move-orange {
-  0%      { transform: translateY(var(--start-y)); }
-  12%,20% { transform: translateY(0); }
-  30%,56% { transform: translateY(var(--mirror-y)); }
-  60%,68% { transform: translateY(0); }
-  78%,100%{ transform: translateY(var(--start-y)); }
+    0% {
+        transform: translateY(var(--start-y));
+    }
+    12%, 20% {
+        transform: translateY(0);
+    }
+    30%, 56% {
+        transform: translateY(var(--mirror-y));
+    }
+    60%, 68% {
+        transform: translateY(0);
+    }
+    78%, 100% {
+        transform: translateY(var(--start-y));
+    }
 }
 
 @keyframes move-red {
-  0%      { transform: translateY(var(--start-y)); }
-  16%,24% { transform: translateY(0); }
-  34%,52% { transform: translateY(var(--mirror-y)); }
-  56%,64% { transform: translateY(0); }
-  74%,100%{ transform: translateY(var(--start-y)); }
+    0% {
+        transform: translateY(var(--start-y));
+    }
+    16%, 24% {
+        transform: translateY(0);
+    }
+    34%, 52% {
+        transform: translateY(var(--mirror-y));
+    }
+    56%, 64% {
+        transform: translateY(0);
+    }
+    74%, 100% {
+        transform: translateY(var(--start-y));
+    }
 }
 
 @keyframes move-pink {
-  0%      { transform: translateY(var(--start-y)); }
-  20%,28% { transform: translateY(0); }
-  38%,48% { transform: translateY(var(--mirror-y)); }
-  52%,60% { transform: translateY(0); }
-  70%,100%{ transform: translateY(var(--start-y)); }
+    0% {
+        transform: translateY(var(--start-y));
+    }
+    20%, 28% {
+        transform: translateY(0);
+    }
+    38%, 48% {
+        transform: translateY(var(--mirror-y));
+    }
+    52%, 60% {
+        transform: translateY(0);
+    }
+    70%, 100% {
+        transform: translateY(var(--start-y));
+    }
+}
+
+.preloader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.preloader-container.visible {
+    display: flex;
 }
