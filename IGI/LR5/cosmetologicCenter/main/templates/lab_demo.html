@@ -17,7 +17,8 @@
             <h2>Встроенные примеры и интервалы</h2>
 
             <p class="paragraph-with-indent">
-                Переходы в CSS позволяют плавно перейти от одного состояния элемента к другому. отдельные свойства анимируются от начального состояния до конечного (только два состояния).
+                Переходы в CSS позволяют плавно перейти от одного состояния элемента к другому. отдельные свойства
+                анимируются от начального состояния до конечного (только два состояния).
             </p>
 
             <p>
@@ -405,62 +406,157 @@ print(sum_to(5))  # 15
         <p><a href="/">Вернуться на главную</a></p>
     </article>
 
-<div class="container mt-4">
-    <h1>Генератор элементов формы</h1>
-    <p>Эта страница демонстрирует динамическое создание элементов, управление их атрибутами и сохранение состояния между перезагрузками страницы.</p>
+    <div class="container mt-4">
+        <h1>Генератор элементов формы</h1>
+        <p>Эта страница демонстрирует динамическое создание элементов, управление их атрибутами и сохранение состояния
+            между перезагрузками страницы.</p>
 
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="show-generator-checkbox">
-        <label class="form-check-label" for="show-generator-checkbox">
-            Показать панель генератора &lt;input type="file"&gt;
-        </label>
-    </div>
-
-    <!-- Панель с настройками (изначально скрыта) -->
-    <div id="generator-panel" class="generator-panel">
-        <h3>Настройки элемента &lt;input type="file"&gt;</h3>
-        <div class="attributes-grid">
-            <div class="form-group">
-                <label for="attr-name">name</label>
-                <input type="text" id="attr-name" placeholder="file-upload">
-            </div>
-
-            {# --- ВОЗВРАЩАЕМ НЕЗАВИСИМЫЕ ПОЛЯ --- #}
-            <div class="form-group">
-                <label for="attr-accept">Фильтр по типу (accept)</label>
-                <input type="text" id="attr-accept" placeholder="image/*, .pdf">
-            </div>
-
-            <div class="form-group">
-                <label for="attr-capture">Захват с камеры (capture)</label>
-                <select id="attr-capture">
-                    <option value="">Нет</option>
-                    <option value="user">user (фронтальная камера)</option>
-                    <option value="environment">environment (задняя камера)</option>
-                </select>
-            </div>
-
-            <div class="form-group-checkbox">
-                <input type="checkbox" id="attr-multiple">
-                <label for="attr-multiple">multiple</label>
-            </div>
-            <div class="form-group-checkbox">
-                <input type="checkbox" id="attr-required">
-                <label for="attr-required">required</label>
-            </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="show-generator-checkbox">
+            <label class="form-check-label" for="show-generator-checkbox">
+                Показать панель генератора &lt;input type="file"&gt;
+            </label>
         </div>
-        <button id="generate-element-btn" class="btn btn-primary">Сгенерировать элемент</button>
+
+        <!-- Панель с настройками (изначально скрыта) -->
+        <div id="generator-panel" class="generator-panel">
+            <h3>Настройки элемента &lt;input type="file"&gt;</h3>
+            <div class="attributes-grid">
+                <div class="form-group">
+                    <label for="attr-name">name</label>
+                    <input type="text" id="attr-name" placeholder="file-upload">
+                </div>
+
+                {# --- ВОЗВРАЩАЕМ НЕЗАВИСИМЫЕ ПОЛЯ --- #}
+                <div class="form-group">
+                    <label for="attr-accept">Фильтр по типу (accept)</label>
+                    <input type="text" id="attr-accept" placeholder="image/*, .pdf">
+                </div>
+
+                <div class="form-group">
+                    <label for="attr-capture">Захват с камеры (capture)</label>
+                    <select id="attr-capture">
+                        <option value="">Нет</option>
+                        <option value="user">user (фронтальная камера)</option>
+                        <option value="environment">environment (задняя камера)</option>
+                    </select>
+                </div>
+
+                <div class="form-group-checkbox">
+                    <input type="checkbox" id="attr-multiple">
+                    <label for="attr-multiple">multiple</label>
+                </div>
+                <div class="form-group-checkbox">
+                    <input type="checkbox" id="attr-required">
+                    <label for="attr-required">required</label>
+                </div>
+            </div>
+            <button id="generate-element-btn" class="btn btn-primary">Сгенерировать элемент</button>
+        </div>
+
+        <hr>
+        <h3>Сгенерированные элементы:</h3>
+
+        <form id="test-form">
+            <div id="output-container"></div>
+            <div id="test-form-actions" style="display: none;">
+                <button type="submit" class="btn btn-success">Проверить отправку</button>
+            </div>
+        </form>
     </div>
 
     <hr>
-    <h3>Сгенерированные элементы:</h3>
 
-    <form id="test-form">
-        <div id="output-container"></div>
-        <div id="test-form-actions" style="display: none;">
-            <button type="submit" class="btn btn-success">Проверить отправку</button>
+    <div id="age-calculator-section" class="age-calculator-section">
+        <h3>Калькулятор возраста и дня недели</h3>
+        <p>Введите вашу дату рождения, чтобы узнать ваш возраст и день недели, в который вы родились.</p>
+        <div class="form-group">
+            <label for="birth-date-input">Ваша дата рождения:</label>
+            <input type="date" id="birth-date-input" class="form-control">
         </div>
-    </form>
-</div>
+        <button id="calculate-age-btn" class="btn btn-info">Рассчитать</button>
+        <div id="age-result-output" class="result-output">
+            <!-- Сюда будет выводиться результат -->
+        </div>
+    </div>
+
+    <hr>
+    <section id="oop-task-section">
+
+        <h2>ООП Задача. Вариант 22</h2>
+        <p>Найти предмет, по которому существует наибольшее количество учебников различных авторов для данного
+            класса.</p>
+
+        <div id="prototype-version" class="oop-variant-container">
+            <h3>1. Функциональный стиль (прототипное наследование)</h3>
+
+            <div class="add-form">
+                <h4>Добавить учебник:</h4>
+                <input type="text" id="proto-subject" placeholder="Предмет">
+                <input type="text" id="proto-author" placeholder="Автор">
+                <input type="number" id="proto-class" placeholder="Класс (1-11)" min="1" max="11">
+                <button id="proto-add-btn">Добавить</button>
+            </div>
+
+            <!-- Форма анализа -->
+            <div class="analysis-form">
+                <h4>Анализ для класса:</h4>
+                <input type="number" id="proto-class-to-find" placeholder="Номер класса" value="9" min="1" max="11">
+                <button id="proto-find-btn">Найти предмет</button>
+            </div>
+
+            <!-- Области вывода -->
+            <div class="output-area">
+                <h4>Все учебники (массив объектов):</h4>
+                <div id="proto-all-objects-output" class="object-list"></div>
+                <h4>Результат анализа:</h4>
+                <div id="proto-result-output" class="result-text"></div>
+            </div>
+        </div>
+
+        <!-- === ВАРИАНТ 2: КЛАССОВОЕ НАСЛЕДОВАНИЕ (ES6) === -->
+        <div id="class-version" class="oop-variant-container">
+            <h3>2. Конструкция «class / extends»</h3>
+
+            <!-- Форма добавления -->
+            <div class="add-form">
+                <h4>Добавить учебник:</h4>
+                <input type="text" id="class-subject" placeholder="Предмет">
+                <input type="text" id="class-author" placeholder="Автор">
+                <input type="number" id="class-class" placeholder="Класс (1-11)" min="1" max="11">
+                <button id="class-add-btn">Добавить</button>
+            </div>
+
+            <!-- Форма анализа -->
+            <div class="analysis-form">
+                <h4>Анализ для класса:</h4>
+                <input type="number" id="class-class-to-find" placeholder="Номер класса" value="9" min="1" max="11">
+                <button id="class-find-btn">Найти предмет</button>
+            </div>
+
+            <!-- Области вывода -->
+            <div class="output-area">
+                <h4>Все учебники (массив объектов):</h4>
+                <div id="class-all-objects-output" class="object-list"></div>
+                <h4>Результат анализа:</h4>
+                <div id="class-result-output" class="result-text"></div>
+            </div>
+        </div>
+    </section>
+    <section class="api-demo-container">
+        <h3>Speech Synthesis API</h3>
+        <p>Введите текст и нажмите "Озвучить".</p>
+        <textarea id="speech-text" rows="3">Демонстрация синтеза речи.</textarea>
+        <h4>Выберите голос:</h4>
+        <select id="voice-select"></select>
+        <button id="speak-btn" class="btn btn-info">Озвучить</button>
+    </section>
+    <section class="api-demo-container">
+        <h3>Battery Status API</h3>
+        <p>Получение информации о состоянии батареи вашего устройства.</p>
+        <button id="battery-btn" class="btn btn-info">Получить статус батареи</button>
+        <div id="battery-output" class="api-result"></div>
+    </section>
+
     <script src="{% static 'js/lab_demo.js' %}"></script>
 {% endblock %}

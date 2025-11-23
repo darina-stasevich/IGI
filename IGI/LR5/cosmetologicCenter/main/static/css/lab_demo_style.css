@@ -74,3 +74,86 @@
 }
 .delete-btn { background-color: #dc3545; }
 .btn-success { background-color: #28a745; margin-top: 15px; }
+
+.age-calculator-section {
+    margin-top: 2rem;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.age-calculator-section .form-control {
+    max-width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-info {
+    background-color: #17b81a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.result-output {
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.result-output .adult {
+    color: #28a745; /* Зеленый для совершеннолетних */
+}
+
+.result-output .minor {
+    color: #dc3545; /* Красный для предупреждения */
+}
+
+/* ... все ваши предыдущие стили ... */
+
+/* --- Стили для ООП Задачи --- */
+#oop-task-section {
+    margin-top: 2rem;
+}
+
+.oop-variant-container {
+    margin-top: 2rem;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+.oop-variant-container h3 { margin-top: 0; }
+.oop-variant-container h4 { margin-top: 1.5rem; }
+
+.add-form, .analysis-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 15px;
+}
+.add-form input, .analysis-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.output-area { margin-top: 1rem; }
+.object-list {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre; /* Сохраняет форматирование */
+    max-height: 200px;
+    overflow-y: auto;
+}
+.result-text {
+    font-weight: bold;
+    color: #2d780e;
+    margin-top: 10px;
+}
