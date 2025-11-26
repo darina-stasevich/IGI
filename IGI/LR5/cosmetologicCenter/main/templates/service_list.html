@@ -23,7 +23,6 @@
         </header>
 
         <div class="service-layout-grid">
-            <!-- Боковая панель категорий - сделана уже -->
             <aside class="categories-sidebar">
                 <div class="categories-header">
                     <h2>Категории</h2>
@@ -46,9 +45,7 @@
                 </nav>
             </aside>
 
-            <!-- Основной контент -->
             <section id="services-list-section">
-                <!-- Улучшенные контролы пагинации -->
                 <div class="pagination-controls-wrapper">
                     <div class="pagination-controls">
                         <label for="per_page_selector" class="per-page-label">Показывать по:</label>
@@ -67,7 +64,6 @@
                 {% if services %}
                    <ul class="service-cards-grid" id="service-cards-container">
                     {% for service in services %}
-                        {# --- УБИРАЕМ LI И ПРОСТО ВКЛЮЧАЕМ ШАБЛОН --- #}
                         {% if current_category %}
                             {% include "_service_card.html" with service=service show_category=False %}
                         {% else %}

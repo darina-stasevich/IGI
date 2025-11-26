@@ -49,12 +49,10 @@ class ServicePaginator {
         const container = document.createElement('div');
         container.className = 'pagination-buttons';
 
-        // Кнопка "Назад"
         if (this.currentPage > 1) {
             container.appendChild(this.createButton('←', () => this.changePage(this.currentPage - 1), 'pagination-btn pagination-prev'));
         }
 
-        // Номера страниц
         for (let i = 1; i <= totalPages; i++) {
             if (i === this.currentPage) {
                 const button = document.createElement('button');
@@ -67,7 +65,6 @@ class ServicePaginator {
             }
         }
 
-        // Кнопка "Вперед"
         if (this.currentPage < totalPages) {
             container.appendChild(this.createButton('→', () => this.changePage(this.currentPage + 1), 'pagination-btn pagination-next'));
         }
@@ -96,7 +93,6 @@ class ServicePaginator {
     }
 }
 
-// Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
     new ServicePaginator('service-cards-container', 'pagination-container', 'per_page_selector');
 });

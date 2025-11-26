@@ -752,16 +752,10 @@ def home_view(request):
         for banner in all_banners
     ]
 
-    active_banners = Banner.objects.filter(is_active=True).order_by('display_order')
     slider_delay_ms = 3000
 
-    if active_banners.exists():
-        slider_delay_ms = active_banners.first().slider_delay
-
-    banner_data = [
-        {"image": b.image.url, "caption": b.caption, "link": b.link, "alt_text": b.alt_text}
-        for b in active_banners
-    ]
+    if all_banners.exists():
+       slider_delay_ms = all_banners.first().slider_delay
 
     services_queryset = Service.objects.select_related('category')[:3]
 
@@ -1448,50 +1442,40 @@ def premial_contacts_view(request):
     return render(request, 'premial_contacts.html', context)
 
 
-@transaction.atomic  # Гарантирует, что все шаги либо выполнятся, либо откатятся
+@transaction.atomic
 def add_doctor_view(request):
-    # Проверяем, что запрос отправлен методом POST и пользователь - администратор
     if request.method != 'POST' or not request.user.is_superuser:
         messages.error(request, 'Недопустимый запрос или недостаточно прав.')
         return redirect('premial_contacts')
 
     try:
-        # Получаем данные из POST-запроса формы
         name = request.POST.get('name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         category_name = request.POST.get('category')
         description = request.POST.get('description')
 
-        # Простая серверная проверка на случай, если JS отключен
         if not all([name, email, phone, category_name, description]):
             messages.error(request, 'Все поля формы должны быть заполнены.')
             return redirect('premial_contacts')
 
-        # 1. Создаем пользователя
         first_name = name.split(' ')[0]
         last_name = ' '.join(name.split(' ')[1:])
         username = f"{first_name.lower()}_{User.objects.count()}"
 
-        # --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-        # Создаем пользователя без пароля.
         user = User(
             username=username,
             email=email,
             first_name=first_name,
             last_name=last_name
         )
-        # Явно устанавливаем, что у пользователя нет пароля для входа
         user.set_unusable_password()
-        user.save()  # Сохраняем пользователя
+        user.save()
 
-        # 2. Создаем профиль
         user_profile = UserProfile.objects.create(user=user, phone_number=phone)
 
-        # 3. Находим категорию
         category = DoctorCategory.objects.get(name=category_name)
 
-        # 4. Создаем доктора
         Doctor.objects.create(
             user_profile=user_profile,
             category=category,
@@ -1504,10 +1488,8 @@ def add_doctor_view(request):
     except DoctorCategory.DoesNotExist:
         messages.error(request, 'Выбранная категория не найдена. Попробуйте снова.')
     except Exception as e:
-        # Теперь эта ошибка больше не должна возникать
         messages.error(request, f'Произошла непредвиденная ошибка: {e}')
 
-    # В любом случае (успех или ошибка) возвращаем пользователя на страницу контактов
     return redirect('premial_contacts')
 
 

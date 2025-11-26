@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. Получаем все элементы ---
     const showGeneratorCheckbox = document.getElementById('show-generator-checkbox');
     const generatorPanel = document.getElementById('generator-panel');
     const generateBtn = document.getElementById('generate-element-btn');
@@ -7,22 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const testForm = document.getElementById('test-form');
     const testFormActions = document.getElementById('test-form-actions');
 
-    // Элементы управления атрибутами
     const attributeInputs = {
         name: document.getElementById('attr-name'),
-        accept: document.getElementById('attr-accept'), // <-- вернули
-        capture: document.getElementById('attr-capture'), // <-- вернули
+        accept: document.getElementById('attr-accept'),
+        capture: document.getElementById('attr-capture'),
         multiple: document.getElementById('attr-multiple'),
         required: document.getElementById('attr-required'),
     };
 
     const STORAGE_KEY = 'generatedFileInputs';
 
-    // --- 2. Функции для localStorage (без изменений) ---
     function getStoredElements() { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
     function saveElements(elements) { localStorage.setItem(STORAGE_KEY, JSON.stringify(elements)); }
 
-    // --- 3. Функции рендеринга и управления (обновлены) ---
     function renderElement(elementConfig, index) {
         const wrapper = document.createElement('div');
         wrapper.className = 'generated-wrapper';
@@ -36,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const appliedAttributes = [];
 
-        // Простые атрибуты, которые можно устанавливать как свойства
         if (elementConfig.name) {
             fileInput.name = elementConfig.name;
             appliedAttributes.push(`name="${elementConfig.name}"`);
@@ -54,10 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             appliedAttributes.push(`accept="${elementConfig.accept}"`);
         }
 
-        // --- ГЛАВНОЕ ИСПРАВЛЕНИЕ ---
-        // Для атрибута 'capture' мы ИСПОЛЬЗУЕМ .setAttribute()
         if (elementConfig.capture) {
-            // Этот метод надежно добавляет атрибут в HTML-тег
             fileInput.setAttribute('capture', elementConfig.capture);
             appliedAttributes.push(`capture="${elementConfig.capture}"`);
         }
@@ -91,13 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAllElements();
     }
 
-    // --- 4. Обработчики событий (обновлены) ---
     showGeneratorCheckbox.addEventListener('change', (e) => {
         generatorPanel.classList.toggle('visible', e.target.checked);
     });
 
     generateBtn.addEventListener('click', () => {
-        // Просто собираем все значения из полей
         const newElementConfig = {
             name: attributeInputs.name.value,
             accept: attributeInputs.accept.value,
@@ -116,20 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('ok');
     });
 
-    // --- 5. Первоначальная загрузка ---
     renderAllElements();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Находим новые элементы
     const birthDateInput = document.getElementById('birth-date-input');
     const calculateBtn = document.getElementById('calculate-age-btn');
     const resultOutput = document.getElementById('age-result-output');
 
-    // Проверяем, существуют ли элементы, чтобы не вызывать ошибок на других страницах
     if (!calculateBtn) return;
 
-    // 2. Вешаем обработчик на кнопку "Рассчитать"
     calculateBtn.addEventListener('click', () => {
         const birthDateString = birthDateInput.value;
         if (!birthDateString) {
@@ -140,25 +126,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const birthDate = new Date(birthDateString);
         const today = new Date();
 
-        // 3. Расчет возраста
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDifference = today.getMonth() - birthDate.getMonth();
         const dayDifference = today.getDate() - birthDate.getDate();
 
-        // Корректируем возраст, если день рождения в этом году еще не наступил
         if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
             age--;
         }
 
-        // 4. Определение дня недели
         const daysOfWeek = [
             'Воскресенье', 'Понедельник', 'Вторник', 'Среда',
             'Четверг', 'Пятница', 'Суббота'
         ];
         const dayOfWeek = daysOfWeek[birthDate.getDay()];
 
-        // 5. Вывод результата в зависимости от возраста
-        resultOutput.innerHTML = ''; // Очищаем предыдущий результат
+        resultOutput.innerHTML = '';
 
         if (age >= 18) {
             const successMessage = document.createElement('p');
@@ -166,21 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
             successMessage.textContent = `Вам ${age} лет. Вы родились в этот день недели: ${dayOfWeek}.`;
             resultOutput.appendChild(successMessage);
         } else {
-            // Для несовершеннолетних выводим и текстовое сообщение, и alert
             const minorMessage = document.createElement('p');
             minorMessage.className = 'minor';
             minorMessage.textContent = `Вам ${age} лет.`;
             resultOutput.appendChild(minorMessage);
 
-            // Вызываем alert, как требуется в задании
             alert('Внимание! Для использования сайта необходимо разрешение родителей.');
         }
     });
 });
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ===== ОБЩИЕ ДАННЫЕ =====
-    const initialTextbooksData = [
+    const getInitialTextbooksData = () => [
         { subject: 'Физика', author: 'Перышкин А.В.', classNumber: 9 },
         { subject: 'Физика', author: 'Генденштейн Л.Э.', classNumber: 9 },
         { subject: 'Химия', author: 'Рудзитис Г.Е.', classNumber: 10 },
@@ -191,62 +170,47 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
 
-    // ====================================================================
-    // === ВАРИАНТ 1: ФУНКЦИОНАЛЬНЫЙ СТИЛЬ (ПРОТОТИПНОЕ НАСЛЕДОВАНИЕ) ===
-    // ====================================================================
     (function() {
-        // --- 1. Определение классов ---
+        const textbooks = [];
 
-        // Базовый класс "Издание"
         function Publication(author) {
             this._author = author;
         }
 
-        // Getter/Setter для автора
         Publication.prototype.getAuthor = function() { return this._author; };
+
         Publication.prototype.setAuthor = function(author) { this._author = author; };
 
-        // Производный класс "Учебник"
         function Textbook(subject, author, classNumber) {
-            // Вызов конструктора родителя
             Publication.call(this, author);
             this._subject = subject;
             this.classNumber = classNumber;
         }
 
-        // Наследование
         Textbook.prototype = Object.create(Publication.prototype);
         Textbook.prototype.constructor = Textbook;
 
-        // Getter/Setter для предмета (добавлен в наследнике)
         Textbook.prototype.getSubject = function() { return this._subject; };
         Textbook.prototype.setSubject = function(subject) { this._subject = subject; };
 
-        // --- 2. Логика управления ---
-        const textbooks = []; // Массив для хранения объектов
-
-        // Метод 3: Добавление объекта с использованием формы
         function addObjectFromForm() {
             const subject = document.getElementById('proto-subject').value;
             const author = document.getElementById('proto-author').value;
             const classNum = parseInt(document.getElementById('proto-class').value);
 
             if (subject && author && classNum) {
-                const newTextbook = new Textbook(subject, author, classNum);
-                textbooks.push(newTextbook);
-                displayAllObjects(); // Обновляем отображение
+                textbooks.push(new Textbook(subject, author, classNum));
+                displayAllObjects();
             } else {
                 alert('Заполните все поля для добавления учебника.');
             }
         }
 
-        // Метод 4: Вывод на страницу всех объектов в массиве
         function displayAllObjects() {
             const outputDiv = document.getElementById('proto-all-objects-output');
             outputDiv.textContent = JSON.stringify(textbooks, null, 2);
         }
 
-        // Метод 5: Вывод результата на страницу
         function displayResult() {
             const classToFind = parseInt(document.getElementById('proto-class-to-find').value);
             if (!classToFind) {
@@ -254,110 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Фильтруем учебники по нужному классу
             const filteredByClass = textbooks.filter(tb => tb.classNumber === classToFind);
-
-            // Группируем по предмету и собираем уникальных авторов
             const subjectStats = filteredByClass.reduce((acc, tb) => {
                 const subject = tb.getSubject();
                 const author = tb.getAuthor();
-                if (!acc[subject]) {
-                    acc[subject] = new Set(); // Используем Set для автоматического отсеивания дублей авторов
-                }
-                acc[subject].add(author);
-                return acc;
-            }, {});
-
-            let maxAuthors = 0;
-            let resultSubject = 'Не найден';
-
-            // Находим предмет с максимальным числом уникальных авторов
-            for (const subject in subjectStats) {
-                const authorsCount = subjectStats[subject].size;
-                if (authorsCount > maxAuthors) {
-                    maxAuthors = authorsCount;
-                    resultSubject = subject;
-                }
-            }
-
-            const resultDiv = document.getElementById('proto-result-output');
-            resultDiv.textContent = `Для ${classToFind} класса предмет с наибольшим количеством авторов: ${resultSubject} (${maxAuthors} авт.)`;
-        }
-
-        // --- 3. Инициализация ---
-        initialTextbooksData.forEach(data => {
-            textbooks.push(new Textbook(data.subject, data.author, data.classNumber));
-        });
-
-        displayAllObjects();
-        document.getElementById('proto-add-btn').addEventListener('click', addObjectFromForm);
-        document.getElementById('proto-find-btn').addEventListener('click', displayResult);
-    })();
-
-
-    // =================================================================
-    // === ВАРИАНТ 2: КОНСТРУКЦИЯ «CLASS / EXTENDS» (ES6) ===
-    // =================================================================
-    (function() {
-        // --- 1. Определение классов ---
-
-        // Базовый класс "Издание"
-        class PublicationES6 {
-            constructor(author) {
-                this._author = author;
-            }
-            // Getter/Setter
-            get author() { return this._author; }
-            set author(value) { this._author = value; }
-        }
-
-        // Производный класс "Учебник"
-        class TextbookES6 extends PublicationES6 {
-            constructor(subject, author, classNumber) {
-                super(author); // Вызов конструктора родителя
-                this._subject = subject;
-                this.classNumber = classNumber;
-            }
-            // Getter/Setter
-            get subject() { return this._subject; }
-            set subject(value) { this._subject = value; }
-        }
-
-        // --- 2. Логика управления ---
-        const textbooks = [];
-
-        // Метод 3: Добавление объекта
-        function addObjectFromForm() {
-            const subject = document.getElementById('class-subject').value;
-            const author = document.getElementById('class-author').value;
-            const classNum = parseInt(document.getElementById('class-class').value);
-
-            if (subject && author && classNum) {
-                textbooks.push(new TextbookES6(subject, author, classNum));
-                displayAllObjects();
-            } else {
-                alert('Заполните все поля для добавления учебника.');
-            }
-        }
-
-        // Метод 4: Вывод всех объектов
-        function displayAllObjects() {
-            const outputDiv = document.getElementById('class-all-objects-output');
-            outputDiv.textContent = JSON.stringify(textbooks, null, 2);
-        }
-
-        // Метод 5: Вывод результата
-        function displayResult() {
-            const classToFind = parseInt(document.getElementById('class-class-to-find').value);
-            if (!classToFind) {
-                alert('Введите класс для анализа.');
-                return;
-            }
-
-            const filteredByClass = textbooks.filter(tb => tb.classNumber === classToFind);
-            const subjectStats = filteredByClass.reduce((acc, tb) => {
-                const subject = tb.subject; // Используем геттер
-                const author = tb.author; // Используем геттер
                 if (!acc[subject]) acc[subject] = new Set();
                 acc[subject].add(author);
                 return acc;
@@ -373,12 +237,92 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const resultDiv = document.getElementById('class-result-output');
-            resultDiv.textContent = `Для ${classToFind} класса предмет с наибольшим количеством авторов: ${resultSubject} (${maxAuthors} авт.)`;
+            document.getElementById('proto-result-output').textContent = `Для ${classToFind} класса предмет с наибольшим количеством авторов: ${resultSubject} (${maxAuthors} авт.)`;
         }
 
-        // --- 3. Инициализация ---
-        initialTextbooksData.forEach(data => {
+        getInitialTextbooksData().forEach(data => {
+            textbooks.push(new Textbook(data.subject, data.author, data.classNumber));
+        });
+
+        displayAllObjects();
+        document.getElementById('proto-add-btn').addEventListener('click', addObjectFromForm);
+        document.getElementById('proto-find-btn').addEventListener('click', displayResult);
+    })();
+
+
+    (function() {
+        const textbooks = [];
+
+        class PublicationES6 {
+            constructor(author) {
+                this._author = author;
+            }
+
+            get author() { return this._author; }
+
+            set author(value) { this._author = value; }
+        }
+
+        class TextbookES6 extends PublicationES6 {
+            constructor(subject, author, classNumber) {
+                super(author);
+                this._subject = subject;
+                this.classNumber = classNumber;
+            }
+
+            get subject() { return this._subject; }
+
+            set subject(value) { this._subject = value; }
+        }
+
+        function addObjectFromForm() {
+            const subject = document.getElementById('class-subject').value;
+            const author = document.getElementById('class-author').value;
+            const classNum = parseInt(document.getElementById('class-class').value);
+
+            if (subject && author && classNum) {
+                textbooks.push(new TextbookES6(subject, author, classNum));
+                displayAllObjects();
+            } else {
+                alert('Заполните все поля для добавления учебника.');
+            }
+        }
+
+        function displayAllObjects() {
+            const outputDiv = document.getElementById('class-all-objects-output');
+            outputDiv.textContent = JSON.stringify(textbooks, null, 2);
+        }
+
+        function displayResult() {
+            const classToFind = parseInt(document.getElementById('class-class-to-find').value);
+            if (!classToFind) {
+                alert('Введите класс для анализа.');
+                return;
+            }
+
+            const filteredByClass = textbooks.filter(tb => tb.classNumber === classToFind);
+            const subjectStats = filteredByClass.reduce((acc, tb) => {
+                const subject = tb.subject;
+                const author = tb.author;
+                if (!acc[subject]) acc[subject] = new Set();
+                acc[subject].add(author);
+                return acc;
+            }, {});
+
+            let maxAuthors = 0;
+            let resultSubject = 'Не найден';
+
+            for (const subject in subjectStats) {
+                if (subjectStats[subject].size > maxAuthors) {
+                    maxAuthors = subjectStats[subject].size;
+                    resultSubject = subject;
+                }
+            }
+
+            document.getElementById('class-result-output').textContent = `Для ${classToFind} класса предмет с наибольшим количеством авторов: ${resultSubject} (${maxAuthors} авт.)`;
+        }
+
+        getInitialTextbooksData().forEach(data => {
             textbooks.push(new TextbookES6(data.subject, data.author, data.classNumber));
         });
 
@@ -387,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('class-find-btn').addEventListener('click', displayResult);
     })();
 });
-
 document.addEventListener('DOMContentLoaded', () => {
 const speakBtn = document.getElementById('speak-btn');
     const speechText = document.getElementById('speech-text');
@@ -442,7 +385,6 @@ const speakBtn = document.getElementById('speak-btn');
                         `;
                     };
 
-                    // Обновляем статус сразу и при изменениях
                     updateBatteryStatus();
                     battery.addEventListener('levelchange', updateBatteryStatus);
                     battery.addEventListener('chargingchange', updateBatteryStatus);
@@ -454,12 +396,7 @@ const speakBtn = document.getElementById('speak-btn');
     }
 });
 
-// ... весь ваш предыдущий код ...
-
-// --- НАЧАЛО НОВОГО КОДА ДЛЯ CHART.JS ---
-
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Получаем элементы DOM ---
     const generateBtn = document.getElementById('generate-chart-btn');
     const saveBtn = document.getElementById('save-chart-btn');
     const canvas = document.getElementById('arcsin-chart');
@@ -473,11 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
         terms: document.getElementById('chart-terms'),
     };
 
-    let chartInstance = null; // Переменная для хранения нашего графика
+    let chartInstance = null;
 
-    // --- Математические функции ---
-
-    // Вспомогательная функция для вычисления факториала
     function factorial(num) {
         if (num < 0) return -1;
         if (num === 0) return 1;
@@ -488,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return result;
     }
 
-    // Вычисление arcsin(x) через ряд Тейлора
     function taylorArcsin(x, n_terms) {
         let sum = 0;
         for (let n = 0; n < n_terms; n++) {
@@ -500,10 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return sum;
     }
 
-    // --- Основная функция для генерации данных и графика ---
-    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ---
     function generateChartAndTable() {
-        // 1. Получаем значения из полей ввода
         const xStart = parseFloat(inputs.xStart.value);
         const xEnd = parseFloat(inputs.xEnd.value);
         const points = parseInt(inputs.points.value);
@@ -514,7 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. Генерируем наборы данных
         const labels = [];
         const mathData = [];
         const seriesData = [];
@@ -528,14 +457,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const mathValue = Math.asin(fixedX);
             const seriesValue = taylorArcsin(fixedX, terms);
 
-            // --- ДОБАВЛЕНО ВЫЧИСЛЕНИЕ EPS ---
             const eps = Math.abs(mathValue - seriesValue);
 
             labels.push(fixedX);
             mathData.push(mathValue);
             seriesData.push(seriesValue);
 
-            // --- ДОБАВЛЕНА ЯЧЕЙКА ДЛЯ EPS В СТРОКУ ТАБЛИЦЫ ---
             tableRows.push(`
                 <tr>
                     <td>${fixedX}</td>
@@ -547,8 +474,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `);
         }
 
-        // 3. Создаем и выводим таблицу
-        // --- ДОБАВЛЕН ЗАГОЛОВОК ДЛЯ EPS ---
         tableContainer.innerHTML = `
             <table>
                 <thead>
@@ -566,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </table>
         `;
 
-        // ... остальной код функции (создание графика) остается без изменений ...
         if (chartInstance) {
             chartInstance.destroy();
         }
@@ -640,7 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Функция для сохранения графика ---
     function saveChart() {
         if (!chartInstance) {
             alert("Сначала постройте график!");
@@ -652,10 +575,8 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
     }
 
-    // --- Навешиваем обработчики событий ---
     generateBtn.addEventListener('click', generateChartAndTable);
     saveBtn.addEventListener('click', saveChart);
 
-    // Генерируем график при первой загрузке
     generateChartAndTable();
 });

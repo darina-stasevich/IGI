@@ -64,7 +64,6 @@ class InteractiveTable {
     }
 
      initBonusSystem() {
-        // 1. Слушаем клики по чекбоксам в таблице (делегирование)
         this.tbody.addEventListener('change', (event) => {
             const checkbox = event.target;
             if (checkbox.classList.contains('contact-checkbox')) {
@@ -77,7 +76,6 @@ class InteractiveTable {
             }
         });
 
-        // 2. Слушаем клик по кнопке "Премировать"
         this.generateBonusButton.addEventListener('click', () => {
             this.generateBonusOrder();
         });
@@ -92,10 +90,8 @@ class InteractiveTable {
 
         const selectedNames = [];
         this.selectedContactIds.forEach(id => {
-            // Находим строку по ID (значению чекбокса)
             const row = this.allRows.find(r => r.querySelector(`.contact-checkbox[value="${id}"]`));
             if (row) {
-                // Извлекаем фамилию (первое слово из полного имени)
                 const fullName = row.dataset.name;
                 const lastName = fullName.split(' ')[0] || fullName;
                 selectedNames.push(lastName);
@@ -104,7 +100,6 @@ class InteractiveTable {
 
         if (selectedNames.length === 0) return;
 
-        // Формируем текст приказа
         const today = new Date();
         const dateString = today.toLocaleDateString('ru-RU');
         const namesString = selectedNames.join(', ');
@@ -125,7 +120,6 @@ class InteractiveTable {
 Директор                                               И.И. Иванов
         `;
 
-        // Отображаем текст и делаем блок видимым
         this.bonusOutputContainer.textContent = orderText.trim();
         this.bonusOutputContainer.classList.add('visible');
     }
@@ -139,25 +133,20 @@ class InteractiveTable {
             this.formContainer.classList.toggle('visible');
         });
 
-        // Слушаем ввод в каждое поле для живой валидации
         this.formInputs.forEach(input => {
             input.addEventListener('input', () => this.validateForm());
         });
 
-        // Слушаем событие отправки всей формы
         form.addEventListener('submit', (event) => {
-            // Запускаем валидацию еще раз перед отправкой
             const isFormValid = this.validateForm();
 
-            // Если форма НЕ валидна, отменяем ее отправку
             if (!isFormValid) {
-                event.preventDefault(); // <-- Отмена отправки
+                event.preventDefault();
                 alert('Пожалуйста, исправьте ошибки в форме перед отправкой.');
             }
             else{
                 this.showPreloader();
             }
-            // Если форма валидна, мы ничего не делаем, и браузер отправляет ее на сервер
         });
     }
 
@@ -182,7 +171,7 @@ class InteractiveTable {
         const isFormValid = areRequiredFieldsFilled && isPhoneValid && isPhotoUrlValid;
         this.addRowButton.disabled = !isFormValid;
 
-        return isFormValid; // <-- Возвращаем итог валидации
+        return isFormValid;
     }
 
 
@@ -201,8 +190,6 @@ class InteractiveTable {
     }
 
     validatePhotoUrl(url) {
-        // Проверяем, что это валидный URL, начинающийся с http:// или https://
-        // и заканчивающийся на расширение картинки.
         try {
             const parsedUrl = new URL(url);
             const protocol = parsedUrl.protocol;
@@ -211,14 +198,12 @@ class InteractiveTable {
 
             return (protocol === "http:" || protocol === "https:") && imageExtensions.some(ext => path.endsWith(ext));
         } catch (e) {
-            return false; // Если new URL() выдает ошибку, это невалидный URL
+            return false;
         }
     }
 
     validatePhone(phone) {
-        // Удаляем все скобки, дефисы, пробелы
         const cleanPhone = phone.replace(/[\s-()]/g, '');
-        // Проверяем, что номер начинается с +375 (и 12 цифр) или 80 (и 11 цифр)
         const regex = /^(\+375\d{9}|80\d{9})$/;
         return regex.test(cleanPhone);
     }
@@ -227,24 +212,20 @@ class InteractiveTable {
     initDetailsView() {
         if (!this.detailsContainer) return;
 
-        // Используем делегирование событий для tbody
         this.tbody.addEventListener('click', (event) => {
             const row = event.target.closest('tr.contact-row');
-            if (!row) return; // Клик был не по строке
+            if (!row) return;
 
-            // Снимаем выделение со всех строк
             this.allRows.forEach(r => r.classList.remove('selected'));
-            // Выделяем нажатую
             row.classList.add('selected');
 
-            // Показываем детали
             this.showDetails(row);
         });
     }
 
     showDetails(row) {
         const data = row.dataset;
-        const photoUrl = data.photoUrl || '{% static "images/default_avatar.png" %}'; // Укажите путь к вашему фото-заглушке
+        const photoUrl = data.photoUrl || '{% static "images/default_avatar.png" %}';
 
         this.detailsContainer.innerHTML = `
             <img src="${data.photoUrl}" alt="Фото ${data.name}" onerror="this.src='{% static 'images/doctor_placeholder.png' %}'; this.onerror=null;">
@@ -255,7 +236,6 @@ class InteractiveTable {
                 <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
             </div>
         `;
-        // Делаем блок видимым
         this.detailsContainer.classList.add('visible');
     }
 
@@ -265,7 +245,6 @@ class InteractiveTable {
         });
     }
 
-    // --- НОВЫЙ МЕТОД ДЛЯ ИНИЦИАЛИЗАЦИИ ПОИСКА ---
     initSearch() {
         if (!this.searchButton || !this.searchInput) return;
         this.searchButton.addEventListener('click', () => this.performSearch());
@@ -279,28 +258,24 @@ class InteractiveTable {
         activeHeader.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
     }
 
-    // --- ГЛАВНОЕ ИЗМЕНЕНИЕ: ЕДИНАЯ ФУНКЦИЯ РЕНДЕРИНГА СТАЛА УМНЕЕ ---
     render() {
-        // 1. ФИЛЬТРАЦИЯ: Начинаем с фильтрации строк
         let processedRows = this.allRows.filter(row => {
-            if (!this.currentFilter) return true; // Если фильтр пуст, показываем все
+            if (!this.currentFilter) return true;
             const nameCell = row.querySelector('[data-cell="name"]');
             return nameCell ? nameCell.textContent.toLowerCase().includes(this.currentFilter) : false;
         });
 
-        // 2. СОРТИРОВКА: Сортируем отфильтрованные строки
         if (this.currentSort.key) {
             processedRows.sort((rowA, rowB) => {
                 const valueA = rowA.querySelector(`[data-cell="${this.currentSort.key}"]`)?.textContent.trim() || '';
                 const valueB = rowB.querySelector(`[data-cell="${this.currentSort.key}"]`)?.textContent.trim() || '';
-                const comparison = valueA.localeCompare(valueB, 'ru', {sensitivity: 'base'});
+                const comparison = valueA.localeCompare(valueB, 'ru');
                 return this.currentSort.direction === 'asc' ? comparison : -comparison;
             });
         }
 
-        // 3. ПАГИНАЦИЯ: Вычисляем пагинацию для отфильтрованного и отсортированного результата
         const totalPages = Math.ceil(processedRows.length / this.rowsPerPage);
-        this.currentPage = Math.min(this.currentPage, totalPages) || 1; // Убеждаемся, что текущая страница не выходит за пределы
+        this.currentPage = Math.min(this.currentPage, totalPages) || 1;
 
         this.tbody.innerHTML = '';
         this.paginationContainer.innerHTML = '';
@@ -309,14 +284,11 @@ class InteractiveTable {
             this.createPaginationButtons(totalPages);
         }
 
-        // 4. ОТРІСОВКА: Показываем итоговый срез строк
         const startIndex = (this.currentPage - 1) * this.rowsPerPage;
         const pageRows = processedRows.slice(startIndex, startIndex + this.rowsPerPage);
          pageRows.forEach(row => {
-            // --- ДОБАВЛЕНА ЛОГИКА ВОССТАНОВЛЕНИЯ СОСТОЯНИЯ ---
             const checkbox = row.querySelector('.contact-checkbox');
             if (checkbox) {
-                // Проверяем, есть ли ID этой строки в нашем хранилище
                 if (this.selectedContactIds.has(checkbox.value)) {
                     checkbox.checked = true;
                 } else {
@@ -336,7 +308,6 @@ class InteractiveTable {
         }, 200);
     }
 
-    // Этот метод будет вызываться при поиске
     performSearch() {
         this.showPreloader();
         setTimeout(() => {
@@ -347,7 +318,6 @@ class InteractiveTable {
         }, 200);
     }
 
-    // Этот метод будет вызываться при сортировке
     performSort(header) {
         this.showPreloader();
         setTimeout(() => {
@@ -377,7 +347,6 @@ class InteractiveTable {
     }
 
     createButton(text, onClick, disabled = false) {
-        // ... этот метод остается без изменений ...
         const button = document.createElement('button');
         button.className = 'pagination-btn';
         button.textContent = text;

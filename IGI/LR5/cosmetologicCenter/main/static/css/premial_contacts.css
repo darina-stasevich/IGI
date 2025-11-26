@@ -123,7 +123,7 @@
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: var(--border-radius, 0.35rem);
-    flex-grow: 1; /* Поле поиска займет доступное пространство */
+    flex-grow: 1;
     max-width: 400px;
 }
 
@@ -142,11 +142,11 @@
 }
 
 .contacts-table tbody tr.selected {
-    background-color: #dbeafe; /* Приятный синий оттенок для выделения */
+    background-color: #dbeafe;
 }
 
 html.dark-theme .contacts-table tbody tr.selected {
-    background-color: #2b3a54; /* Темный синий для темной темы */
+    background-color: #2b3a54;
 }
 
 #contact-details-block {
@@ -156,13 +156,13 @@ html.dark-theme .contacts-table tbody tr.selected {
     border-radius: var(--border-radius, 0.35rem);
     background-color: var(--color-background-content, #fff);
     box-shadow: var(--box-shadow);
-    display: none; /* Изначально блок скрыт */
+    display: none;
     gap: 20px;
     align-items: center;
 }
 
 #contact-details-block.visible {
-    display: flex; /* Показываем как flex-контейнер */
+    display: flex;
 }
 
 #contact-details-block img {
@@ -179,7 +179,7 @@ html.dark-theme .contacts-table tbody tr.selected {
 }
 
 .form-container {
-    display: none; /* Форма по умолчанию скрыта */
+    display: none;
     padding: 20px;
     margin-top: 1.5rem;
     border: 1px solid #ddd;
@@ -191,8 +191,6 @@ html.dark-theme .contacts-table tbody tr.selected {
 .form-container.visible {
     display: block;
 }
-
-/* Класс для отображения */
 
 .form-grid {
     display: grid;
@@ -209,8 +207,6 @@ html.dark-theme .contacts-table tbody tr.selected {
     grid-column: 1 / -1;
 }
 
-/* Для полей на всю ширину */
-
 .form-container input[type="text"],
 .form-container input[type="email"],
 .form-container input[type="url"],
@@ -225,7 +221,6 @@ html.dark-theme .contacts-table tbody tr.selected {
     min-height: 80px;
 }
 
-/* Стили для невалидных полей */
 .form-container input.invalid,
 .form-container textarea.invalid {
     border-color: red;
@@ -270,16 +265,15 @@ html.dark-theme .contacts-table tbody tr.selected {
     margin-bottom: 1rem;
 }
 
-/* --- НОВЫЕ СТИЛИ ДЛЯ ПРЕМИРОВАНИЯ --- */
 #bonus-order-output {
     margin-top: 2rem;
     padding: 20px;
     border: 2px dashed var(--color-primary, #20c997);
     border-radius: var(--border-radius, 0.35rem);
     background-color: var(#f8f9fa);
-    white-space: pre-wrap; /* Сохраняет форматирование текста (переносы строк) */
+    white-space: pre-wrap;
     font-family: 'Courier New', Courier, monospace;
-    display: none; /* Изначально скрыт */
+    display: none;
 }
 
 #bonus-order-output.visible {
