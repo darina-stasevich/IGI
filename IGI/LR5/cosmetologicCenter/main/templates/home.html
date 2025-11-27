@@ -30,13 +30,15 @@
 
 {% if banner_images %}
   <section id="hero" title="Баннеры">
+    <!-- Добавлен id для связи с формой управления -->
     <div class="carousel-container"
+         id="main-slider"
          data-loop="true"
          data-navs="true"
          data-pags="true"
          data-auto="true"
          data-stop-mouse-hover="true"
-         data-delay={{ slider_delay }}>
+         data-delay="{{ slider_delay }}">
 
       {% for item in banner_images %}
         <figure class="carousel-slide">
@@ -46,28 +48,59 @@
                data-caption="{{ item.caption }}"
                loading="lazy"
                decoding="async">
-
           <figcaption></figcaption>
         </figure>
       {% endfor %}
-
     </div>
   </section>
+
+  <!-- Новая форма для локального управления настройками слайдера -->
+  <div class="user-controls-panel">
+    <h4>Настройки слайдера (локально)</h4>
+    <form class="slider-controls-form" data-slider-id="main-slider">
+      <div>
+        <input type="checkbox" id="user-loop" name="loop">
+        <label for="user-loop">Зациклить (loop)</label>
+      </div>
+      <div>
+        <input type="checkbox" id="user-navs" name="navs">
+        <label for="user-navs">Стрелки (navs)</label>
+      </div>
+      <div>
+        <input type="checkbox" id="user-pags" name="pags">
+        <label for="user-pags">Пагинация (pags)</label>
+      </div>
+      <div>
+        <input type="checkbox" id="user-auto" name="auto">
+        <label for="user-auto">Авто-прокрутка (auto)</label>
+      </div>
+      <div>
+        <input type="checkbox" id="user-stopMouseHover" name="stopMouseHover">
+        <label for="user-stopMouseHover">Пауза при наведении</label>
+      </div>
+      <button type="submit">Применить</button>
+    </form>
+  </div>
+
+  <!-- === НОВЫЙ БЛОК ДЛЯ ДЕБАГА === -->
+  <div class="debug-panel">
+    <h4>Текущие активные настройки слайдера:</h4>
+    <pre id="debug-settings-output">Загрузка...</pre>
+  </div>
 
   <script src="{% static 'js/slider.js' %}"></script>
 
   {% if user.is_superuser %}
-  <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f0f5fa; border: 1px solid #c8d9e8; border-radius: 8px;">
-    <h4 style="margin: 0 0 10px;">Панель администратора</h4>
-      <form method="POST" action="">
+  <div class="admin-panel" id="admin-panel"> <!-- Добавлен ID -->
+    <h4>Панель администратора (сохранение в БД)</h4>
+    <form method="POST" action="">
       {% csrf_token %}
       <label for="delay-input">Задержка слайдера (мс):</label>
-      <input type="number" id="delay-input" name="slider_delay" value="{{ slider_delay }}" step="500" style="width: 80px;">
-      <button type="submit" style="padding: 5px 10px;">Сохранить и перезагрузить</button>
+      <input type="number" id="delay-input" name="slider_delay" value="{{ slider_delay }}" step="500">
+      <button type="submit">Сохранить и перезагрузить</button>
     </form>
   </div>
-{% endif %}
-
+  {% endif %}
 {% endif %}
 
   {% if latest_services %}
