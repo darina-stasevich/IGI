@@ -1,0 +1,79 @@
+.admin-page {
+    padding: 2rem;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.users-table th {
+    background-color: var(--header-footer-bg);
+    font-weight: 600;
+}
+
+.users-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.users-table select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* --- Стили для админ-панели --- */
+
+/* Общий контейнер для страниц админки */
+.admin-page {
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Стили для формы добавления/редактирования */
+.admin-form {
+    background-color: var(--secondary-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.admin-form h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 1rem;
+}
+
+/* ... (существующие стили) */
+
+/* Контейнер для поля ввода и его ошибки */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* Текст ошибки валидации */
+.error-text {
+    color: #e74c3c; /* Красный цвет для ошибок */
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+/* Выделяем красной рамкой поле с ошибкой */
+.form-control.is-invalid {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}

@@ -1,0 +1,191 @@
+.analyzer-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.symptoms-selector {
+    background-color: var(--secondary-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.symptoms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.symptom-chip {
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.symptom-chip:hover {
+    background-color: #f0f0f0;
+}
+
+.symptom-chip.selected {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--accent-color);
+    font-weight: 500;
+}
+
+.analyze-button-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.results-container {
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.recommendation-card {
+    background-color: var(--secondary-bg);
+    border-left: 4px solid var(--accent-color);
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.recommendation-card h4 {
+    margin: 0 0 0.5rem 0;
+}
+
+.recommendation-card p {
+    margin: 0.25rem 0;
+}
+
+/* --- Стили для страницы Анализатора --- */
+.analyzer-page {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.analyzer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* --- Главная доработка: область загрузки --- */
+.upload-area {
+    border: 2px dashed #a0aec0; /* Серая пунктирная рамка */
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f7fafc;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden; /* Скрываем все, что выходит за рамки */
+}
+
+.upload-area:hover {
+    border-color: #4a5568;
+    background-color: #edf2f7;
+}
+
+/* Подсветка ошибки */
+.upload-area.has-error {
+    border-color: #e53e3e; /* Красный цвет для ошибки */
+    background-color: #fff5f5;
+}
+
+.upload-placeholder .upload-icon {
+    font-size: 3rem;
+    line-height: 1;
+    color: #a0aec0;
+    transition: color 0.3s ease;
+}
+
+.upload-placeholder p {
+    margin: 0.5rem 0 0;
+    color: #4a5568;
+}
+
+.upload-area:hover .upload-placeholder .upload-icon {
+    color: #4a5568;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.required-star {
+    color: #e53e3e;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+}
+
+.analyze-button-container {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* --- Стили для блока результатов --- */
+.ai-response {
+    margin-top: 2rem;
+    background-color: #f0f4f8;
+    border-left: 5px solid #4299e1;
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.ai-response h3 {
+    margin-top: 0;
+}
+
+.response-text {
+    /* Это свойство сохраняет все переносы строк и пробелы из текста */
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.api-meta {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #718096;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}

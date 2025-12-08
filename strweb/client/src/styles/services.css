@@ -1,0 +1,188 @@
+/* --- Стили для страницы каталога услуг --- */
+
+.services-page {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header .page-title {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.page-header .page-subtitle {
+    font-size: 1.1rem;
+    color: #888;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* --- Сетка для карточек услуг (Grid Layout) --- */
+.services-grid {
+    display: grid;
+    /* Адаптивная сетка: создает столько колонок, сколько поместится,
+       с минимальной шириной 320px и максимальной 1fr (равная доля) */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem; /* Расстояние между карточками */
+}
+
+/* --- Стилизация карточки услуги --- */
+.service-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+
+    /* Плавный переход для тени и трансформации (Animations/Transitions) */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Псевдокласс :hover для интерактивности */
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.service-card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Изображение будет красиво обрезано, а не искажено */
+    background-color: #eee; /* Фон на случай, если картинка не загрузится */
+}
+
+.service-card-content {
+    padding: 1.5rem;
+    flex-grow: 1; /* Позволяет этому блоку занимать все доступное пространство */
+    display: flex;
+    flex-direction: column;
+}
+
+.service-category-badge {
+    align-self: flex-start; /* Располагает бейдж в начале flex-контейнера */
+    background-color: var(--accent-color);
+    color: var(--secondary-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.service-card-title {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+}
+
+.service-card-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    flex-grow: 1; /* Занимает пространство, отодвигая футер вниз */
+}
+
+/* Flexbox для футера карточки */
+.service-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    margin-top: auto; /* Прижимает футер к низу контент-блока */
+}
+
+.service-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.service-price span {
+    font-weight: normal;
+    font-size: 0.9rem;
+}
+
+/* Стилизация кнопки */
+.btn {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Псевдоклассы для кнопки */
+.btn:hover {
+    background-color: #777; /* Немного светлее */
+}
+
+.btn:active {
+    transform: scale(0.98); /* Легкое нажатие */
+}
+
+.btn:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+.filters-panel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.filter-input,
+.filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(228, 216, 199, 0.5); /* Тень в цвет акцента */
+}
+
+.service-card-timestamps {
+    background-color: #f9f9f9;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.75rem;
+    color: #888;
+    text-align: right;
+}
+.service-card-timestamps p {
+    margin: 0.2rem 0;
+}
+
+@media (max-width: 768px) {
+    .filters-panel {
+        flex-direction: column;
+    }
+}

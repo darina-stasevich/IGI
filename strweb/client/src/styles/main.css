@@ -1,0 +1,454 @@
+:root {
+    --primary-bg: #fdfaf6;
+    --secondary-bg: #ffffff;
+    --accent-color: #e4d8c7;
+    --text-color: #5d5d5d;
+    --header-footer-bg: #f9f5f0;
+    --border-color: #ebe3d9;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    color: var(--text-color);
+    background-color: var(--primary-bg);
+}
+
+body {
+    margin: 0;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #a08c72;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+main {
+    flex-grow: 1;
+    padding: 2rem;
+}
+
+.app-header {
+    background-color: var(--header-footer-bg);
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-nav a {
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+
+.app-aside {
+    width: 250px;
+    background-color: var(--secondary-bg);
+    padding: 1.5rem;
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 5px var(--shadow-color);
+}
+
+.app-aside h3 {
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.app-aside ul {
+    list-style: none;
+    padding: 0;
+}
+
+.app-aside li {
+    margin-bottom: 0.75rem;
+}
+
+.app-footer {
+    background-color: var(--header-footer-bg);
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+.home-page .welcome-card {
+    background-color: var(--secondary-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    text-align: center;
+}
+
+.home-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.home-page p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.sidebar nav {
+    margin-bottom: 20px;
+}
+
+.sidebar nav h3 {
+    color: #5a6d7a;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e0e5e9;
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* НОВЫЕ СТИЛИ ДЛЯ ВИДЖЕТА ВРЕМЕНИ */
+.sidebar hr {
+    border: none;
+    height: 1px;
+    background-color: #e0e5e9;
+    margin: 20px 0;
+}
+
+#time-widget {
+    font-size: 0.9em;
+    color: #495863;
+}
+
+.calendar-caption {
+    text-align: center;
+    font-weight: 600;
+    color: #5a6d7a;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.time-info p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.time-info strong {
+    font-weight: 600;
+    color: #5a6d7a;
+}
+
+.time-info time, .time-info span {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f7f9fb;
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+    color: #333;
+}
+
+.status-message {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #888;
+}
+
+.error-message {
+    background-color: #fff0f0;
+    color: #d8000c;
+    border: 1px solid #ffd2d2;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+/* ... (в конец файла) */
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-greeting {
+    font-weight: 500;
+}
+
+.btn-secondary {
+    background-color: #eee;
+    color: #333;
+    border: 1px solid #ccc;
+}
+.btn-secondary:hover {
+    background-color: #ddd;
+}
+
+.btn-google {
+    background-color: #f1dfd5;
+    color: white;
+}
+.btn-google:hover {
+    background-color: #d3a18e;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #888;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+
+/* --- Кнопки --- */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Основная кнопка (уже может быть, но проверим) */
+.btn-primary {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+}
+.btn-primary:hover {
+    background-color: #555;
+}
+
+/* Второстепенная кнопка (серая) */
+.btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    border-color: #ccc;
+}
+.btn-secondary:hover {
+    background-color: #d1d1d1;
+}
+
+/* Кнопка "Редактировать" (синяя) */
+.btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+/* Кнопка "Удалить" (красная) */
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+
+/* --- Формы --- */
+.form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(228, 216, 199, 0.5);
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+
+/* --- Таблицы --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    background-color: var(--secondary-bg);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-radius: 8px;
+    overflow: hidden; /* Для скругления углов */
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table thead th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #555;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.data-table .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+.data-table .action-buttons .btn,
+.data-table .action-buttons .btn-edit,
+.data-table .action-buttons .btn-delete {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+
+/* --- Разделители --- */
+.divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2.5rem 0;
+}
+
+.page-transition-container {
+    /* Плавный переход для свойств opacity и transform */
+    transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
+}
+
+/*
+  Начальное состояние "невидимости".
+  Страница полностью прозрачна и немного сдвинута вниз.
+*/
+.page-exit {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/*
+  Финальное состояние "видимости".
+  Страница полностью непрозрачна и находится на своем месте.
+*/
+.page-enter {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Countdown Timer Styles */
+.countdown-timer {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.countdown-timer h3 {
+    color: var(--text-color);
+    margin-top: 0;
+}
+
+.timer-grid {
+    display: flex;
+    justify-content: space-around;
+}
+
+.timer-unit {
+    display: flex;
+    flex-direction: column;
+}
+
+.timer-unit span {
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.timer-unit small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}

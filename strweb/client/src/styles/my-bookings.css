@@ -1,0 +1,102 @@
+.my-bookings-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.bookings-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.booking-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--accent-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.booking-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.booking-service-name {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.booking-status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Стили для разных статусов */
+.status-confirmed .booking-status-badge { background-color: #2ecc71; color: white; }
+.status-cancelled .booking-status-badge { background-color: #e74c3c; color: white; }
+.status-completed .booking-status-badge { background-color: #3498db; color: white; }
+
+.status-cancelled {
+    border-left-color: #e74c3c;
+    opacity: 0.7;
+}
+.status-completed {
+    border-left-color: #3498db;
+}
+
+.booking-card-body {
+    padding: 1.5rem;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.booking-card-body p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.booking-card-footer {
+    padding: 0 1.5rem 1.5rem;
+    text-align: right;
+}
+
+.btn-cancel {
+    background-color: #f39c12;
+    color: white;
+}
+.btn-cancel:hover {
+    background-color: #e67e22;
+}
+
+.past-booking {
+    opacity: 0.6;
+    border-left-color: #bdc3c7;
+}
+
+.no-bookings-message {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--secondary-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.no-bookings-message p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
