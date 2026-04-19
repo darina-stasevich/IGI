@@ -12,6 +12,16 @@
     background-color: var(--primary-bg);
 }
 
+.theme-dark {
+    --primary-bg: #1a202c;
+    --secondary-bg: #2d3748;
+    --accent-color: #4a5568;
+    --text-color: #e2e8f0;
+    --header-footer-bg: #2d3748;
+    --border-color: #4a5568;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
 body {
     margin: 0;
     line-height: 1.6;
@@ -159,7 +169,6 @@ main {
     margin: 0;
 }
 
-/* НОВЫЕ СТИЛИ ДЛЯ ВИДЖЕТА ВРЕМЕНИ */
 .sidebar hr {
     border: none;
     height: 1px;
@@ -216,8 +225,6 @@ main {
     border-radius: 8px;
 }
 
-/* ... (в конец файла) */
-
 .auth-buttons {
     display: flex;
     align-items: center;
@@ -260,7 +267,6 @@ main {
 }
 
 
-/* --- Кнопки --- */
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -279,7 +285,6 @@ main {
     cursor: not-allowed;
 }
 
-/* Основная кнопка (уже может быть, но проверим) */
 .btn-primary {
     background-color: var(--text-color);
     color: var(--secondary-bg);
@@ -288,7 +293,6 @@ main {
     background-color: #555;
 }
 
-/* Второстепенная кнопка (серая) */
 .btn-secondary {
     background-color: #e0e0e0;
     color: #333;
@@ -298,7 +302,6 @@ main {
     background-color: #d1d1d1;
 }
 
-/* Кнопка "Редактировать" (синяя) */
 .btn-edit {
     background-color: #3498db;
     color: white;
@@ -307,7 +310,6 @@ main {
     background-color: #2980b9;
 }
 
-/* Кнопка "Удалить" (красная) */
 .btn-delete {
     background-color: #e74c3c;
     color: white;
@@ -317,7 +319,6 @@ main {
 }
 
 
-/* --- Формы --- */
 .form-control {
     width: 100%;
     padding: 0.8rem 1rem;
@@ -347,8 +348,6 @@ textarea.form-control {
     margin-top: 1rem;
 }
 
-
-/* --- Таблицы --- */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -356,7 +355,7 @@ textarea.form-control {
     background-color: var(--secondary-bg);
     box-shadow: 0 4px 12px var(--shadow-color);
     border-radius: 8px;
-    overflow: hidden; /* Для скругления углов */
+    overflow: hidden;
 }
 
 .data-table th,
@@ -387,38 +386,27 @@ textarea.form-control {
     font-size: 0.85rem;
 }
 
-
-/* --- Разделители --- */
 .divider {
     border: none;
     border-top: 1px solid var(--border-color);
     margin: 2.5rem 0;
 }
 
+ /*плавно*/
 .page-transition-container {
-    /* Плавный переход для свойств opacity и transform */
     transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
 }
 
-/*
-  Начальное состояние "невидимости".
-  Страница полностью прозрачна и немного сдвинута вниз.
-*/
 .page-exit {
     opacity: 0;
     transform: translateY(20px);
 }
 
-/*
-  Финальное состояние "видимости".
-  Страница полностью непрозрачна и находится на своем месте.
-*/
 .page-enter {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Countdown Timer Styles */
 .countdown-timer {
     background-color: var(--accent-color);
     color: var(--text-color);
@@ -451,4 +439,29 @@ textarea.form-control {
 .timer-unit small {
     font-size: 0.7rem;
     text-transform: uppercase;
+}
+
+/* Стили для кнопки переключения темы */
+.theme-toggle-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// --- ХУК ДЛЯ РАБОТЫ С localStorage ---
-// Этот хук будет безопасно получать и устанавливать значения
 function useLocalStorage(key, initialValue) {
     const [storedValue, setStoredValue] = useState(() => {
         try {
@@ -30,7 +28,6 @@ function useLocalStorage(key, initialValue) {
     return [storedValue, setValue];
 }
 
-// Функция-хелпер для расчета времени
 const calculateTimeLeft = (targetDate) => {
     if (!targetDate) return null;
     const difference = +new Date(targetDate) - Date.now();
@@ -45,44 +42,37 @@ const calculateTimeLeft = (targetDate) => {
 };
 
 
-function Aside({ nextAppointmentDate }) { // Получаем "живую" дату через props
-    // --- ИСПОЛЬЗУЕМ НАШ ХУК ДЛЯ СИНХРОНИЗАЦИИ С localStorage ---
-    const [storedAppointmentDate, setStoredAppointmentDate] = useLocalStorage('nextAppointmentDate', null);
+function Aside({ nextAppointment = null }) {
+    const [storedAppointment, setStoredAppointment] = useLocalStorage('nextAppointment', null);
 
-    // --- ОБЪЕДИНЕННОЕ СОСТОЯНИЕ ---
+    const targetAppointment = nextAppointment || storedAppointment;
+
     const [timeData, setTimeData] = useState({
         currentDate: new Date(),
-        timeLeft: calculateTimeLeft(storedAppointmentDate), // Начальное значение берем из localStorage
+        timeLeft: calculateTimeLeft(targetAppointment?.date),
     });
 
-    // --- СИНХРОНИЗАЦИЯ ПРОПСОВ И localStorage ---
     useEffect(() => {
-        // Если из App пришла новая дата, которая отличается от сохраненной, обновляем localStorage
-        if (nextAppointmentDate && nextAppointmentDate !== storedAppointmentDate) {
-            setStoredAppointmentDate(nextAppointmentDate);
+        if (nextAppointment && nextAppointment._id !== storedAppointment?._id) {
+            setStoredAppointment(nextAppointment);
         }
-        // Если из App пришел null (например, юзер вышел), а в localStorage что-то есть - очищаем
-        if (nextAppointmentDate === null && storedAppointmentDate !== null) {
-            setStoredAppointmentDate(null);
+        if (nextAppointment === null && storedAppointment !== null) {
+            setStoredAppointment(null);
         }
-    }, [nextAppointmentDate, storedAppointmentDate, setStoredAppointmentDate]);
+    }, [nextAppointment, storedAppointment, setStoredAppointment]);
 
-    // --- ЕДИНЫЙ ТАЙМЕР ДЛЯ ВСЕГО ---
     useEffect(() => {
-        // Запускаем интервал, который обновляет ВСЕ данные каждую секунду
         const timerId = setInterval(() => {
             setTimeData({
                 currentDate: new Date(),
-                timeLeft: calculateTimeLeft(storedAppointmentDate)
+                timeLeft: calculateTimeLeft(storedAppointment?.date)
             });
         }, 1000);
 
-        // Очищаем интервал при размонтировании
         return () => clearInterval(timerId);
 
-    }, [storedAppointmentDate]); // Перезапускаем таймер, если целевая дата изменилась
+    }, [storedAppointment]);
 
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const { currentDate, timeLeft } = timeData;
 
     return (
@@ -101,10 +91,9 @@ function Aside({ nextAppointmentDate }) { // Получаем "живую" да�
                 </div>
             </section>
 
-            {/* Таймер обратного отсчета */}
-            {timeLeft && (
+            {timeLeft && targetAppointment && (
                 <div className="aside-block countdown-timer">
-                    <h3>До следующего приема:</h3>
+                    <h3>До процедуры "{targetAppointment.service?.name || '...'}":</h3>
                     <div className="timer-grid">
                         <div className="timer-unit"><span>{timeLeft.days}</span><small>дней</small></div>
                         <div className="timer-unit"><span>{String(timeLeft.hours).padStart(2, '0')}</span><small>часов</small></div>

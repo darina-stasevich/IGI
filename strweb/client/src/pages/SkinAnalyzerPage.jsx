@@ -53,12 +53,10 @@ function SkinAnalyzerPage() {
 
             <form onSubmit={handleSubmit} className="analyzer-form">
 
-                {/* --- УЛУЧШЕННЫЙ БЛОК ЗАГРУЗКИ --- */}
                 <div className="form-group">
                     <label htmlFor="file-upload">
                         Шаг 1: Загрузите фото <span className="required-star">*</span>
                     </label>
-                    {/* Добавляем класс 'has-error', если есть ошибка и нет файла */}
                     <div
                         id="file-upload"
                         className={`upload-area ${error && !imageFile ? 'has-error' : ''}`}
@@ -104,8 +102,7 @@ function SkinAnalyzerPage() {
 
             {apiResponse && (
                 <div className="results-container ai-response">
-                    <h3>Результаты от {apiResponse.assistant_name} ({apiResponse.model})</h3>
-                    {/* --- УЛУЧШЕННОЕ ОТОБРАЖЕНИЕ ОТВЕТА --- */}
+                    <h3>Результаты от {apiResponse.assistant_name}</h3>
                     <p className="response-text">{apiResponse.response}</p>
                     <div className="api-meta">
                         <small>Стоимость запроса: {apiResponse.price}$</small>

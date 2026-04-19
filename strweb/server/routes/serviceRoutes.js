@@ -13,15 +13,12 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, '..', 'public', 'uploads'));
     },
     filename: function (req, file, cb) {
-        // Создаем уникальное имя файла, чтобы избежать конфликтов
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: storage });
 
-
-// --- НОВЫЙ РОУТ ДЛЯ ЗАГРУЗКИ ФОТО В ГАЛЕРЕЮ ---
 // POST /api/services/:id/photos
 router.post('/services/:id/photos', upload.single('photo'), async (req, res) => {
     try {
@@ -30,17 +27,15 @@ router.post('/services/:id/photos', upload.single('photo'), async (req, res) => 
             return res.status(404).json({ message: 'Услуга не найдена' });
         }
 
-        // Проверяем, был ли файл загружен
         if (!req.file) {
             return res.status(400).json({ message: 'Файл не был загружен' });
         }
 
         const newPhoto = {
-            url: `/uploads/${req.file.filename}`, // Путь, по которому файл будет доступен на фронтенде
+            url: `/uploads/${req.file.filename}`,
             caption: req.body.caption || 'Новое фото',
         };
 
-        // Добавляем новое фото в галерею и сохраняем документ
         service.photoGallery.push(newPhoto);
         await service.save();
 
@@ -59,13 +54,12 @@ router.post('/services/:id/photos', upload.single('photo'), async (req, res) => 
 router.get('/services', async (req, res) => {
     try {
         let sortOptions = {};
-        // Получаем параметр сортировки из запроса
         const sortBy = req.query.sort;
 
         if (sortBy === 'price_asc') {
-            sortOptions = { price: 1 }; // 1 для сортировки по возрастанию
+            sortOptions = { price: 1 };
         } else if (sortBy === 'price_desc') {
-            sortOptions = { price: -1 }; // -1 для сортировки по убыванию
+            sortOptions = { price: -1 };
         } else if (sortBy === 'duration_asc') {
             sortOptions = { duration_minutes: 1 };
         } else if (sortBy === 'duration_desc') {
@@ -114,7 +108,7 @@ router.put('/services/:id', ensureAuthenticated, ensureAdmin, async (req, res) =
         service = await Service.findByIdAndUpdate(
             req.params.id,
             { $set: { name, description, price, duration_minutes, category, image } },
-            { new: true } // Возвращает обновленный документ
+            { new: true }
         );
         res.json(service);
     } catch (err) {
@@ -153,7 +147,6 @@ router.get('/categories', async (req, res) => {
     }
 });
 
-// Мы также можем добавить роут для получения одной услуги по ID, это понадобится позже
 // @route   GET api/services/:id
 // @desc    Получить услугу по ID
 // @access  Public

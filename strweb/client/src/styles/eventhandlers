@@ -1,0 +1,14 @@
+event handlers
+onclick
+onchange
+onfocus
+onblur
+onsubmit
+onmouseover
+onmouseleave
+
+компоненты
+классовый - BookingPage
+декларативный - ServicesPage
+стрелочный - BeforeAfterGallery
+вложенный - BookingPage

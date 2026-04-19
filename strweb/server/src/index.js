@@ -3,14 +3,12 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
+const connectDB = require('../src/config/db');
+
 const passport = require('passport');
 
-// ---> ВОТ ЭТА СТРОКА БЫЛА ПРОПУЩЕНА <---
 const session = require('express-session');
-// ------------------------------------
-
-const connectDB = require('../src/config/db');
-require('../src/config/passport')(passport); // Настройка Passport
+require('../src/config/passport')(passport);
 
 const authRoutes = require('../routes/authRoutes');
 const serviceRoutes = require('../routes/serviceRoutes');
@@ -32,27 +30,22 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// 1. Настройка сессий
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000 // 24 часа
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
-// 2. Инициализация Passport и сессий Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-// Роуты
 app.use('/api/auth', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
-
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../../client/dist')));

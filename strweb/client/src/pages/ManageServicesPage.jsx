@@ -7,19 +7,16 @@ function ManageServicesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // --- ИЗМЕНЕНИЕ: Добавили 'image' в начальное состояние ---
     const initialFormData = {
         name: '', description: '', price: '', duration_minutes: '', category: '', image: ''
     };
     const [formData, setFormData] = useState(initialFormData);
 
-    // --- НОВОЕ: Состояние для ошибок валидации ---
     const [formErrors, setFormErrors] = useState({});
 
     const [editingId, setEditingId] = useState(null);
 
     const fetchData = useCallback(async () => {
-        // ... (без изменений)
         try {
             setLoading(true);
             const [servicesRes, categoriesRes] = await Promise.all([ fetch('/api/services'), fetch('/api/categories') ]);
@@ -41,7 +38,6 @@ function ManageServicesPage() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        // Убираем ошибку для поля, которое пользователь начал исправлять
         if (formErrors[name]) {
             setFormErrors({ ...formErrors, [name]: null });
         }
@@ -50,10 +46,10 @@ function ManageServicesPage() {
     const resetForm = () => {
         setEditingId(null);
         setFormData(initialFormData);
-        setFormErrors({}); // Сбрасываем ошибки
+        setFormErrors({});
     };
 
-    // --- НОВОЕ: Функция валидации ---
+
     const validateForm = () => {
         const errors = {};
         if (!formData.name.trim()) errors.name = "Название не может быть пустым.";
@@ -76,7 +72,6 @@ function ManageServicesPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // --- ИЗМЕНЕНИЕ: Проверяем форму перед отправкой ---
         if (!validateForm()) {
             return;
         }
@@ -100,7 +95,6 @@ function ManageServicesPage() {
 
     const handleEdit = (service) => {
         setEditingId(service._id);
-        // --- ИЗМЕНЕНИЕ: Добавляем 'image' при редактировании ---
         setFormData({
             name: service.name,
             description: service.description,
@@ -109,12 +103,11 @@ function ManageServicesPage() {
             category: service.category?._id || '',
             image: service.image || ''
         });
-        setFormErrors({}); // Сбрасываем ошибки при выборе новой записи
+        setFormErrors({});
         window.scrollTo(0, 0);
     };
 
     const handleDelete = async (id) => {
-        // ... (без изменений)
         if (!window.confirm('Вы уверены, что хотите удалить эту услугу?')) return;
         try {
             const response = await fetch(`/api/services/${id}`, { method: 'DELETE', credentials: 'include' });
@@ -136,7 +129,6 @@ function ManageServicesPage() {
             <form className="admin-form" onSubmit={handleSubmit} noValidate>
                 <h3>{editingId ? 'Редактирование услуги' : 'Добавить новую услугу'}</h3>
 
-                {/* --- ИЗМЕНЕНИЕ: Обернули каждое поле в div и добавили отображение ошибок --- */}
                 <div className="form-group">
                     <input type="text" name="name" placeholder="Название услуги" value={formData.name} onChange={handleInputChange} className={`form-control ${formErrors.name ? 'is-invalid' : ''}`} />
                     {formErrors.name && <p className="error-text">{formErrors.name}</p>}
@@ -178,7 +170,6 @@ function ManageServicesPage() {
 
             <hr className="divider" />
             <h2 className="page-title">Список услуг</h2>
-            {/* Таблица остается без изменений */}
             <table className="data-table">
                 <thead>
                 <tr>

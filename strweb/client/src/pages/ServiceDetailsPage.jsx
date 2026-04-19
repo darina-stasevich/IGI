@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import BeforeAfterGallery from '../components/BeforeAfterGallery'; // Импортируем галерею
+import BeforeAfterGallery from '../components/BeforeAfterGallery';
 import '../styles/details.css'; // Стили для страницы
 
 function ServiceDetailsPage() {
@@ -29,7 +29,6 @@ function ServiceDetailsPage() {
         fetchService();
     }, [id]);
 
-    // Колбэк, который будет обновлять галерею после успешной загрузки
     const handleUploadSuccess = (newPhotoGallery) => {
         setService(prevService => ({
             ...prevService,
@@ -66,24 +65,16 @@ function ServiceDetailsPage() {
                 </div>
 
                 <div className="details-actions">
-                    {/* Кнопка "Назад" с использованием navigate(-1) для возврата на предыдущую страницу */}
                     <button onClick={() => navigate(-1)} className="btn btn-secondary">
                         &larr; Назад
                     </button>
-                    {/* Кнопка "Записаться", ведущая на страницу бронирования */}
                     <Link
                         to={`/book/${service._id}`}
                         className="btn btn-primary"
                         onMouseOver={() => setIsButtonHovered(true)}
                         onMouseLeave={() => setIsButtonHovered(false)}
-                        // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-                        // Мы добавляем новое свойство backgroundColor
                         style={{
-                            // Если курсор наведен, цвет фона - красный.
-                            // Иначе - пустая строка, чтобы применился стиль из класса "btn-primary" (вероятно, синий).
                             backgroundColor: isButtonHovered ? 'red' : '',
-
-                            // Остальные эффекты оставляем для наглядности
                             transform: isButtonHovered ? 'scale(1.05)' : 'scale(1)',
                             boxShadow: isButtonHovered ? '0 4px 15px rgba(0, 0, 0, 0.2)' : '0 2px 5px rgba(0, 0, 0, 0.1)',
                             transition: 'all 0.2s ease-in-out'

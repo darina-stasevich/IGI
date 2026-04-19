@@ -1,48 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
-function ServiceFilter({ onFilterChange, selectedSort }) {
-    const [categories, setCategories] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
+const ServiceFilter = ({ filters, onFilterChange }) => {
 
-    // 1. Загружаем категории при монтировании компонента
+    const [categories, setCategories] = useState([]);
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await fetch('/api/categories');
+                if (!response.ok) throw new Error('Failed to fetch categories');
                 const data = await response.json();
                 setCategories(data);
             } catch (error) {
-                console.error("Failed to fetch categories:", error);
+                console.error(error);
             }
         };
         fetchCategories();
     }, []);
 
-    // 2. Обработчики изменений в полях ввода
     const handleFilterUpdate = (key, value) => {
-        const newFilters = {
-            searchTerm,
-            category: selectedCategory,
-            sort: selectedSort,
-            [key]: value // Обновляем измененное поле
-        };
-        onFilterChange(newFilters);
-    };
-
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-        handleFilterUpdate('searchTerm', e.target.value);
-    };
-
-    const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value);
-        handleFilterUpdate('category', e.target.value);
-    };
-
-    // Новый обработчик для сортировки
-    const handleSortChange = (e) => {
-        handleFilterUpdate('sort', e.target.value);
+        onFilterChange({
+            ...filters,
+            [key]: value
+        });
     };
 
     return (
@@ -51,13 +31,13 @@ function ServiceFilter({ onFilterChange, selectedSort }) {
                 type="text"
                 placeholder="Поиск по названию..."
                 className="filter-input"
-                value={searchTerm}
-                onChange={handleSearchChange}
+                value={filters.searchTerm}
+                onChange={(e) => handleFilterUpdate('searchTerm', e.target.value)}
             />
             <select
                 className="filter-select"
-                value={selectedCategory}
-                onChange={handleCategoryChange}
+                value={filters.category}
+                onChange={(e) => handleFilterUpdate('category', e.target.value)}
             >
                 <option value="">Все категории</option>
                 {categories.map((category) => (
@@ -68,8 +48,8 @@ function ServiceFilter({ onFilterChange, selectedSort }) {
             </select>
             <select
                 className="filter-select"
-                value={selectedSort}
-                onChange={handleSortChange}
+                value={filters.sort}
+                onChange={(e) => handleFilterUpdate('sort', e.target.value)}
             >
                 <option value="">Сортировка по умолчанию</option>
                 <option value="price_asc">Цена: по возрастанию</option>
@@ -79,6 +59,6 @@ function ServiceFilter({ onFilterChange, selectedSort }) {
             </select>
         </div>
     );
-}
+};
 
 export default ServiceFilter;

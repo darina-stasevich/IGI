@@ -26,13 +26,13 @@ const serviceSchema = new mongoose.Schema({
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ServiceCategory', // Связь с моделью ServiceCategory
+        ref: 'ServiceCategory',
         required: true,
     },
     photoGallery: [{
-        url: { type: String, required: true },      // Путь к файлу
-        caption: { type: String, default: '' },     // Описание/комментарий к фото
-        uploadedAt: { type: Date, default: Date.now } // Дата загрузки
+        url: { type: String, required: true },
+        caption: { type: String, default: '' },
+        uploadedAt: { type: Date, default: Date.now }
     }]
 }, {
     timestamps: true

@@ -35,8 +35,6 @@ module.exports = function(passport) {
         done(null, user.id);
     });
 
-    // --- ИСПРАВЛЕННЫЙ КОД ---
-    // Десериализация с использованием async/await
     passport.deserializeUser(async (id, done) => {
         try {
             const user = await User.findById(id);
@@ -45,5 +43,4 @@ module.exports = function(passport) {
             done(err, null);
         }
     });
-    // -------------------------
 }

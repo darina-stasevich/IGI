@@ -7,18 +7,16 @@ function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // Единое состояние для всех фильтров
     const [filters, setFilters] = useState({
         searchTerm: '',
         category: '',
         sort: ''
     });
 
-    // Функция для загрузки данных с учетом всех фильтров
+    // function for loading data with filters
     const fetchServices = useCallback(async () => {
         try {
             setLoading(true);
-            // Формируем URL с параметром сортировки для бэкенда
             const query = new URLSearchParams({ sort: filters.sort }).toString();
             const response = await fetch(`/api/services?${query}`);
 
@@ -28,7 +26,6 @@ function ServicesPage() {
 
             let data = await response.json();
 
-            // Применяем клиентскую фильтрацию (поиск и категория) после получения отсортированных данных
             if (filters.searchTerm) {
                 data = data.filter(service =>
                     service.name.toLowerCase().includes(filters.searchTerm.toLowerCase())
@@ -47,9 +44,8 @@ function ServicesPage() {
         } finally {
             setLoading(false);
         }
-    }, [filters]); // Функция будет пересоздана только при изменении фильтров
+    }, [filters]);
 
-    // Вызываем fetchServices каждый раз, когда меняется сама функция (т.е. когда меняются фильтры)
     useEffect(() => {
         fetchServices();
     }, [fetchServices]);
@@ -69,7 +65,7 @@ function ServicesPage() {
                 <p className="page-subtitle">Откройте для себя процедуры, которые подчеркнут вашу естественную красоту.</p>
             </header>
 
-            <ServiceFilter onFilterChange={setFilters} selectedSort={filters.sort} />
+            <ServiceFilter filters={filters} onFilterChange={setFilters} />
 
             <div className="services-grid">
                 {services.length > 0 ? (

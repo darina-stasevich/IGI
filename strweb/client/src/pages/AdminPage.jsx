@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/admin.css'; // Создадим этот файл позже
+import '../styles/admin.css';
 
 function AdminPage() {
     const [users, setUsers] = useState([]);
@@ -36,13 +36,12 @@ function AdminPage() {
 
             if (!response.ok) throw new Error('Не удалось обновить роль.');
 
-            // Обновляем список пользователей локально для мгновенного отклика
             setUsers(users.map(user =>
                 user._id === userId ? { ...user, role: newRole } : user
             ));
 
         } catch (err) {
-            alert(err.message); // Показываем ошибку
+            alert(err.message);
         }
     };
 
